@@ -8,6 +8,5 @@ import edu.jorge.proyectodaw.entity.Category;
 
 @Repository
 public interface CategoryRepo extends JpaRepository<Category, Long> {
-    List<Category> findByParentCategoryIsNull();
-    List<Category> findByParentCategory(Category parentCategory);
+
 }

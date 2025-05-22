@@ -30,7 +30,7 @@ public class Feature {
     private String name;
 
     @Column(nullable = false)
-    private Double value;
+    private Integer value;
 
     @OneToMany(mappedBy = "feature")
     private List<ProductFeature> productFeatures;

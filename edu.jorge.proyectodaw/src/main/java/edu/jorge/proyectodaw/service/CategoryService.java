@@ -9,6 +9,4 @@ public interface CategoryService {
     Category save(Category category);
     Category update(Long id, Category category);
     void delete(Long id);
-    List<Category> findByParentCategoryIsNull();
-    List<Category> findByParentCategory(Category parentCategory);
 }

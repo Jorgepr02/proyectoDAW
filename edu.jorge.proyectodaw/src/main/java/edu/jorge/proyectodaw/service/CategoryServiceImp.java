@@ -36,7 +36,6 @@ public class CategoryServiceImp implements CategoryService {
         existingCategory.setName(category.getName());
         existingCategory.setDescription(category.getDescription());
         existingCategory.setCategoryType(category.getCategoryType());
-        existingCategory.setParentCategory(category.getParentCategory());
         return categoryRepo.save(existingCategory);
     }
 
@@ -46,13 +45,4 @@ public class CategoryServiceImp implements CategoryService {
         categoryRepo.delete(category);
     }
 
-    @Override
-    public List<Category> findByParentCategoryIsNull() {
-        return categoryRepo.findByParentCategoryIsNull();
-    }
-
-    @Override
-    public List<Category> findByParentCategory(Category parentCategory) {
-        return categoryRepo.findByParentCategory(parentCategory);
-    }
 }
