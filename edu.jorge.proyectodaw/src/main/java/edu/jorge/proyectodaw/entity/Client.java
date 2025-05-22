@@ -60,7 +60,7 @@ public class Client {
     private User user;
 
     @OneToMany(mappedBy = "client")
-    private List<Review> reviews;
+    private List<Review> review;
 
     @OneToMany(mappedBy = "client")
     private List<Order> orders;

@@ -1,0 +1,15 @@
+package edu.jorge.proyectodaw.controller.output;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategorySimpleOutputDTO {
+    private String name;
+    private String categoryType;
+}

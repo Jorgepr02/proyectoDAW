@@ -17,11 +17,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
-  sql:
-    init:
-      data-locations: classpath:data.sql
-      mode: always
-      encoding: UTF-8
   output:
     ansi:
       enabled: always

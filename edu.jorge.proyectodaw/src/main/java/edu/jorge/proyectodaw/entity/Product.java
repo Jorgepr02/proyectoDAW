@@ -48,6 +48,6 @@ public class Product {
     private List<ProductFeature> productFeatures;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Review> reviews;
+    private List<Review> review;
 
 }
