@@ -3,9 +3,9 @@ package edu.jorge.proyectodaw.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.jorge.proyectodaw.entity.Product;
+import edu.jorge.proyectodaw.entity.ProductFeature;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Product, Long> {
-    
+public interface ProductFeatureRepo extends JpaRepository<ProductFeature, Long> {
+
 }

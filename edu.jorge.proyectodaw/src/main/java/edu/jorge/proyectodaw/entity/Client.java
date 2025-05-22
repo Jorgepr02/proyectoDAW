@@ -1,9 +1,9 @@
 package edu.jorge.proyectodaw.entity;
 
+import java.time.LocalDate;
 import java.util.List;
 
-import edu.jorge.proyectodaw.enums.CategoryType;
-import jakarta.persistence.CascadeType;
+import edu.jorge.proyectodaw.enums.TypeAddress;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,8 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +21,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "category")
+@Table(name = "client")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,20 +35,33 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
-    private String description;
+    @Column(nullable = false)
+    private String email;
+
+    private String phone;
+
+    private String photo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category_type")
-    private CategoryType categoryType;
+    @Column(name = "type_addr")
+    private TypeAddress typeAddr;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Category parentCategory;
+    @Column(name = "name_addr")
+    private String nameAddr;
 
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private List<Category> subcategories;
+    @Column(name = "number_addr")
+    private String numberAddr;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Product> products;
+    @Column(name = "registration_date")
+    private LocalDate registrationDate;
 
+    @OneToOne
+    @JoinColumn(name = "id_user")
+    private User user;
+
+    @OneToMany(mappedBy = "client")
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders;
 }
