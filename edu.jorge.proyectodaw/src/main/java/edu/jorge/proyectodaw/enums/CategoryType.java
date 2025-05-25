@@ -8,9 +8,17 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 public enum CategoryType {
-    SNOWBOARD("Snowboard"),
-    SKI("Ski"),
-    ACCESORY("Accessory"),;
+
+    /**
+     * Features:
+     *  - Polivalencia
+     *  - Agarre
+     *  - Rigidez
+     *  - Estabilidad
+     */
+    SNOWBOARD("Snowboard") ,SKI("Ski")
+
+    ,ACCESORY("Accessory");
     
     private final String description;
     

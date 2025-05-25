@@ -1,5 +1,6 @@
 package edu.jorge.proyectodaw.controller;
 
+import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,25 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@RequestBody ProductCreateInputDTO productDTO) {
         Category category = new Category();
         category.setId(productDTO.getIdCategory());
-            Product product = new Product();
-            product.setName(productDTO.getName());
-            product.setDescription(productDTO.getDescription());
-            product.setPrice(productDTO.getPrice());
-            product.setCategory(category);
-            product.setProductFeatures(productDTO.getProductFeatures());
-            Product createdProduct = productService.createProduct(product);
-            return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setCategory(category);
+
+        // for (ProductFeatureInputDTO productFeatures : productDTO.getProductFeatures()) {
+        //     ProductFeature feature = new ProductFeature();
+        //     feature.setProduct(
+        //         new Product(
+        //             productFeatures.getId()
+        //         )
+        //     );
+        // }
+        
+        Product createdProduct = productService.save(product);
+        
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 }
 
