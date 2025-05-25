@@ -50,4 +50,8 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> review;
 
+    public Product(Long id){
+        this.id = id;
+    }
+
 }

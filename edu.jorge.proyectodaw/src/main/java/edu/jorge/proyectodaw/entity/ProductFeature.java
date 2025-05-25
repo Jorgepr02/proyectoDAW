@@ -31,4 +31,6 @@ public class ProductFeature {
     @ManyToOne
     @JoinColumn(name = "id_features")
     private Feature feature;
+
+    private Integer value;
 }

@@ -36,5 +36,5 @@ public class ProductCreateInputDTO {
 
     private Long idCategory;
 
-    private List<FeatureProductInputDTO> productFeatures;
+    private List<ProductFeatureInputDTO> productFeatures;
 }
