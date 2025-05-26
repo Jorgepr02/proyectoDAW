@@ -1,4 +1,4 @@
-package edu.jorge.proyectodaw.controller.dto.output;
+package edu.jorge.proyectodaw.controller.dto.input;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientSimpleOutputDTO {
-    private Long id;
+public class ClientInputDTO {
     private String name;
     private String email;
     private String phone;

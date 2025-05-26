@@ -5,7 +5,6 @@ import java.util.List;
 
 import edu.jorge.proyectodaw.enums.OrderStatus;
 import edu.jorge.proyectodaw.enums.PaymentMethod;
-import edu.jorge.proyectodaw.enums.TypeAddress;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,10 +47,6 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(name = "order_payment_method")
     private PaymentMethod orderPaymentMethod;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "shipping_type_address")
-    private TypeAddress shippingTypeAddress;
 
     @Column(name = "shipping_name_address")
     private String shippingNameAddress;
