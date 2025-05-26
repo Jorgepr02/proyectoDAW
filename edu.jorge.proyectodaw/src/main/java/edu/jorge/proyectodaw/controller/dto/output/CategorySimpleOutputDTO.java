@@ -1,4 +1,4 @@
-package edu.jorge.proyectodaw.controller.output;
+package edu.jorge.proyectodaw.controller.dto.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
