@@ -1,6 +1,5 @@
 package edu.jorge.proyectodaw.controller.dto.output;
 
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientSimpleOutputDTO {
+public class ProductSimpleOutputDTO {
     private Long id;
     private String name;
-    private String email;
-    private String phone;
-    private String nameAddr;
-    private String numberAddr;
-    private LocalDate registrationDate;
+    private String description;
+    private Double price;
+    private Integer stock;
+    private String categoryName;
+    private String categoryType;
 }

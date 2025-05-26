@@ -22,7 +22,7 @@ public class CategoryServiceImp implements CategoryService {
     @Override
     public Category findById(Long id) {
         return categoryRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada con id: " + id));
     }
 
     @Override

@@ -23,7 +23,7 @@ public class ClientServiceImp implements ClientService {
     @Override
     public Client findById(Long id) {
         return clientRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + id));
     }
 
     @Override
@@ -37,8 +37,6 @@ public class ClientServiceImp implements ClientService {
         existingClient.setName(client.getName());
         existingClient.setEmail(client.getEmail());
         existingClient.setPhone(client.getPhone());
-        existingClient.setPhoto(client.getPhoto());
-        existingClient.setTypeAddr(client.getTypeAddr());
         existingClient.setNameAddr(client.getNameAddr());
         existingClient.setNumberAddr(client.getNumberAddr());
         existingClient.setRegistrationDate(client.getRegistrationDate());

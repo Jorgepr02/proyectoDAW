@@ -23,7 +23,7 @@ public class FeatureServiceImp implements FeatureService {
     @Override
     public Feature findById(Long id) {
         return featureRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Feature not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Característica no encontrada con id: " + id));
     }
 
     @Override

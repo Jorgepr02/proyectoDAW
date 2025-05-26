@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.jorge.proyectodaw.entity.Product;
-import edu.jorge.proyectodaw.repositories.FeatureRepo;
 import edu.jorge.proyectodaw.repositories.ProductRepo;
 import jakarta.persistence.EntityNotFoundException;
 import edu.jorge.proyectodaw.enums.CategoryType;

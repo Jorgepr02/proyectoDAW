@@ -3,11 +3,8 @@ package edu.jorge.proyectodaw.entity;
 import java.time.LocalDate;
 import java.util.List;
 
-import edu.jorge.proyectodaw.enums.TypeAddress;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,12 +36,6 @@ public class Client {
     private String email;
 
     private String phone;
-
-    private String photo;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type_addr")
-    private TypeAddress typeAddr;
 
     @Column(name = "name_addr")
     private String nameAddr;
