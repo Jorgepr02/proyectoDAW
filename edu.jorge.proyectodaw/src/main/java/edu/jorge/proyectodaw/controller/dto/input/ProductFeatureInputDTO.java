@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductFeatureInputDTO {
     
-    private Long id;
+    private Long idFeature;
     
     private Integer value;
 }

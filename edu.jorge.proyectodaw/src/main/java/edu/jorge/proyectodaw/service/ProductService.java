@@ -1,7 +1,9 @@
 package edu.jorge.proyectodaw.service;
 
-import java.util.List;
+import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
 import edu.jorge.proyectodaw.entity.Product;
+
+import java.util.List;
 
 public interface ProductService {
     List<Product> findAll();
@@ -9,4 +11,7 @@ public interface ProductService {
     Product save(Product product);
     Product update(Long id, Product product);
     void delete(Long id);
+
+    // DTO
+    Product save(ProductCreateInputDTO product);
 }
