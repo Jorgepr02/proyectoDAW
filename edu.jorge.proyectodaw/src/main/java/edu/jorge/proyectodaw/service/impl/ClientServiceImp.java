@@ -1,7 +1,8 @@
-package edu.jorge.proyectodaw.service;
+package edu.jorge.proyectodaw.service.impl;
 
 import java.util.List;
 
+import edu.jorge.proyectodaw.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

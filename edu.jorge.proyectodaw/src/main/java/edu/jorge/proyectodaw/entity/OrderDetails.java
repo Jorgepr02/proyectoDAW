@@ -15,10 +15,8 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "order_details")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class OrderDetails {
 
     @Id

@@ -1,4 +1,4 @@
-package edu.jorge.proyectodaw.service;
+package edu.jorge.proyectodaw.service.impl;
 
 import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
 import edu.jorge.proyectodaw.entity.Feature;
@@ -6,6 +6,9 @@ import edu.jorge.proyectodaw.entity.Product;
 import edu.jorge.proyectodaw.entity.ProductFeature;
 import edu.jorge.proyectodaw.repositories.ProductFeatureRepo;
 import edu.jorge.proyectodaw.repositories.ProductRepo;
+import edu.jorge.proyectodaw.service.CategoryService;
+import edu.jorge.proyectodaw.service.FeatureService;
+import edu.jorge.proyectodaw.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
