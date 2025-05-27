@@ -17,6 +17,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
+  sql:
+    init:
+      mode: always
+      platform: mysql
+      data-locations: classpath:db/initialData.sql
   output:
     ansi:
       enabled: always
