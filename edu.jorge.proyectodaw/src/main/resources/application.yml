@@ -5,7 +5,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/edu.jorge.proyectodaw?createDatabaseIfNotExist=true
     username: root
-    password: 
+    password:
+  profiles:
+    active: dev
   jpa:
     hibernate:
       ddl-auto: create-drop

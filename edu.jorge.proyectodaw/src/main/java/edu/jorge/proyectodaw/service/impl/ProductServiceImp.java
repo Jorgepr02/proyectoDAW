@@ -40,9 +40,13 @@ public class ProductServiceImp implements ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con id: " + id));
     }
 
-    // TODO ESTO ES UN EJEMPLO ¡¡NO SE UTILIZA!!
+
     @Override
-    public Product save(Product product) { return null; }
+    public Product save(Product product) {
+        return productRepo.save(product);
+    }
+
+// TODO ESTO ES UN EJEMPLO ¡¡NO SE UTILIZA!!
 //    @Override
 //    public Product save(Product product) {
 //        product.setStock(0);
