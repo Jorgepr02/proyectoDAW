@@ -1,8 +1,8 @@
 -- Category
 INSERT INTO category (name, description, category_type) VALUES
-('Informática', 'Productos relacionados con la informática', 'SNOWBOARD'),
-('Electrodomésticos', 'Productos para el hogar', 'SKI'),
-('Telefonía', 'Móviles y accesorios', NULL);
+('Snowboard', 'Tablas y equipamiento específico para snowboard', 'SNOWBOARD'),
+('Ski', 'Esquís y material especializado para esquiar', 'SKI'),
+('Accesorios', 'Complementos y accesorios para deportes de nieve', NULL);
 
 -- Feature
 INSERT INTO features (name) VALUES
