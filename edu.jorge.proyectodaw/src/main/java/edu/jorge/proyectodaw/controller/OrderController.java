@@ -2,6 +2,7 @@ package edu.jorge.proyectodaw.controller;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,9 +38,11 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderSimpleOutputDTO>> findAll() {
         List<Order> orders = orderService.findAll();
-        List<OrderSimpleOutputDTO> orderDTOs = orders.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        List<OrderSimpleOutputDTO> orderDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            OrderSimpleOutputDTO dto = convertToDTO(order);
+            orderDTOs.add(dto);
+        }
         return ResponseEntity.ok(orderDTOs);
     }
 
@@ -103,7 +106,7 @@ public class OrderController {
         dto.setNotes(order.getNotes());
         
         if (order.getClient() != null) {
-            dto.setClientName(order.getClient().getName());
+            dto.setClientEmail(order.getClient().getEmail());
         }
         
         return dto;

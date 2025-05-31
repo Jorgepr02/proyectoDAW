@@ -16,5 +16,4 @@ public class ProductFullOutputDTO {
     private Double price;
     private Integer stock;
     private String categoryName;
-    private String categoryType;
 }

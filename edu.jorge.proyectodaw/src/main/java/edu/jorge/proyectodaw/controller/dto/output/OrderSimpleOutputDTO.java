@@ -19,5 +19,5 @@ public class OrderSimpleOutputDTO {
     private String shippingNameAddress;
     private String shippingNumberAddress;
     private String notes;
-    private String clientName;
+    private String clientEmail;
 }

@@ -66,9 +66,10 @@ public class OrderServiceImp implements OrderService {
     @Transactional
     public Order createOrderWithDetails(Order order, List<OrderDetails> orderDetails) {
         // Calcular el precio total
-        Double totalPrice = orderDetails.stream()
-                .mapToDouble(od -> od.getProduct().getPrice() * od.getQuantity())
-                .sum();
+        Double totalPrice = 0.0;
+        for (OrderDetails od : orderDetails) {
+            totalPrice += od.getProduct().getPrice() * od.getQuantity();
+        }
 
         Double truncatedValue = BigDecimal.valueOf(totalPrice)
                 .setScale(2, RoundingMode.DOWN)
