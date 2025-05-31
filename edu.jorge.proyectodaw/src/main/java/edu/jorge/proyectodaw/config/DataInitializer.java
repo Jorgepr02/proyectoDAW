@@ -55,9 +55,9 @@ public class DataInitializer {
     }
 
     private void initProducts(ProductService productService, CategoryService categoryService) {
-        Product p1 = new Product(null, "Producto 1", "Descripción del producto 1", 19.99, 100, categoryService.findById(2L), null, null);
-        Product p2 = new Product(null, "Producto 2", "Descripción del producto 2", 29.99, 50, categoryService.findById(3L), null, null);
-        Product p3 = new Product(null, "Producto 3", "Descripción del producto 3", 39.99, 75, categoryService.findById(1L), null, null);
+        Product p1 = new Product("Producto 1", "Descripción del producto 1", 19.99, 100, categoryService.findById(2L));
+        Product p2 = new Product("Producto 2", "Descripción del producto 2", 29.99, 50, categoryService.findById(3L));
+        Product p3 = new Product("Producto 3", "Descripción del producto 3", 39.99, 75, categoryService.findById(1L));
 
         productService.save(p1);
         productService.save(p2);

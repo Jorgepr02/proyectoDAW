@@ -43,6 +43,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Product save(Product product) {
+        product.setCategory(categoryService.findById(product.getCategory().getId()));
         return productRepo.save(product);
     }
 
