@@ -1,14 +1,13 @@
 package edu.jorge.proyectodaw.service.impl;
 
-import java.util.List;
-
+import edu.jorge.proyectodaw.entity.User;
+import edu.jorge.proyectodaw.repositories.UserRepo;
 import edu.jorge.proyectodaw.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.jorge.proyectodaw.entity.User;
-import edu.jorge.proyectodaw.repositories.UserRepo;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -37,7 +36,7 @@ public class UserServiceImp implements UserService {
         User existingUser = findById(id);
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
-        existingUser.setRole(user.getRole());
+//        existingUser.setRole(user.getRole());
         return userRepo.save(existingUser);
     }
 
