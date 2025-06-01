@@ -1,6 +1,6 @@
 package edu.jorge.proyectodaw.enums;
 
-public enum Role {
+public enum ERole {
     ADMIN,
     CLIENT
 }
