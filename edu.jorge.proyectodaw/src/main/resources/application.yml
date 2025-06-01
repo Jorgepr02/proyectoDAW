@@ -29,3 +29,5 @@ spring:
       enabled: always
 server:
   port: 8080
+ecommerce:
+  imgDir: src/main/java/edu/jorge/proyectodaw/img/products/
