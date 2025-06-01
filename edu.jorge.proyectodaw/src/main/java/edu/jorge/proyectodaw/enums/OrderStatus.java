@@ -9,7 +9,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum OrderStatus {
     PENDING("Pendiente"),
-    PROCESSING("En proceso"),
     SHIPPED("Enviado"),
     DELIVERED("Entregado"),
     CANCELLED("Cancelado");

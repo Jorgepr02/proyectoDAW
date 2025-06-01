@@ -1,9 +1,12 @@
 package edu.jorge.proyectodaw.service.impl;
 
 import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
+import edu.jorge.proyectodaw.controller.dto.output.ProductSimpleOutputDTO;
+import edu.jorge.proyectodaw.entity.Category;
 import edu.jorge.proyectodaw.entity.Feature;
 import edu.jorge.proyectodaw.entity.Product;
 import edu.jorge.proyectodaw.entity.ProductFeature;
+import edu.jorge.proyectodaw.enums.CategoryType;
 import edu.jorge.proyectodaw.repositories.ProductFeatureRepo;
 import edu.jorge.proyectodaw.repositories.ProductRepo;
 import edu.jorge.proyectodaw.service.CategoryService;
@@ -14,7 +17,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -39,7 +44,6 @@ public class ProductServiceImp implements ProductService {
         return productRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con id: " + id));
     }
-
 
     @Override
     public Product save(Product product) {
@@ -129,5 +133,20 @@ public class ProductServiceImp implements ProductService {
 //        Product productCreated = productRepo.saveAndFlush(productToSave);
 
         return productCreated;
+    }
+
+    @Override
+    public List<Product> findByCategoryId(Long categoryId) {
+        return productRepo.findByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<Product> findByNameContaining(String name) {
+        return productRepo.findByNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public List<Product> findByPriceRange(Double minPrice, Double maxPrice) {
+        return productRepo.findByPriceBetween(minPrice, maxPrice);
     }
 }
