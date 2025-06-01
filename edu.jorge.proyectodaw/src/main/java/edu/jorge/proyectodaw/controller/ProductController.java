@@ -151,5 +151,77 @@ public class ProductController {
         return ResponseEntity.ok("Fotos subidas correctamente: " + fileDownloadUris);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.findAll();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(product);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
+        Product updatedProduct = productService.update(id, product);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductSimpleOutputDTO>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        List<Product> products = productService.findByCategoryId(categoryId);
+        List<ProductSimpleOutputDTO> productSimpleOutputDTOS = new ArrayList<>();
+        for (Product product : products) {
+            productSimpleOutputDTOS.add(convertToSimpleDTO(product));
+        }
+        return ResponseEntity.ok(productSimpleOutputDTOS);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductSimpleOutputDTO>> searchProductsByName(@RequestParam String name) {
+        List<Product> products = productService.findByNameContaining(name);
+
+        List<ProductSimpleOutputDTO> productSimpleOutputDTOS = new ArrayList<>();
+        for (Product product : products) {
+            productSimpleOutputDTOS.add(convertToSimpleDTO(product));
+        }
+
+        return ResponseEntity.ok(productSimpleOutputDTOS);
+    }
+
+    @GetMapping("/price-range")
+    public ResponseEntity<List<ProductSimpleOutputDTO>> getProductsByPriceRange(
+            @RequestParam Double minPrice,
+            @RequestParam Double maxPrice) {
+        List<Product> products = productService.findByPriceRange(minPrice, maxPrice);
+
+        List<ProductSimpleOutputDTO> productSimpleOutputDTOS = new ArrayList<>();
+        for (Product product : products) {
+            productSimpleOutputDTOS.add(convertToSimpleDTO(product));
+        }
+
+        return ResponseEntity.ok(productSimpleOutputDTOS);
+    }
+
+    private ProductSimpleOutputDTO convertToSimpleDTO(Product product) {
+        ProductSimpleOutputDTO dto = new ProductSimpleOutputDTO();
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        if (product.getCategory().getCategoryType() != null) {
+            dto.setCategoryType(product.getCategory().getCategoryType().getDescription());
+        } else {
+            dto.setCategoryType("No Category Type");
+        }
+        return dto;
+    }
+
 }
 
