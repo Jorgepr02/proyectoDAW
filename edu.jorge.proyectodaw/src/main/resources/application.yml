@@ -31,3 +31,10 @@ server:
   port: 8080
 ecommerce:
   imgDir: src/main/java/edu/jorge/proyectodaw/img/products/
+  security:
+    jwt:
+      secret: 1234567890
+      expiration: 86400000
+      header: Authorization
+      prefix: Bearer
+      token-type: JWT
