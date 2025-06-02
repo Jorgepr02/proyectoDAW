@@ -10,3 +10,9 @@ INSERT INTO features (name) VALUES
 ('Agarre'),
 ('Rigidez'),
 ('Estabilidad');
+
+-- Roles
+INSERT INTO roles (name) VALUES
+('ROLE_ADMIN')
+,('ROLE_CLIENT')
+,('ROLE_USER');
