@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { ProductCard } from "../ProductCard/ProductCard";
 import styles from "./AllProducts.module.css";
 
-const allProducts = [
+const allProductsStatic = [
   {
     image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748935575/CosmicX_xfvdog.png",
     title: "Cosmic X",
@@ -141,6 +141,29 @@ const allProducts = [
     type: "ski"
   }
 ];
+
+let allProducts;
+
+fetch('http://localhost:8080/api/products')
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+})
+.then(data => {
+  console.log(data)
+  allProducts = data.map(product => ({
+    id: product.id,
+    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
+    title: product.name,
+    category: product.categoryName,
+    price: product.price,
+  }));
+})
+.catch(err => {
+  console.error('Error fetching products:', err);
+});
 
 export const AllProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
