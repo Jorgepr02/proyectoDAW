@@ -133,11 +133,6 @@ const RegisterPage = () => {
                   Nombre de usuario
                 </label>
                 <div className={styles.inputWrapper}>
-                  <img
-                    src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748982304/image_27_r9gygf.png"
-                    alt="User Icon"
-                    className={styles.inputIcon}
-                  />
                   <input
                     type="text"
                     id="username"
@@ -158,11 +153,6 @@ const RegisterPage = () => {
                   Dirección de email
                 </label>
                 <div className={styles.inputWrapper}>
-                  <img
-                    src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748982304/image_27_r9gygf.png"
-                    alt="Mail Icon"
-                    className={styles.inputIcon}
-                  />
                   <input
                     type="email"
                     id="email"
@@ -180,11 +170,6 @@ const RegisterPage = () => {
                   Contraseña
                 </label>
                 <div className={styles.inputWrapper}>
-                  <img
-                    src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748982304/image_28_l34rgt.png"
-                    alt="Lock Icon"
-                    className={styles.inputIcon}
-                  />
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
@@ -212,11 +197,6 @@ const RegisterPage = () => {
                 disabled={loading}
               >
                 <span>{loading ? "Registrando..." : "Registrarse"}</span>
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/edfba5b307911e46f91cda1933d4ee1b02d6a44d?placeholderIfAbsent=true"
-                  alt=""
-                  className={styles.inputIcon}
-                />
               </button>
 
               <div className={styles.socialLogin}>
