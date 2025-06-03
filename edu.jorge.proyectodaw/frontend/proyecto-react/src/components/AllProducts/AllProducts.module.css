@@ -140,6 +140,15 @@
   cursor: not-allowed;
 }
 
+.paginationBtn:disabled:hover {
+  border-color: #e2e8f0;
+  color: var(--text-tertiary);
+}
+
+.paginationBtn:disabled img {
+  filter: invert(0.5);
+}
+
 .paginationNumber {
   width: 40px;
   height: 40px;
@@ -180,6 +189,17 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 12px 12px;
+}
+
+.ellipsis {
+  color: var(--text-tertiary);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
 }
 
 @media (max-width: 991px) {

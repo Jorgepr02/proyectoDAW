@@ -131,31 +131,55 @@ const allProducts = [
     variant: "1 diseño",
     price: "666,66",
     type: "ski"
+  },
+  {
+    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904506/Devils_Game_Death_kqr3fj.png",
+    title: "Devil's Game",
+    category: "Esquís",
+    variant: "1 diseño",
+    price: "666,66",
+    type: "ski"
   }
 ];
 
 export const AllProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeFilter, setActiveFilter] = useState("Todos");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 16;
 
-  // Leer el filtro de la URL al cargar el componente
+  // Leer el filtro y página de la URL al cargar el componente
   useEffect(() => {
     const filterParam = searchParams.get('filter');
+    const pageParam = searchParams.get('page');
+    
     if (filterParam && ["Snowboard", "Esquí", "Accesorios"].includes(filterParam)) {
       setActiveFilter(filterParam);
+    }
+    
+    if (pageParam) {
+      const page = parseInt(pageParam);
+      if (page > 0) {
+        setCurrentPage(page);
+      }
     }
   }, [searchParams]);
 
   // Actualizar la URL cuando cambie el filtro
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
-    if (filter === "Todos") {
-      setSearchParams({});
-    } else {
-      setSearchParams({ filter });
+    setCurrentPage(1); // Resetear a la primera página al cambiar filtro
+    
+    const newParams = {};
+    if (filter !== "Todos") {
+      newParams.filter = filter;
     }
+    newParams.page = "1";
+    
+    setSearchParams(newParams);
   };
 
+  // Filtrar productos
   const filteredProducts = allProducts.filter(product => {
     if (activeFilter === "Todos") return true;
     if (activeFilter === "Snowboard") return product.type === "snowboard";
@@ -163,6 +187,81 @@ export const AllProducts = () => {
     if (activeFilter === "Accesorios") return product.type === "accesorios";
     return true;
   });
+
+  // Calcular paginación
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // Manejar cambio de página
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      
+      const newParams = {};
+      if (activeFilter !== "Todos") {
+        newParams.filter = activeFilter;
+      }
+      newParams.page = page.toString();
+      
+      setSearchParams(newParams);
+      
+      // Scroll to top cuando cambie de página
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Manejar botón anterior
+  const handlePrevious = () => {
+    handlePageChange(currentPage - 1);
+  };
+
+  // Manejar botón siguiente
+  const handleNext = () => {
+    handlePageChange(currentPage + 1);
+  };
+
+  // Generar números de página para mostrar
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxPagesToShow = 5;
+    
+    if (totalPages <= maxPagesToShow) {
+      // Mostrar todas las páginas si son pocas
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Lógica para mostrar páginas con elipsis
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        pageNumbers.push(1);
+        pageNumbers.push('...');
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pageNumbers.push(i);
+        }
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      }
+    }
+    
+    return pageNumbers;
+  };
 
   return (
     <div className={styles.container}>
@@ -195,25 +294,44 @@ export const AllProducts = () => {
         </div>
 
         <div className={styles.grid}>
-          {filteredProducts.map((product, index) => (
-            <ProductCard key={index} {...product} />
+          {currentProducts.map((product, index) => (
+            <ProductCard key={`${currentPage}-${index}`} {...product} />
           ))}
         </div>
 
-        <div className={styles.pagination}>
-          <button 
-            className={`${styles.paginationBtn} ${styles.prevBtn}`}
-            aria-label="Anterior"
-          >
-          </button>
-          <button className={`${styles.paginationNumber} ${styles.paginationActive}`}>1</button>
-          <button className={styles.paginationNumber}>2</button>
-          <button 
-            className={`${styles.paginationBtn} ${styles.nextBtn}`}
-            aria-label="Siguiente"
-          >
-          </button>
-        </div>
+        {totalPages > 1 && (
+          <div className={styles.pagination}>
+            <button 
+              className={`${styles.paginationBtn} ${styles.prevBtn}`}
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              aria-label="Anterior"
+            >
+            </button>
+            
+            {getPageNumbers().map((pageNumber, index) => (
+              pageNumber === '...' ? (
+                <span key={`ellipsis-${index}`} className={styles.ellipsis}>...</span>
+              ) : (
+                <button 
+                  key={pageNumber}
+                  className={`${styles.paginationNumber} ${currentPage === pageNumber ? styles.paginationActive : ''}`}
+                  onClick={() => handlePageChange(pageNumber)}
+                >
+                  {pageNumber}
+                </button>
+              )
+            ))}
+            
+            <button 
+              className={`${styles.paginationBtn} ${styles.nextBtn}`}
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              aria-label="Siguiente"
+            >
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
