@@ -3,6 +3,7 @@ package edu.jorge.proyectodaw.controller;
 import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
 import edu.jorge.proyectodaw.controller.dto.input.ProductFeatureInputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.ProductFullOutputDTO;
+import edu.jorge.proyectodaw.controller.dto.output.ProductListOutputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.ProductSimpleOutputDTO;
 import edu.jorge.proyectodaw.entity.Category;
 import edu.jorge.proyectodaw.entity.Feature;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +24,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/products")
 /**
@@ -152,15 +154,24 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductListOutputDTO>> getAllProducts() {
         List<Product> products = productService.findAll();
-        return ResponseEntity.ok(products);
+        List<ProductListOutputDTO> productFullOutputDTOS = new ArrayList<>();
+        for (Product product : products) {
+            productFullOutputDTOS.add(
+                    convertToListDTO(product)
+            );
+        }
+        return ResponseEntity.ok(productFullOutputDTOS);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = productService.findById(id);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ProductFullOutputDTO> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                convertToFullDTO(
+                        productService.findById(id)
+                )
+        );
     }
 
     @PutMapping("/{id}")
@@ -223,5 +234,37 @@ public class ProductController {
         return dto;
     }
 
+    private ProductFullOutputDTO convertToFullDTO(Product product) {
+        ProductFullOutputDTO dto = new ProductFullOutputDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setStock(product.getStock());
+        if (product.getCategory() != null) {
+            dto.setCategoryName(product.getCategory().getName());
+        } else {
+            dto.setCategoryName("No Category");
+        }
+        return dto;
+    }
+
+    private ProductListOutputDTO convertToListDTO(Product product) {
+        ProductListOutputDTO dto = new ProductListOutputDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setPrice(product.getPrice());
+        if (product.getCategory() != null) {
+            dto.setCategoryName(product.getCategory().getName());
+        } else {
+            dto.setCategoryName("No Category");
+        }
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            dto.setImages(product.getImages());
+        } else {
+            dto.setImages(Collections.emptyList());
+        }
+        return dto;
+    }
 }
 
