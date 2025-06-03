@@ -33,4 +33,10 @@ public class ProductFeature {
     private Feature feature;
 
     private Integer value;
+
+    public ProductFeature(Product product, Feature feature, Integer value) {
+        this.product = product;
+        this.feature = feature;
+        this.value = value;
+    }
 }

@@ -1,0 +1,87 @@
+.calculator {
+  padding: 40px;
+  background-color: #2d1282;
+  border-radius: 12px;
+  color: white;
+  margin-top: 60px;
+}
+
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.measurementInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 12px;
+}
+
+.input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.selectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.select {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.result h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.result p {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .calculator {
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .inputGroup {
+    flex-direction: column;
+  }
+}

@@ -7,7 +7,7 @@ export const ProductCard = ({ id, image, title, category, price }) => {
 
   const handleClick = () => {
     window.scrollTo(0, 0);
-    navigate('/productos/cosmic-x');
+    navigate(`/productos/${id}`);
   };
 
   return (

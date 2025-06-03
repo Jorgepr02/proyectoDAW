@@ -37,4 +37,11 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
+
+    public Review(Double stars, String comment, Product product, Client client) {
+        this.stars = stars;
+        this.comment = comment;
+        this.product = product;
+        this.client = client;
+    }
 }

@@ -10,7 +10,7 @@ spring:
     active: dev
   jpa:
     hibernate:
-      ddl-auto: update #create-drop
+      ddl-auto: create-drop #update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     defer-datasource-initialization: true

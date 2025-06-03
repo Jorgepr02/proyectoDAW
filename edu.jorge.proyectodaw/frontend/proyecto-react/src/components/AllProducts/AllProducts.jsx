@@ -144,7 +144,7 @@ const allProductsStatic = [
 
 let allProducts;
 
-fetch('http://localhost:8080/api/products')
+fetch('http://localhost:8080/api/products?outputType=list')
 .then(response => {
   if (!response.ok) {
     throw new Error(`Error: ${response.status} ${response.statusText}`);
