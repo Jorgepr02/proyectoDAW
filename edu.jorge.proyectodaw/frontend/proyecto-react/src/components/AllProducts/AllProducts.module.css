@@ -118,14 +118,21 @@
 }
 
 .paginationBtn img {
-  width: 16px;
-  height: 16px;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+  fill: currentColor;
+  filter: invert(0.5);
+  transition: filter 0.3s ease;
+}
+
+.paginationBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .paginationBtn:hover img {
-  opacity: 1;
+  filter: invert(0.2);
 }
 
 .paginationBtn:disabled {
@@ -158,6 +165,21 @@
   background-color: var(--primary);
   border-color: var(--primary);
   color: var(--white);
+}
+
+.prevBtn {
+  background-image: url('https://res.cloudinary.com/dluvwj5lo/image/upload/v1748965283/arrow_gtemug.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+  transform: rotate(180deg);
+}
+
+.nextBtn {
+  background-image: url('https://res.cloudinary.com/dluvwj5lo/image/upload/v1748965283/arrow_gtemug.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
 }
 
 @media (max-width: 991px) {

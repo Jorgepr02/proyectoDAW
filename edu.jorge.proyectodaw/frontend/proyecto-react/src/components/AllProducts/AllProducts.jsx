@@ -201,24 +201,17 @@ export const AllProducts = () => {
         </div>
 
         <div className={styles.pagination}>
-          <button className={styles.paginationBtn}>
-            <img 
-              src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748965283/arrow_gtemug.svg" 
-              alt="Anterior" 
-              width="16" 
-              height="16"
-            />
+          <button 
+            className={`${styles.paginationBtn} ${styles.prevBtn}`}
+            aria-label="Anterior"
+          >
           </button>
           <button className={`${styles.paginationNumber} ${styles.paginationActive}`}>1</button>
           <button className={styles.paginationNumber}>2</button>
-          <button className={styles.paginationBtn}>
-            <img 
-              src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748965283/arrow_gtemug.svg" 
-              alt="Siguiente" 
-              width="16" 
-              height="16"
-              style={{ transform: "rotate(180deg)" }}
-            />
+          <button 
+            className={`${styles.paginationBtn} ${styles.nextBtn}`}
+            aria-label="Siguiente"
+          >
           </button>
         </div>
       </section>
