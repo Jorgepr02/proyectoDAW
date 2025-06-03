@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,4 +18,7 @@ public class ProductFullOutputDTO {
     private Double price;
     private Integer stock;
     private String categoryName;
+    private List<FeatureProductSimpleOutputDTO> features;
+    private List<ReviewSimpleOutputDTO> reviews;
+    private List<String> images;
 }

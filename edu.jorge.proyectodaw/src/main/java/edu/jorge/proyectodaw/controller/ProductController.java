@@ -2,9 +2,7 @@ package edu.jorge.proyectodaw.controller;
 
 import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
 import edu.jorge.proyectodaw.controller.dto.input.ProductFeatureInputDTO;
-import edu.jorge.proyectodaw.controller.dto.output.ProductFullOutputDTO;
-import edu.jorge.proyectodaw.controller.dto.output.ProductListOutputDTO;
-import edu.jorge.proyectodaw.controller.dto.output.ProductSimpleOutputDTO;
+import edu.jorge.proyectodaw.controller.dto.output.*;
 import edu.jorge.proyectodaw.entity.Category;
 import edu.jorge.proyectodaw.entity.Feature;
 import edu.jorge.proyectodaw.entity.Product;
@@ -26,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -154,16 +153,35 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductListOutputDTO>> getAllProducts() {
+    public ResponseEntity<?> getAllProducts(@RequestParam(defaultValue = "simple") String outputType) {
         List<Product> products = productService.findAll();
-        List<ProductListOutputDTO> productFullOutputDTOS = new ArrayList<>();
-        for (Product product : products) {
-            productFullOutputDTOS.add(
-                    convertToListDTO(product)
-            );
-        }
-        return ResponseEntity.ok(productFullOutputDTOS);
+
+        return switch (outputType.toLowerCase()) {
+            case "full" -> {
+                List<ProductFullOutputDTO> fullOutput = new ArrayList<>();
+                for (Product product : products) {
+                    fullOutput.add(convertToFullDTO(product));
+                }
+                yield ResponseEntity.ok(fullOutput);
+            }
+            case "simple" -> {
+                List<ProductSimpleOutputDTO> simpleOutput = new ArrayList<>();
+                for (Product product : products) {
+                    simpleOutput.add(convertToSimpleDTO(product));
+                }
+                yield ResponseEntity.ok(simpleOutput);
+            }
+            case "list" -> {
+                List<ProductListOutputDTO> fullOutput = new ArrayList<>();
+                for (Product product : products) {
+                    fullOutput.add(convertToListDTO(product));
+                }
+                yield ResponseEntity.ok(fullOutput);
+            }
+            default -> ResponseEntity.badRequest().body("Invalid outputType. Use 'simple' or 'full'.");
+        };
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductFullOutputDTO> getProductById(@PathVariable Long id) {
@@ -241,11 +259,47 @@ public class ProductController {
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
         dto.setStock(product.getStock());
+
         if (product.getCategory() != null) {
             dto.setCategoryName(product.getCategory().getName());
         } else {
-            dto.setCategoryName("No Category");
+            dto.setCategoryName("No category");
         }
+
+        if (product.getProductFeatures() != null && !product.getProductFeatures().isEmpty()) {
+            dto.setFeatures(
+                product.getProductFeatures().stream()
+                    .map(feature -> new FeatureProductSimpleOutputDTO(
+                        feature.getId(),
+                        feature.getFeature().getName(),
+                        feature.getValue().toString()
+                    ))
+                    .collect(Collectors.toList())
+            );
+        } else {
+            dto.setFeatures(Collections.emptyList());
+        }
+
+        if (product.getReview() != null && !product.getReview().isEmpty()) {
+            dto.setReviews(
+                product.getReview().stream()
+                    .map(review -> new ReviewSimpleOutputDTO(
+                        review.getStars(),
+                        review.getComment(),
+                        review.getClient().getName()
+                    ))
+                    .collect(Collectors.toList())
+            );
+        } else {
+            dto.setReviews(Collections.emptyList());
+        }
+
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            dto.setImages(product.getImages());
+        } else {
+            dto.setImages(Collections.emptyList());
+        }
+
         return dto;
     }
 

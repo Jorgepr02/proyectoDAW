@@ -1,16 +1,9 @@
 package edu.jorge.proyectodaw.config;
 
-import edu.jorge.proyectodaw.entity.Client;
-import edu.jorge.proyectodaw.entity.Order;
-import edu.jorge.proyectodaw.entity.OrderDetails;
-import edu.jorge.proyectodaw.entity.Product;
+import edu.jorge.proyectodaw.entity.*;
 import edu.jorge.proyectodaw.enums.OrderStatus;
 import edu.jorge.proyectodaw.enums.PaymentMethod;
-import edu.jorge.proyectodaw.service.CategoryService;
-import edu.jorge.proyectodaw.service.ClientService;
-import edu.jorge.proyectodaw.service.OrderService;
-import edu.jorge.proyectodaw.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import edu.jorge.proyectodaw.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,14 +21,16 @@ public class DataInitializer {
             ClientService clientService,
             ProductService productService,
             CategoryService categoryService,
-            OrderService orderService) {
+            OrderService orderService,
+            FeatureService featureService) {
 
         return args -> {
             // Inicializar clientes
             initClients(clientService);
 
             // Inicializar productos
-            initProducts(productService, categoryService);
+//            initProducts(productService, categoryService);
+            initProductsRelation(productService, categoryService, clientService, featureService);
 
             // Inicializar pedidos
             initOrders(orderService, clientService, productService);
@@ -62,6 +57,63 @@ public class DataInitializer {
         productService.save(p1);
         productService.save(p2);
         productService.save(p3);
+    }
+
+    private void initProductsRelation(ProductService productService, CategoryService categoryService, ClientService clientService, FeatureService featureService) {
+        // Crear categorías
+        Category snowboardCategory = categoryService.findById(1L);
+        Category skiCategory = categoryService.findById(2L);
+        Category accessoryCategory = categoryService.findById(3L);
+
+        // Crear productos
+        Product snowboard = new Product("Tabla Snowboard", "Tabla profesional para snowboard", 199.99, 20, snowboardCategory);
+        Product skiBoots = new Product("Botas Ski", "Botas cómodas y resistentes para ski", 129.99, 50, skiCategory);
+        Product sunglasses = new Product("Gafas de Sol", "Gafas de sol para deportes extremos", 49.99, 100, accessoryCategory);
+
+        // Agregar características a los productos
+        ProductFeature feature11 = new ProductFeature(snowboard, featureService.findById(1L), 2);
+        ProductFeature feature12 = new ProductFeature(snowboard, featureService.findById(2L), 2);
+        ProductFeature feature13 = new ProductFeature(snowboard, featureService.findById(3L), 2);
+        ProductFeature feature14 = new ProductFeature(snowboard, featureService.findById(4L), 2);
+
+        ProductFeature feature21 = new ProductFeature(skiBoots, featureService.findById(1L), 3);
+        ProductFeature feature22 = new ProductFeature(skiBoots, featureService.findById(2L), 3);
+        ProductFeature feature23 = new ProductFeature(skiBoots, featureService.findById(3L), 3);
+        ProductFeature feature24 = new ProductFeature(skiBoots, featureService.findById(4L), 3);
+
+        ProductFeature feature31 = new ProductFeature(sunglasses, featureService.findById(1L), 5);
+        ProductFeature feature32 = new ProductFeature(sunglasses, featureService.findById(2L), 5);
+        ProductFeature feature33 = new ProductFeature(sunglasses, featureService.findById(3L), 5);
+        ProductFeature feature34 = new ProductFeature(sunglasses, featureService.findById(4L), 5);
+
+        snowboard.setProductFeatures(List.of(feature11,feature12, feature13, feature14));
+        skiBoots.setProductFeatures(List.of(feature21,feature22, feature23, feature24));
+        sunglasses.setProductFeatures(List.of(feature31,feature32, feature33, feature34));
+
+        // Agregar imágenes a los productos
+        List<String> defaultImages = List.of(
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904516/Celine_Pirris_pqisbu.png",
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/Vanilla_Disluv_l5iayv.png",
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903377/White_Fury_rw4ugu.png"
+        );
+
+        snowboard.setImages(defaultImages);
+        skiBoots.setImages(defaultImages);
+        sunglasses.setImages(defaultImages);
+
+        // Agregar reseñas a los productos
+        Review review1 = new Review(5.0,"Excelente tabla", snowboard, clientService.findById(1L));
+        Review review2 = new Review(4.0,"Muy cómodas", skiBoots, clientService.findById(2L));
+        Review review3 = new Review(5.0,"Protegen bien del sol", sunglasses, clientService.findById(2L));
+
+        snowboard.setReview(List.of(review1));
+        skiBoots.setReview(List.of(review2));
+        sunglasses.setReview(List.of(review3));
+
+        // Guardar productos
+        productService.save(snowboard);
+        productService.save(skiBoots);
+        productService.save(sunglasses);
     }
 
     private void initOrders(OrderService orderService, ClientService clientService, ProductService productService) {
