@@ -5,7 +5,7 @@ import SizeCalculator from '../components/SizeCalculator/SizeCalculator';
 import styles from './ProductDetail.module.css';
 
 const ProductDetail = () => {
-  const { id } = useParams(); // Leer el ID desde la URL
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +13,6 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [currentImage, setCurrentImage] = useState(0);
 
-  // Función para obtener un producto específico por ID
   const fetchProductById = (productId) => {
     setLoading(true);
     setError(null);
@@ -31,7 +30,6 @@ const ProductDetail = () => {
           id: data.id,
           name: data.name,
           price: data.price,
-          originalPrice: (data.price * 1.08).toFixed(2), // Precio original 8% mayor
           rating: 5,
           reviews: data.reviews ? data.reviews.length : 0,
           image: data.images && data.images.length > 0 ? data.images[0] : "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
@@ -43,7 +41,7 @@ const ProductDetail = () => {
           description: data.description || `La tabla ${data.name} es perfecta para riders que buscan calidad y rendimiento. Diseñada con los mejores materiales para ofrecer una experiencia única en la montaña.`,
           sizes: ['152', '152W', '154', '154W', '156', '156W'],
           characteristics: data.features ? data.features.map(feature => ({
-            name: feature.mame, // Nota: en tu JSON dice "mame" en lugar de "name"
+            name: feature.name,
             value: parseInt(feature.value)
           })) : [
             { name: "Polivalencia", value: 4 },
@@ -64,26 +62,22 @@ const ProductDetail = () => {
       });
   };
 
-  // Cargar el producto cuando el componente se monta o cambia el ID
   useEffect(() => {
     if (id) {
       fetchProductById(id);
     }
   }, [id]);
 
-  // Función para cambiar la imagen
   const handleImageChange = (index) => {
     setCurrentImage(index);
   };
 
-  // Calcular promedio de estrellas de las reseñas
   const calculateAverageRating = (reviews) => {
     if (!reviews || reviews.length === 0) return 5;
     const totalStars = reviews.reduce((sum, review) => sum + review.stars, 0);
     return (totalStars / reviews.length).toFixed(1);
   };
 
-  // Mostrar loading
   if (loading) {
     return (
       <div className={styles.container}>
@@ -94,7 +88,6 @@ const ProductDetail = () => {
     );
   }
 
-  // Mostrar error
   if (error || !product) {
     return (
       <div className={styles.container}>

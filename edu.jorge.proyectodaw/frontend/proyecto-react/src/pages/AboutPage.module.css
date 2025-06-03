@@ -1,0 +1,223 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+  padding-top: 97px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 32px 80px;
+}
+
+.title {
+  color: #111;
+  font-weight: 700;
+  font-size: 36px;
+  margin-bottom: 60px;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin-bottom: 80px;
+}
+
+.textContent {
+  flex: 1;
+  min-width: 300px;
+}
+
+.sectionTitle {
+  color: #111;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.text {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: 16px;
+}
+
+.text:last-child {
+  margin-bottom: 0;
+}
+
+.imageContainer {
+  flex: 1;
+  min-width: 300px;
+}
+
+.sideImage {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.video {
+  width: 100%;
+  height: 650px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.valuesSection {
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+.valuesSectionTitle {
+  color: #111;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 60px;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.valueCard {
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.valueIcon {
+  width: 80px;
+  height: 80px;
+  background-color: #2d1282;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 32px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.valueTitle {
+  color: #111;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.valueText {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.charactersSection {
+  background-color: #f8fafc;
+  border-radius: 20px;
+  padding: 60px 40px;
+  margin-top: 40px;
+}
+
+.charactersContainer {
+  text-align: center;
+}
+
+.charactersImage {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+/* Media Queries */
+@media (max-width: 991px) {
+  .container {
+    padding-top: 80px;
+  }
+
+  .content {
+    padding: 32px 24px 60px;
+  }
+
+  .section {
+    flex-direction: column;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+
+  .textContent,
+  .imageContainer {
+    min-width: unset;
+  }
+
+  .valuesGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .valuesSectionTitle {
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+
+  .title {
+    font-size: 28px;
+    margin-bottom: 40px;
+  }
+
+  .video {
+    height: 350px;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-top: 70px;
+  }
+
+  .content {
+    padding: 24px 16px 40px;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+  }
+
+  .sideImage {
+    height: 250px;
+  }
+
+  .video {
+    height: 280px;
+  }
+
+  .charactersSection {
+    padding: 32px 16px;
+  }
+
+  .charactersImage {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 32px;
+  }
+
+  .valuesGrid {
+    gap: 24px;
+  }
+
+  .valueCard {
+    padding: 24px 16px;
+  }
+}
