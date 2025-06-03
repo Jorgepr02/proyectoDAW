@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ProductCard.module.css";
 
-export const ProductCard = ({ image, title, category, variant, price }) => {
+export const ProductCard = ({ id, image, title, category, price }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -11,12 +11,12 @@ export const ProductCard = ({ image, title, category, variant, price }) => {
   };
 
   return (
-    <div className={styles.card} onClick={handleClick}>
+    <div id={id} className={styles.card} onClick={handleClick}>
       <img src={image} alt={title} className={styles.image} />
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
         <p className={styles.category}>{category}</p>
-        <p className={styles.variant}>{variant}</p>
+        <p>Diseños 2</p>
         <div className={styles.price}>
           <span className={styles.currency}>€</span>
           <span className={styles.amount}>{price}</span>
