@@ -1,25 +1,16 @@
 package edu.jorge.proyectodaw.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import edu.jorge.proyectodaw.controller.dto.input.UserInputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.UserSimpleOutputDTO;
 import edu.jorge.proyectodaw.entity.User;
-import edu.jorge.proyectodaw.enums.Role;
 import edu.jorge.proyectodaw.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -70,7 +61,7 @@ public class UserController {
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        user.setRole(Role.valueOf(userDTO.getRole().toUpperCase()));
+//        user.setRole(ERole.valueOf(userDTO.getRole().toUpperCase()));
         return user;
     }
 
@@ -78,12 +69,14 @@ public class UserController {
         UserSimpleOutputDTO dto = new UserSimpleOutputDTO();
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole().name());
+        // TODO corregir OUTPUTS DTO DEBIDO A CAMBIO EN LA ENTIDAD USER POR SECURITY
+//        dto.setRole(user.getRole().name());
         
-        if (user.getClient() != null) {
-            dto.setClientName(user.getClient().getName());
-        }
+//        if (user.getClient() != null) {
+//            dto.setClientName(user.getClient().getName());
+//        }
         
         return dto;
     }
+
 }
