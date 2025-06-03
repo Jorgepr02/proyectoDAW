@@ -142,35 +142,54 @@ const allProductsStatic = [
   }
 ];
 
-let allProducts;
-
-fetch('http://localhost:8080/api/products?outputType=list')
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status} ${response.statusText}`);
-  }
-  return response.json();
-})
-.then(data => {
-  console.log(data)
-  allProducts = data.map(product => ({
-    id: product.id,
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
-    title: product.name,
-    category: product.categoryName,
-    price: product.price,
-  }));
-})
-.catch(err => {
-  console.error('Error fetching products:', err);
-});
-
 export const AllProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("default");
+  const [allProducts, setAllProducts] = useState([]); // Nuevo estado para productos
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
   const productsPerPage = 16; // 4 filas x 4 productos por fila
+
+  // Fetch productos del backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:8080/api/products?outputType=list');
+        
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('Productos obtenidos:', data);
+        
+        const mappedProducts = data.map(product => ({
+          id: product.id,
+          image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
+          title: product.name,
+          category: product.categoryName,
+          price: product.price,
+          type: product.categoryName === "Snowboard" ? "snowboard" : 
+                product.categoryName === "Esquí" ? "ski" : "accesorios"
+        }));
+        
+        setAllProducts(mappedProducts);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError(err.message);
+        // Usar productos estáticos como fallback
+        setAllProducts(allProductsStatic);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Leer el filtro, página y ordenamiento de la URL al cargar el componente
   useEffect(() => {
@@ -229,28 +248,51 @@ export const AllProducts = () => {
     setSearchParams(newParams);
   };
 
+  // Función auxiliar para convertir precio a número
+  const parsePrice = (price) => {
+    if (typeof price === 'number') {
+      return price;
+    }
+    if (typeof price === 'string') {
+      return parseFloat(price.replace(',', '.'));
+    }
+    return 0;
+  };
+
   // Función para ordenar productos
   const sortProducts = (products) => {
     const sortedProducts = [...products];
     
     switch (sortBy) {
       case "price-low":
-        return sortedProducts.sort((a, b) => parseFloat(a.price.replace(',', '.')) - parseFloat(b.price.replace(',', '.')));
+        return sortedProducts.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
       
       case "price-high":
-        return sortedProducts.sort((a, b) => parseFloat(b.price.replace(',', '.')) - parseFloat(a.price.replace(',', '.')));
+        return sortedProducts.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
       
       case "name":
         return sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
       
       case "newest":
-        // Asumiendo que los productos más nuevos están al principio del array
         return sortedProducts.reverse();
       
       default:
         return sortedProducts;
     }
   };
+
+  // Mostrar loading
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <section className={styles.section}>
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <h2>Cargando productos...</h2>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   // Filtrar productos
   const filteredProducts = allProducts.filter(product => {
@@ -346,6 +388,18 @@ export const AllProducts = () => {
     <div className={styles.container}>
       <section className={styles.section}>
         <h1 className={styles.title}>Productos</h1>
+
+        {error && (
+          <div style={{ 
+            backgroundColor: '#fee', 
+            padding: '10px', 
+            borderRadius: '5px', 
+            marginBottom: '20px',
+            textAlign: 'center'
+          }}>
+            <p>Error al cargar productos del servidor. Mostrando productos estáticos.</p>
+          </div>
+        )}
 
         <div className={styles.filtersContainer}>
           <div className={styles.filters}>

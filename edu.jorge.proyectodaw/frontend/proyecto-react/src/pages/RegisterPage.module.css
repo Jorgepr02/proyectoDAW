@@ -1,0 +1,289 @@
+.container {
+  min-height: 80vh;
+  background: linear-gradient(to bottom, #2d1282, #ffffff);
+  padding-top: 20px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 40px 24px 20px;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 1076px;
+  max-height: 1076px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 0px 4px 15px rgba(45, 18, 130, 0.49);
+  display: flex;
+  overflow: hidden;
+}
+
+.formSection {
+  flex: 1;
+  padding: 50px;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logoWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.logo {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+}
+
+.headerText {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.title {
+  color: #111;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 32px;
+  margin-bottom: 8px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  margin-top: 4px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.inputWrapper {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  background-color: rgba(152, 152, 152, 0.15);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.inputIcon,
+.togglePassword {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.togglePassword {
+  width: 25px;
+  height: 25px;
+  margin-left: 8px;
+  margin-right: 0;
+  cursor: pointer;
+}
+
+.input {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  color: #111;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: #989898;
+  font-weight: 400;
+}
+
+.registerButton {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  background-color: #2d1282;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.registerButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.socialLogin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.socialButton {
+  width: 135px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: rgba(152, 152, 152, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+  border: none;
+}
+
+.socialIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  opacity: 0.66;
+}
+
+.loginText {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.loginLink {
+  color: #2d1282;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 5px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.imageSection {
+  flex: 1;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 12px 12px 0;
+}
+
+.errorMessage,
+.successMessage {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.errorMessage {
+  background-color: #fee;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.successMessage {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+/* Media Queries */
+@media (max-width: 991px) {
+  .formContainer {
+    flex-direction: column;
+  }
+  
+  .imageSection {
+    display: none;
+  }
+  
+  .title {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainContent {
+    padding: 20px 16px;
+  }
+  
+  .formSection {
+    padding: 24px;
+  }
+  
+  .logoWrapper {
+    margin-bottom: 24px;
+  }
+  
+  .logo {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .formFields {
+    gap: 20px;
+  }
+  
+  .socialLogin {
+    gap: 16px;
+  }
+  
+  .socialButton {
+    width: 120px;
+    min-width: 100px;
+  }
+}
