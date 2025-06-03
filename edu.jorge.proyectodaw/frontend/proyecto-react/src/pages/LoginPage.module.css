@@ -1,11 +1,11 @@
-.container {
+.loginPage {
   min-height: 80vh;
   background: linear-gradient(to bottom, #2d1282, #ffffff);
   padding-top: 20px;
   font-family: "Poppins", system-ui, sans-serif;
 }
 
-.mainContent {
+.main {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,18 +16,22 @@
 .formContainer {
   width: 100%;
   max-width: 1076px;
-  max-height: 1076px;
+  max-height: 730px;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0px 0px 4px 15px rgba(45, 18, 130, 0.49);
-  display: flex;
   overflow: hidden;
+}
+
+.formWrapper {
+  display: flex;
+  height: 100%;
 }
 
 .formSection {
   flex: 1;
   padding: 50px;
-  padding-top: 0;
+  padding-top: 0px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,13 +41,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
 }
 
 .logo {
   width: 130px;
   height: 130px;
   object-fit: contain;
+  margin-bottom: 16px;
 }
 
 .headerText {
@@ -57,7 +62,6 @@
   font-weight: 700;
   line-height: 32px;
   margin-bottom: 8px;
-  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .subtitle {
@@ -66,13 +70,25 @@
   font-weight: 500;
   line-height: 21px;
   margin-top: 4px;
-  font-family: "Poppins", system-ui, sans-serif;
 }
 
-.formFields {
+.errorMessage {
+  background-color: #fee;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid #fecaca;
+}
+
+.inputsContainer {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  margin-bottom: 32px;
 }
 
 .inputGroup {
@@ -81,11 +97,10 @@
   gap: 8px;
 }
 
-.inputLabel {
+.label {
   color: #111;
   font-size: 15px;
   font-weight: 700;
-  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .inputWrapper {
@@ -98,7 +113,7 @@
   padding: 0 12px;
 }
 
-.togglePassword {
+.passwordToggle {
   width: 25px;
   height: 25px;
   margin-left: 8px;
@@ -113,19 +128,13 @@
   color: #111;
   font-size: 14px;
   font-weight: 500;
-  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .input:focus {
   outline: none;
 }
 
-.input::placeholder {
-  color: #989898;
-  font-weight: 400;
-}
-
-.registerButton {
+.loginButton {
   width: 100%;
   height: 40px;
   border-radius: 8px;
@@ -133,18 +142,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
+  margin-bottom: 24px;
+  gap: 8px;
   color: #ffffff;
   font-size: 15px;
   font-weight: 700;
-  font-family: "Poppins", system-ui, sans-serif;
 }
 
-.registerButton:disabled {
+.loginButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.buttonText {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.buttonIcon {
+  width: 15px;
+  height: 15px;
 }
 
 .socialLogin {
@@ -152,6 +172,7 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
@@ -163,9 +184,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
   cursor: pointer;
   padding: 8px;
-  border: none;
 }
 
 .socialIcon {
@@ -175,63 +196,38 @@
   opacity: 0.66;
 }
 
-.loginText {
+.registerPrompt {
   text-align: center;
+  color: #111;
   font-size: 15px;
   font-weight: 500;
-  color: #111;
-  font-family: "Poppins", system-ui, sans-serif;
 }
 
-.loginLink {
+.registerLink {
   color: #2d1282;
   font-size: 15px;
   font-weight: 700;
-  cursor: pointer;
-  margin-left: 5px;
   background: none;
   border: none;
   padding: 0;
-  font-family: "Poppins", system-ui, sans-serif;
+  cursor: pointer;
+  margin-left: 5px;
 }
 
 .imageSection {
   flex: 1;
 }
 
-.heroImage {
+.sideImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 0 12px 12px 0;
 }
 
-.errorMessage,
-.successMessage {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: "Poppins", system-ui, sans-serif;
-}
-
-.errorMessage {
-  background-color: #fee;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-}
-
-.successMessage {
-  background-color: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
-}
-
 /* Media Queries */
 @media (max-width: 991px) {
-  .formContainer {
+  .formWrapper {
     flex-direction: column;
   }
   
@@ -245,16 +241,12 @@
 }
 
 @media (max-width: 640px) {
-  .mainContent {
+  .main {
     padding: 20px 16px;
   }
   
   .formSection {
     padding: 24px;
-  }
-  
-  .logoWrapper {
-    margin-bottom: 24px;
   }
   
   .logo {
@@ -266,8 +258,8 @@
     font-size: 24px;
   }
   
-  .formFields {
-    gap: 20px;
+  .logoWrapper {
+    margin-bottom: 24px;
   }
   
   .socialLogin {
