@@ -146,12 +146,14 @@ export const AllProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 16;
+  const [sortBy, setSortBy] = useState("default");
+  const productsPerPage = 16; // 4 filas x 4 productos por fila
 
-  // Leer el filtro y página de la URL al cargar el componente
+  // Leer el filtro, página y ordenamiento de la URL al cargar el componente
   useEffect(() => {
     const filterParam = searchParams.get('filter');
     const pageParam = searchParams.get('page');
+    const sortParam = searchParams.get('sort');
     
     if (filterParam && ["Snowboard", "Esquí", "Accesorios"].includes(filterParam)) {
       setActiveFilter(filterParam);
@@ -162,6 +164,10 @@ export const AllProducts = () => {
       if (page > 0) {
         setCurrentPage(page);
       }
+    }
+
+    if (sortParam && ["price-low", "price-high", "name", "newest"].includes(sortParam)) {
+      setSortBy(sortParam);
     }
   }, [searchParams]);
 
@@ -174,9 +180,53 @@ export const AllProducts = () => {
     if (filter !== "Todos") {
       newParams.filter = filter;
     }
+    if (sortBy !== "default") {
+      newParams.sort = sortBy;
+    }
     newParams.page = "1";
     
     setSearchParams(newParams);
+  };
+
+  // Manejar cambio de ordenamiento
+  const handleSortChange = (event) => {
+    const newSortBy = event.target.value;
+    setSortBy(newSortBy);
+    setCurrentPage(1); // Resetear a la primera página al cambiar ordenamiento
+    
+    const newParams = {};
+    if (activeFilter !== "Todos") {
+      newParams.filter = activeFilter;
+    }
+    if (newSortBy !== "default") {
+      newParams.sort = newSortBy;
+    }
+    newParams.page = "1";
+    
+    setSearchParams(newParams);
+  };
+
+  // Función para ordenar productos
+  const sortProducts = (products) => {
+    const sortedProducts = [...products];
+    
+    switch (sortBy) {
+      case "price-low":
+        return sortedProducts.sort((a, b) => parseFloat(a.price.replace(',', '.')) - parseFloat(b.price.replace(',', '.')));
+      
+      case "price-high":
+        return sortedProducts.sort((a, b) => parseFloat(b.price.replace(',', '.')) - parseFloat(a.price.replace(',', '.')));
+      
+      case "name":
+        return sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+      
+      case "newest":
+        // Asumiendo que los productos más nuevos están al principio del array
+        return sortedProducts.reverse();
+      
+      default:
+        return sortedProducts;
+    }
   };
 
   // Filtrar productos
@@ -188,11 +238,14 @@ export const AllProducts = () => {
     return true;
   });
 
+  // Ordenar productos filtrados
+  const sortedProducts = sortProducts(filteredProducts);
+
   // Calcular paginación
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
-  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+  const currentProducts = sortedProducts.slice(startIndex, endIndex);
 
   // Manejar cambio de página
   const handlePageChange = (page) => {
@@ -202,6 +255,9 @@ export const AllProducts = () => {
       const newParams = {};
       if (activeFilter !== "Todos") {
         newParams.filter = activeFilter;
+      }
+      if (sortBy !== "default") {
+        newParams.sort = sortBy;
       }
       newParams.page = page.toString();
       
@@ -283,7 +339,11 @@ export const AllProducts = () => {
 
           <div className={styles.sortContainer}>
             <span className={styles.sortLabel}>Ordenar por</span>
-            <select className={styles.sortSelect}>
+            <select 
+              className={styles.sortSelect}
+              value={sortBy}
+              onChange={handleSortChange}
+            >
               <option value="default">Seleccionar</option>
               <option value="price-low">Precio: Menor a Mayor</option>
               <option value="price-high">Precio: Mayor a Menor</option>
@@ -295,7 +355,7 @@ export const AllProducts = () => {
 
         <div className={styles.grid}>
           {currentProducts.map((product, index) => (
-            <ProductCard key={`${currentPage}-${index}`} {...product} />
+            <ProductCard key={`${currentPage}-${index}-${sortBy}`} {...product} />
           ))}
         </div>
 
