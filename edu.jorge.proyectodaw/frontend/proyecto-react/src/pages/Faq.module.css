@@ -1,0 +1,146 @@
+.container {
+  max-width: 1200px;
+  margin: 97px auto 0;
+  padding: 40px 20px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #111;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background-color: #f3f4f6;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab.activeTab {
+  background-color: #2d1282;
+  color: #fff;
+}
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.question {
+  width: 100%;
+  padding: 24px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #111;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.question:hover {
+  background-color: #f8fafc;
+}
+
+.question.active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.question.active .arrow {
+  transform: rotate(90deg);
+}
+
+.answer {
+  padding: 0 24px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  color: #64748b;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.answer.active {
+  max-height: 2000px;
+  padding: 24px;
+}
+
+.answerContent {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.answer.active .answerContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.answer p {
+  margin-bottom: 16px;
+}
+
+.answer p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Media Queries */
+@media (max-width: 640px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .question {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .answer {
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .answer.active {
+    padding: 16px;
+  }
+}

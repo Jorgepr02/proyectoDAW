@@ -33,12 +33,19 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: "Poppins", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--white);
   min-width: 320px;
+}
+
+#root {
   min-height: 100vh;
 }
 
@@ -52,4 +59,17 @@ button {
 img {
   max-width: 100%;
   height: auto;
+}
+
+/* Layout para mantener footer al final */
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }

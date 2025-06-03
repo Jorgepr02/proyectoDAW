@@ -27,6 +27,8 @@
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-md);
   transition: var(--transition-default);
+  border: none;
+  cursor: pointer;
 }
 
 .filterActive,
@@ -42,7 +44,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* 4 productos en fila */
   gap: var(--spacing-lg);
 }
 
@@ -53,6 +55,11 @@
 
   .title {
     font-size: 28px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 productos en fila para tablet */
+    gap: var(--spacing-md);
   }
 }
 
@@ -69,5 +76,10 @@
   .filters {
     gap: 12px;
     margin-bottom: var(--spacing-md);
+  }
+
+  .grid {
+    grid-template-columns: 1fr; /* 1 producto en fila para móvil */
+    gap: var(--spacing-md);
   }
 }
