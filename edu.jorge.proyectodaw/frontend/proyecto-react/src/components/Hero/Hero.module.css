@@ -1,0 +1,146 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 700px;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--primary), #111111);
+  opacity: 0.5;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 var(--spacing-lg);
+}
+
+.section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  color: var(--white);
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: var(--spacing-xl);
+}
+
+.button {
+  width: 176px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition: var(--transition-default);
+}
+
+.buttonPrimary {
+  background-color: var(--white);
+  color: var(--primary);
+}
+
+.buttonSecondary {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.buttonPrimary:hover,
+.buttonSecondary:hover {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.buttonSecondary:hover {
+  background-color: var(--white);
+  color: var(--primary);
+}
+
+.imageWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.centerImage {
+  width: 387px;
+  height: 387px;
+  transform: rotate(0.219deg);
+  mix-blend-mode: luminosity;
+  transition: transform 0.3s ease;
+}
+
+.imageLeft {
+  transform: translateX(-20px) rotate(-5deg);
+}
+
+.imageRight {
+  transform: translateX(20px) rotate(5deg);
+}
+
+@media (max-width: 991px) {
+  .hero {
+    height: 600px;
+  }
+
+  .title {
+    font-size: 36px;
+  }
+
+  .imageWrapper {
+    display: none;
+  }
+
+  .section {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .section:last-child {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    height: 500px;
+  }
+
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .title {
+    font-size: 28px;
+    margin-bottom: var(--spacing-md);
+  }
+}
