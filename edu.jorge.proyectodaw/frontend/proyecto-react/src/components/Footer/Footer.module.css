@@ -1,0 +1,139 @@
+.footer {
+  width: 100%;
+  background-color: var(--primary);
+  padding: var(--spacing-xxl) 0;
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1271px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+.logoSection {
+  min-width: 240px;
+  max-width: 280px;
+}
+
+.logo {
+  width: 124px;
+  height: auto;
+  margin-bottom: var(--spacing-sm);
+  object-fit: contain;
+}
+
+.description {
+  color: var(--text-tertiary);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.linksSection,
+.contactSection,
+.socialSection {
+  min-width: 160px;
+}
+
+.sectionTitle {
+  color: var(--white);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.linksList,
+.contactList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.link,
+.contactItem {
+  color: var(--text-tertiary);
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 4px 0;
+  transition: var(--transition-default);
+  text-align: left;
+  width: 100%;
+}
+
+.link:hover,
+.contactItem:hover {
+  color: var(--white);
+}
+
+.socialIcons {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.socialButton {
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-default);
+}
+
+.socialButton:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.socialIconX {
+  width: 33px;
+  height: 33px;
+}
+
+.socialIcon {
+  width: 25px;
+  height: 25px;
+}
+
+@media (max-width: 991px) {
+  .content {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .logo {
+    width: 110px; 
+  }
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .logo {
+    width: 100px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: var(--spacing-lg) 0;
+  }
+
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+}
