@@ -3,6 +3,7 @@
   background-color: var(--primary);
   padding: var(--spacing-xxl) 0;
   margin-top: auto;
+  flex-shrink: 0;
 }
 
 .container {
