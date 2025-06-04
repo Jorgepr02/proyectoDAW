@@ -71,10 +71,13 @@ public class WishListController {
     }
 
     @PatchMapping
-    public ResponseEntity<List<ProductListOutputDTO>> addProductToWishList(@RequestBody WishListPatchInputDTO wishListPatchInputDTO) {
+    public ResponseEntity<List<ProductListOutputDTO>> addProductToWishList(
+            @RequestParam String productAction,
+            @RequestBody WishListPatchInputDTO wishListPatchInputDTO
+    ) {
         WishList wishList = wishListService.findByUserId(wishListPatchInputDTO.getUserId());
         if (wishList.getId() == null) {
-            wishListService.save(
+            wishList = wishListService.save(
                     new WishList(
                            userService.findById(
                                    wishListPatchInputDTO.getUserId()
@@ -83,11 +86,22 @@ public class WishListController {
             );
         }
 
-        wishList.addProduct(
-                productService.findById(
-                        wishListPatchInputDTO.getProductId()
-                )
-        );
+        if (productAction.equals("add")) {
+            wishList.addProduct(
+                    productService.findById(
+                            wishListPatchInputDTO.getProductId()
+                    )
+            );
+        } else if (productAction.equals("remove")) {
+            wishList.removeProduct(
+                    productService.findById(
+                            wishListPatchInputDTO.getProductId()
+                    )
+            );
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
 
         wishListService.save(wishList);
 
