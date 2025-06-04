@@ -1,0 +1,135 @@
+.cartItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px 48px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.itemMain {
+  display: flex;
+  gap: 64px;
+  flex: 1;
+}
+
+.itemImage {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.itemActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-left: 40px;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.itemName {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.itemCategory {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.quantityControls {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.quantityControls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: white;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 16px;
+}
+
+.quantityControls button:hover {
+  background-color: #f8fafc;
+}
+
+.quantityControls span {
+  min-width: 40px;
+  text-align: center;
+  padding: 0 8px;
+  font-size: 14px;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.price {
+  font-weight: 600;
+  font-size: 18px;
+  color: #2d1282;
+}
+
+.originalPrice {
+  color: #64748b;
+  text-decoration: line-through;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .cartItem {
+    padding: 24px 32px;
+    max-width: 100%;
+  }
+
+  .itemMain {
+    gap: 32px;
+  }
+
+  .itemImage {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cartItem {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .itemActions {
+    flex-direction: row;
+    width: 100%;
+    padding-left: 0;
+  }
+}
