@@ -12,6 +12,70 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [currentImage, setCurrentImage] = useState(0);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  // Obtener usuario del localStorage
+  const getUser = () => {
+    const userString = localStorage.getItem('user');
+    return userString ? JSON.parse(userString) : null;
+  };
+
+  // Verificar si el producto está en la wishlist
+  const checkWishlistStatus = async (productId) => {
+    const user = getUser();
+    if (!user) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/wishlists/exists?userId=${user.id}&productId=${productId}`
+      );
+      const isInList = await response.json();
+      setIsInWishlist(isInList);
+    } catch (error) {
+      console.error('Error checking wishlist status:', error);
+    }
+  };
+
+  // Manejar toggle de wishlist
+  const handleWishlistToggle = async () => {
+    const user = getUser();
+    if (!user) {
+      // Redirigir al login si no está autenticado
+      alert('Debes iniciar sesión para agregar productos a tu lista de deseos');
+      return;
+    }
+
+    setWishlistLoading(true);
+    
+    try {
+      const action = isInWishlist ? 'remove' : 'add';
+      const response = await fetch(
+        `http://localhost:8080/api/wishlists?productAction=${action}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            productId: parseInt(id)
+          })
+        }
+      );
+
+      if (response.ok) {
+        setIsInWishlist(!isInWishlist);
+      } else {
+        throw new Error('Error al actualizar la lista de deseos');
+      }
+    } catch (error) {
+      console.error('Error toggling wishlist:', error);
+      alert('Error al actualizar la lista de deseos. Inténtalo de nuevo.');
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
   const fetchProductById = (productId) => {
     setLoading(true);
@@ -54,6 +118,9 @@ const ProductDetail = () => {
         };
         setProduct(mappedProduct);
         setLoading(false);
+        
+        // Verificar estado en wishlist después de cargar el producto
+        checkWishlistStatus(data.id);
       })
       .catch(err => {
         console.error('Error fetching product:', err);
@@ -207,7 +274,31 @@ const ProductDetail = () => {
           <div className={styles.breadcrumbs}>
             Inicio / Productos / {product.category} / {product.name}
           </div>
-          <h1 className={styles.productTitle}>{product.name}</h1>
+          
+          <div className={styles.productHeader}>
+            <h1 className={styles.productTitle}>{product.name}</h1>
+            <button 
+              className={`${styles.wishlistButton} ${isInWishlist ? styles.wishlistActive : ''}`}
+              onClick={handleWishlistToggle}
+              disabled={wishlistLoading}
+              title={isInWishlist ? 'Quitar de lista de deseos' : 'Agregar a lista de deseos'}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill={isInWishlist ? "#ff4757" : "none"}
+                stroke={isInWishlist ? "#ff4757" : "currentColor"}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M3 5v14l9-7 9 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+              </svg>
+              {wishlistLoading && <span className={styles.loadingSpinner}></span>}
+            </button>
+          </div>
+
           <div className={styles.priceSection}>
             <span className={styles.price}>{product.price}€</span>
             <span className={styles.originalPrice}>{product.originalPrice}€</span>
