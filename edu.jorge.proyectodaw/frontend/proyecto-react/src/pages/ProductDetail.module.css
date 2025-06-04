@@ -297,6 +297,58 @@
   gap: 24px;
 }
 
+.productHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.wishlistButton {
+  background: none;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.wishlistButton:hover {
+  border-color: #ff4757;
+  background-color: rgba(255, 71, 87, 0.1);
+}
+
+.wishlistButton.wishlistActive {
+  border-color: #ff4757;
+  background-color: rgba(255, 71, 87, 0.1);
+}
+
+.wishlistButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loadingSpinner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #ff4757;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 991px) {
   .productGrid {
     grid-template-columns: 1fr;
