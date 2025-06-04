@@ -1,0 +1,41 @@
+.container {
+  background-color: #ffffff;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  min-height: 100vh;
+}
+
+.content {
+  padding: 0 56px;
+  margin-top: 35px;
+  width: 100%;}
+
+
+@media (max-width: 991px) {
+  .container {
+    padding-top: 140px;
+  }
+
+  .content {
+    padding: 0 20px;
+  }
+
+  .title,
+  .subtitle {
+    margin-left: 9px;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-top: 120px;
+  }
+  
+  .title {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+}

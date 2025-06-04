@@ -1,0 +1,224 @@
+.card {
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  margin-top: 18px;
+  padding: 18px 24px;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 23px;
+  font-size: 14px;
+}
+
+.orderDate {
+  color: #64748b;
+  font-weight: 400;
+  margin: auto 0;
+  flex-grow: 1;
+}
+
+.status {
+  border-radius: 999px;
+  padding: 6px 12px; /* Increased padding for better visibility */
+  font-weight: 600; /* Made font bolder */
+  white-space: nowrap;
+  text-align: center;
+  font-size: 12px; /* Ensure readable font size */
+  text-transform: uppercase; /* Make status text stand out */
+  letter-spacing: 0.5px; /* Better letter spacing */
+}
+
+.statusDelivered {
+  background-color: rgba(34, 197, 94, 0.1); /* More vibrant green background */
+  color: #16a34a; /* Darker green text */
+  border: 1px solid rgba(34, 197, 94, 0.2); /* Add border for definition */
+}
+
+.statusShipped {
+  background-color: rgba(59, 130, 246, 0.1); /* More vibrant blue background */
+  color: #2563eb; /* Darker blue text */
+  border: 1px solid rgba(59, 130, 246, 0.2); /* Add border for definition */
+}
+
+.statusPending {
+  background-color: rgba(245, 158, 11, 0.1); /* More vibrant yellow/orange background */
+  color: #d97706; /* Orange text */
+  border: 1px solid rgba(245, 158, 11, 0.2); /* Add border for definition */
+}
+
+.statusCancelled {
+  background-color: rgba(239, 68, 68, 0.1); /* More vibrant red background */
+  color: #dc2626; /* Dark red text */
+  border: 1px solid rgba(239, 68, 68, 0.2); /* Add border for definition */
+}
+
+.cancelButton {
+  border-radius: 8px;
+  background-color: rgba(220, 38, 38, 0.1); /* Lighter background */
+  border: 1px solid #dc2626;
+  padding: 6px 18px; /* Increased padding */
+  color: #dc2626;
+  font-weight: 600; /* Made font bolder */
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease; /* Add transition */
+}
+
+.cancelButton:hover {
+  background-color: rgba(220, 38, 38, 0.2);
+}
+
+.products {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.productItem {
+  border-radius: 8px;
+  background-color: #f8fafc;
+  display: inline-flex;
+  padding: 6px;
+  align-items: center;
+  gap: 9px;
+  width: fit-content;
+  min-width: 300px;
+}
+
+.productImage {
+  width: 63px;
+  aspect-ratio: 1.05;
+  object-fit: contain;
+}
+
+.productInfo {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 16px;
+}
+
+.productHeader {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.productName {
+  color: #111111;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.productModel {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.productDetails {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.rateButton {
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 9px 32px;
+  font-size: 14px;
+  color: #111111;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.orderTotal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  margin-left: auto;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.totalAmount {
+  color: #111111;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.productCount {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+@media (max-width: 991px) {
+  .card {
+    padding: 18px 20px;
+  }
+
+  .status,
+  .cancelButton {
+    white-space: initial;
+  }
+
+  .rateButton {
+    padding: 9px 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .orderDate {
+    width: 100%;
+    margin: 0 0 8px 0;
+  }
+  
+  .status {
+    margin-right: auto;
+  }
+  
+  .cancelButton {
+    margin-left: 12px;
+  }
+
+  .productItem {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .productInfo {
+    margin-right: 0;
+    flex: 1;
+  }
+
+  .rateButton {
+    margin-left: auto;
+    margin-top: 8px;
+  }
+
+  .orderTotal {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
