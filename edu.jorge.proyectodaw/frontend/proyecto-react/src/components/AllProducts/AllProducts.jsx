@@ -560,14 +560,20 @@ export const AllProducts = () => {
                     onChange={(e) => handlePriceRangeChange(activeFilters.priceRange.min, Number(e.target.value))}
                   />
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="1000"
-                  value={activeFilters.priceRange.max}
-                  onChange={(e) => handlePriceRangeChange(activeFilters.priceRange.min, Number(e.target.value))}
-                  className={styles.priceSlider}
-                />
+                <div className={styles.priceSliderContainer}>
+                  <div 
+                    className={styles.priceSliderFill}
+                    style={{ width: `${(activeFilters.priceRange.max / 1000) * 100}%` }}
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    value={activeFilters.priceRange.max}
+                    onChange={(e) => handlePriceRangeChange(activeFilters.priceRange.min, Number(e.target.value))}
+                    className={styles.priceSlider}
+                  />
+                </div>
               </div>
             </div>
 
@@ -590,15 +596,15 @@ export const AllProducts = () => {
                         className={styles.barFill}
                         style={{ width: `${(activeFilters.characteristics[key] / 5) * 100}%` }}
                       />
+                      <input
+                        type="range"
+                        min="0"
+                        max="5"
+                        value={activeFilters.characteristics[key]}
+                        onChange={(e) => handleCharacteristicChange(key, Number(e.target.value))}
+                        className={styles.characteristicSlider}
+                      />
                     </div>
-                    <input
-                      type="range"
-                      min="0"
-                      max="5"
-                      value={activeFilters.characteristics[key]}
-                      onChange={(e) => handleCharacteristicChange(key, Number(e.target.value))}
-                      className={styles.characteristicSlider}
-                    />
                   </div>
                 ))}
               </div>
