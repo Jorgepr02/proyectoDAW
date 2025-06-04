@@ -7,4 +7,6 @@ import edu.jorge.proyectodaw.entity.Order;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
+
+//    List<Order> findByUserId(Long userId); // TODO
 }
