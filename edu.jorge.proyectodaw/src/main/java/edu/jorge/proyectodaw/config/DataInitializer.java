@@ -3,6 +3,7 @@ package edu.jorge.proyectodaw.config;
 import edu.jorge.proyectodaw.entity.*;
 import edu.jorge.proyectodaw.enums.OrderStatus;
 import edu.jorge.proyectodaw.enums.PaymentMethod;
+import edu.jorge.proyectodaw.repositories.RoleRepo;
 import edu.jorge.proyectodaw.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Configuration
 public class DataInitializer {
@@ -22,7 +24,10 @@ public class DataInitializer {
             ProductService productService,
             CategoryService categoryService,
             OrderService orderService,
-            FeatureService featureService) {
+            FeatureService featureService,
+            RoleRepo roleRepo,
+            UserService userService
+    ) {
 
         return args -> {
             // Inicializar clientes
@@ -34,6 +39,9 @@ public class DataInitializer {
 
             // Inicializar pedidos
             initOrders(orderService, clientService, productService);
+
+            // Inicializar usuarios
+            initUsers(userService, roleRepo);
         };
     }
 
@@ -131,5 +139,11 @@ public class DataInitializer {
 
         // Guardar el pedido con sus detalles utilizando el servicio
         orderService.createOrderWithDetails(order, orderDetailsList);
+    }
+
+    private void initUsers(UserService userService, RoleRepo roleRepo) {
+        User admin = new User("admin", "admin@gmail.com","adminadmin");
+        admin.setRoles(Set.of(roleRepo.findById(1L).orElseThrow(() -> new RuntimeException("Role not found"))));
+        userService.save(admin);
     }
 }
