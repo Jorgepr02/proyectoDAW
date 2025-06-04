@@ -150,6 +150,17 @@ export const AllProducts = () => {
   const [allProducts, setAllProducts] = useState([]); // Nuevo estado para productos
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado de error
+  const [activeFilters, setActiveFilters] = useState({
+    categories: [],
+    priceRange: { min: 0, max: 1000 },
+    characteristics: {
+      polivalencia: 0,
+      agarre: 0,
+      rigidez: 0,
+      estabilidad: 0
+    }
+  });
+  const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
   const productsPerPage = 16; // 4 filas x 4 productos por fila
 
   // Fetch productos del backend
@@ -230,6 +241,40 @@ export const AllProducts = () => {
     setSearchParams(newParams);
   };
 
+  // Función para manejar filtros
+  const handleFilterAdd = (filter) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      categories: prev.categories.includes(filter) 
+        ? prev.categories.filter(f => f !== filter)
+        : [...prev.categories, filter]
+    }));
+  };
+
+  const handleFilterRemove = (filter) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      categories: prev.categories.filter(f => f !== filter)
+    }));
+  };
+
+  const handlePriceRangeChange = (min, max) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      priceRange: { min, max }
+    }));
+  };
+
+  const handleCharacteristicChange = (key, value) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      characteristics: {
+        ...prev.characteristics,
+        [key]: value
+      }
+    }));
+  };
+
   // Manejar cambio de ordenamiento
   const handleSortChange = (event) => {
     const newSortBy = event.target.value;
@@ -295,11 +340,37 @@ export const AllProducts = () => {
   }
 
   // Filtrar productos
-  const filteredProducts = allProducts.filter(product => {
-    if (activeFilter === "Todos") return true;
-    if (activeFilter === "Snowboard") return product.type === "snowboard";
-    if (activeFilter === "Esquí") return product.type === "ski";
-    if (activeFilter === "Accesorios") return product.type === "accesorios";
+  const filteredProducts = allProductsStatic.filter(product => {
+    // Category filter
+    if (activeFilters.categories.length > 0) {
+      const productCategory = product.category.split(" ")[1]; // "Tabla snowboard" -> "snowboard"
+      if (!activeFilters.categories.includes(productCategory)) {
+        return false;
+      }
+    }
+
+    // Price filter
+    const productPrice = parseFloat(product.price.replace(',', '.'));
+    if (productPrice < activeFilters.priceRange.min || 
+        productPrice > activeFilters.priceRange.max) {
+      return false;
+    }
+
+    // For demo purposes, let's assign random characteristics to products
+    const productCharacteristics = {
+      polivalencia: Math.floor(Math.random() * 5) + 1,
+      agarre: Math.floor(Math.random() * 5) + 1,
+      rigidez: Math.floor(Math.random() * 5) + 1,
+      estabilidad: Math.floor(Math.random() * 5) + 1
+    };
+
+    // Characteristics filter
+    for (const [key, minValue] of Object.entries(activeFilters.characteristics)) {
+      if (minValue > 0 && productCharacteristics[key] < minValue) {
+        return false;
+      }
+    }
+
     return true;
   });
 
@@ -402,16 +473,136 @@ export const AllProducts = () => {
         )}
 
         <div className={styles.filtersContainer}>
-          <div className={styles.filters}>
-            {["Todos", "Snowboard", "Esquí", "Accesorios"].map((filter) => (
+          <div className={styles.activeFilters}>
+            {activeFilters.categories.map((filter) => (
               <button
                 key={filter}
-                className={`${styles.filter} ${activeFilter === filter ? styles.filterActive : styles.filterInactive}`}
-                onClick={() => handleFilterChange(filter)}
+                className={styles.activeFilter}
+                onClick={() => handleFilterRemove(filter)}
               >
-                {filter}
+                {filter} <span className={styles.removeFilter}>×</span>
               </button>
             ))}
+            {activeFilters.priceRange.min > 0 || activeFilters.priceRange.max < 1000 ? (
+              <button
+                className={styles.activeFilter}
+                onClick={() => handlePriceRangeChange(0, 1000)}
+              >
+                {`${activeFilters.priceRange.min}€ - ${activeFilters.priceRange.max}€`}
+                <span className={styles.removeFilter}>×</span>
+              </button>
+            ) : null}
+            {Object.entries(activeFilters.characteristics).map(([key, value]) => 
+              value > 0 ? (
+                <button
+                  key={key}
+                  className={styles.activeFilter}
+                  onClick={() => handleCharacteristicChange(key, 0)}
+                >
+                  {`${key}: ${value}/5`} <span className={styles.removeFilter}>×</span>
+                </button>
+              ) : null
+            )}
+            <button 
+              className={styles.filterButton}
+              onClick={() => setIsFilterSidebarOpen(!isFilterSidebarOpen)}
+            >
+              <img 
+                src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903373/filtroicon_s1hfdw.svg"
+                alt="Filtros"
+              />
+              <span>Filtros</span>
+            </button>
+          </div>
+
+          <div className={`${styles.filterSidebar} ${isFilterSidebarOpen ? styles.open : ''}`}>
+            <div className={styles.filterSidebarHeader}>
+              <h3>Filtros</h3>
+              <button onClick={() => setIsFilterSidebarOpen(false)}>×</button>
+            </div>
+            
+            <div className={styles.filterSection}>
+              <h4>Categoría</h4>
+              <div className={styles.filterOptions}>
+                {["Snowboard", "Esquí", "Accesorios"].map((filter) => (
+                  <button
+                    key={filter}
+                    className={`${styles.filterOption} ${
+                      activeFilters.categories.includes(filter) ? styles.selected : ''
+                    }`}
+                    onClick={() => handleFilterAdd(filter)}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.filterSection}>
+              <h4>Rango de Precio</h4>
+              <div className={styles.priceRange}>
+                <div className={styles.priceInputs}>
+                  <span>€</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1000"
+                    value={activeFilters.priceRange.min}
+                    onChange={(e) => handlePriceRangeChange(Number(e.target.value), activeFilters.priceRange.max)}
+                  />
+                  <span>-</span>
+                  <span>€</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="1000"
+                    value={activeFilters.priceRange.max}
+                    onChange={(e) => handlePriceRangeChange(activeFilters.priceRange.min, Number(e.target.value))}
+                  />
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  value={activeFilters.priceRange.max}
+                  onChange={(e) => handlePriceRangeChange(activeFilters.priceRange.min, Number(e.target.value))}
+                  className={styles.priceSlider}
+                />
+              </div>
+            </div>
+
+            <div className={styles.filterSection}>
+              <h4>Características</h4>
+              <div className={styles.characteristicsContainer}>
+                {Object.entries({
+                  polivalencia: "Polivalencia",
+                  agarre: "Agarre",
+                  rigidez: "Rigidez", 
+                  estabilidad: "Estabilidad"
+                }).map(([key, label]) => (
+                  <div key={key} className={styles.characteristicItem}>
+                    <div className={styles.characteristicHeader}>
+                      <span>{label}</span>
+                      <span>{activeFilters.characteristics[key]}/5</span>
+                    </div>
+                    <div className={styles.barContainer}>
+                      <div 
+                        className={styles.barFill}
+                        style={{ width: `${(activeFilters.characteristics[key] / 5) * 100}%` }}
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="5"
+                      value={activeFilters.characteristics[key]}
+                      onChange={(e) => handleCharacteristicChange(key, Number(e.target.value))}
+                      className={styles.characteristicSlider}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className={styles.sortContainer}>
