@@ -252,6 +252,7 @@ public class ProductController {
         return dto;
     }
 
+    @GetMapping("/featured")
     private ProductFullOutputDTO convertToFullDTO(Product product) {
         ProductFullOutputDTO dto = new ProductFullOutputDTO();
         dto.setId(product.getId());

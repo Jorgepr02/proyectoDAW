@@ -11,134 +11,6 @@ const allProductsStatic = [
     variant: "1 diseño",
     price: "599,99",
     type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
-    title: "Divinium",
-    category: "Tabla snowboard",
-    variant: "2 diseños",
-    price: "669,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904513/Vanilla_Luv_red_mzurex.png",
-    title: "Vanilla Luv",
-    category: "Tabla snowboard",
-    variant: "4 colores",
-    price: "339,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904510/Etherreum_h2ehdk.png",
-    title: "Ethereum",
-    category: "Tabla snowboard",
-    variant: "1 diseño",
-    price: "549,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904513/Cosmic_Wanderer1_riyfal.png",
-    title: "Cosmic Wanderer",
-    category: "Tabla snowboard",
-    variant: "2 diseños",
-    price: "399,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904512/Cosmic_Reaver_jkfwgw.png",
-    title: "Cosmic Reaver",
-    category: "Tabla snowboard",
-    variant: "1 diseño",
-    price: "399,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904517/Purple_Thunder_iol78a.png",
-    title: "Purple Thunder",
-    category: "Tabla snowboard",
-    variant: "1 diseño",
-    price: "399,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Kaizen_egtrjx.png",
-    title: "Kaizen",
-    category: "Tabla snowboard",
-    variant: "1 diseño",
-    price: "399,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904511/Tomoe_3_firsef.png",
-    title: "Tomoe 3",
-    category: "Tabla snowboard",
-    variant: "1 diseño",
-    price: "299,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903377/Cosmic_Y_utppmw.png",
-    title: "Cosmic Y",
-    category: "Esquís",
-    variant: "1 diseño",
-    price: "399,99",
-    type: "ski"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904516/Celine_Pirris_pqisbu.png",
-    title: "Celine Pirris",
-    category: "Tabla snowboard",
-    variant: "1 diseño",
-    price: "299,99",
-    type: "snowboard"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/Vanilla_Disluv_l5iayv.png",
-    title: "Vanilla Disluv",
-    category: "Esquís",
-    variant: "4 colores",
-    price: "339,99",
-    type: "ski"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903377/White_Fury_rw4ugu.png",
-    title: "White Fury",
-    category: "Esquís",
-    variant: "1 diseño",
-    price: "399,99",
-    type: "ski"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/Addicted_777_kj9tf8.png",
-    title: "Adicted 777",
-    category: "Esquís",
-    variant: "2 diseños",
-    price: "777,77",
-    type: "ski"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904514/Flame_red_uepay6.png",
-    title: "Flame",
-    category: "Esquís",
-    variant: "6 colores",
-    price: "299,99",
-    type: "ski"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904506/Devils_Game_Death_kqr3fj.png",
-    title: "Devil's Game",
-    category: "Esquís",
-    variant: "1 diseño",
-    price: "666,66",
-    type: "ski"
-  },
-  {
-    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904506/Devils_Game_Death_kqr3fj.png",
-    title: "Devil's Game",
-    category: "Esquís",
-    variant: "1 diseño",
-    price: "666,66",
-    type: "ski"
   }
 ];
 
@@ -179,12 +51,24 @@ export const AllProducts = () => {
         
         const mappedProducts = data.map(product => ({
           id: product.id,
-          image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
+          image: product.images && product.images.length > 0 
+            ? product.images[0] 
+            : "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
           title: product.name,
           category: product.categoryName,
           price: product.price,
           type: product.categoryName === "Snowboard" ? "snowboard" : 
-                product.categoryName === "Esquí" ? "ski" : "accesorios"
+                product.categoryName === "Ski" ? "ski" : "accesorios",
+          characteristics: product.features ? product.features.reduce((acc, feature) => {
+            const featureName = feature.name.toLowerCase();
+            acc[featureName] = parseInt(feature.value) || 0;
+            return acc;
+          }, {}) : {
+            polivalencia: Math.floor(Math.random() * 5) + 1,
+            agarre: Math.floor(Math.random() * 5) + 1,
+            rigidez: Math.floor(Math.random() * 5) + 1,
+            estabilidad: Math.floor(Math.random() * 5) + 1
+          }
         }));
         
         setAllProducts(mappedProducts);
@@ -340,34 +224,45 @@ export const AllProducts = () => {
   }
 
   // Filtrar productos
-  const filteredProducts = allProductsStatic.filter(product => {
-    // Category filter
+  const filteredProducts = allProducts.filter(product => {
+    // Filtro principal por categoría (de los botones superiores)
+    if (activeFilter !== "Todos") {
+      if (activeFilter === "Snowboard" && product.type !== "snowboard") return false;
+      if (activeFilter === "Esquí" && product.type !== "ski") return false;
+      if (activeFilter === "Accesorios" && product.type !== "accesorios") return false;
+    }
+
+    // Filtros de la sidebar - Categoría
     if (activeFilters.categories.length > 0) {
-      const productCategory = product.category.split(" ")[1]; // "Tabla snowboard" -> "snowboard"
-      if (!activeFilters.categories.includes(productCategory)) {
-        return false;
-      }
+      const categoryToTypeMapping = {
+        "Snowboard": "snowboard",
+        "Esquí": "ski",
+        "Accesorios": "accesorios"
+      };
+      
+      const matchesCategory = activeFilters.categories.some(filterCategory => 
+        categoryToTypeMapping[filterCategory] === product.type
+      );
+      
+      if (!matchesCategory) return false;
     }
 
     // Price filter
-    const productPrice = parseFloat(product.price.replace(',', '.'));
+    const productPrice = parsePrice(product.price);
     if (productPrice < activeFilters.priceRange.min || 
         productPrice > activeFilters.priceRange.max) {
       return false;
     }
 
-    // For demo purposes, let's assign random characteristics to products
-    const productCharacteristics = {
-      polivalencia: Math.floor(Math.random() * 5) + 1,
-      agarre: Math.floor(Math.random() * 5) + 1,
-      rigidez: Math.floor(Math.random() * 5) + 1,
-      estabilidad: Math.floor(Math.random() * 5) + 1
-    };
-
-    // Characteristics filter
     for (const [key, minValue] of Object.entries(activeFilters.characteristics)) {
-      if (minValue > 0 && productCharacteristics[key] < minValue) {
-        return false;
+      if (minValue > 0) {
+        const productCharacteristicValue = product.characteristics && product.characteristics[key] 
+          ? product.characteristics[key] 
+          : 0;
+        
+        if (productCharacteristicValue < minValue) {
+          return false;
+        }
       }
     }
 
@@ -471,6 +366,37 @@ export const AllProducts = () => {
             <p>Error al cargar productos del servidor. Mostrando productos estáticos.</p>
           </div>
         )}
+
+        <div className={styles.filtersContainer}>
+          <div className={styles.filters}>
+            {["Todos", "Snowboard", "Esquí", "Accesorios"].map((filter) => (
+              <button
+                key={filter}
+                className={`${styles.filter} ${
+                  activeFilter === filter ? styles.filterActive : styles.filterInactive
+                }`}
+                onClick={() => handleFilterChange(filter)}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.sortContainer}>
+            <span className={styles.sortLabel}>Ordenar por:</span>
+            <select 
+              value={sortBy} 
+              onChange={handleSortChange}
+              className={styles.sortSelect}
+            >
+              <option value="default">Más relevantes</option>
+              <option value="price-low">Precio: menor a mayor</option>
+              <option value="price-high">Precio: mayor a menor</option>
+              <option value="name">Nombre A-Z</option>
+              <option value="newest">Más recientes</option>
+            </select>
+          </div>
+        </div>
 
         <div className={styles.filtersContainer}>
           <div className={styles.activeFilters}>
@@ -609,63 +535,66 @@ export const AllProducts = () => {
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className={styles.sortContainer}>
-            <span className={styles.sortLabel}>Ordenar por</span>
-            <select 
-              className={styles.sortSelect}
-              value={sortBy}
-              onChange={handleSortChange}
-            >
-              <option value="default">Seleccionar</option>
-              <option value="price-low">Precio: Menor a Mayor</option>
-              <option value="price-high">Precio: Mayor a Menor</option>
-              <option value="name">Nombre</option>
-              <option value="newest">Más Nuevos</option>
-            </select>
+            <div className={styles.actions}>
+              <button 
+                className={styles.clearFilters}
+                onClick={() => setActiveFilters({
+                  categories: [],
+                  priceRange: { min: 0, max: 1000 },
+                  characteristics: {
+                    polivalencia: 0,
+                    agarre: 0,
+                    rigidez: 0,
+                    estabilidad: 0
+                  }
+                })}
+              >
+                Limpiar Filtros
+              </button>
+            </div>
           </div>
         </div>
 
         <div className={styles.grid}>
-          {currentProducts.map((product, index) => (
-            <ProductCard key={`${currentPage}-${index}-${sortBy}`} {...product} />
+          {currentProducts.map((product) => (
+            <ProductCard 
+              key={product.id}
+              id={product.id}
+              image={product.image}
+              title={product.title}
+              category={product.category}
+              price={product.price}
+              type={product.type}
+            />
           ))}
         </div>
 
-        {totalPages > 1 && (
-          <div className={styles.pagination}>
-            <button 
-              className={`${styles.paginationBtn} ${styles.prevBtn}`}
-              onClick={handlePrevious}
-              disabled={currentPage === 1}
-              aria-label="Anterior"
+        <div className={styles.pagination}>
+          <button 
+            onClick={handlePrevious} 
+            className={`${styles.pageButton} ${currentPage === 1 ? styles.disabled : ''}`}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          {getPageNumbers().map((number, index) => (
+            <button
+              key={index}
+              onClick={() => typeof number === 'number' && handlePageChange(number)}
+              className={`${styles.pageButton} ${typeof number === 'number' && number === currentPage ? styles.active : ''}`}
             >
+              {number}
             </button>
-            
-            {getPageNumbers().map((pageNumber, index) => (
-              pageNumber === '...' ? (
-                <span key={`ellipsis-${index}`} className={styles.ellipsis}>...</span>
-              ) : (
-                <button 
-                  key={pageNumber}
-                  className={`${styles.paginationNumber} ${currentPage === pageNumber ? styles.paginationActive : ''}`}
-                  onClick={() => handlePageChange(pageNumber)}
-                >
-                  {pageNumber}
-                </button>
-              )
-            ))}
-            
-            <button 
-              className={`${styles.paginationBtn} ${styles.nextBtn}`}
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              aria-label="Siguiente"
-            >
-            </button>
-          </div>
-        )}
+          ))}
+          <button 
+            onClick={handleNext} 
+            className={`${styles.pageButton} ${currentPage === totalPages ? styles.disabled : ''}`}
+            disabled={currentPage === totalPages}
+          >
+            Siguiente
+          </button>
+        </div>
       </section>
     </div>
   );
