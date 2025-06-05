@@ -134,9 +134,7 @@ public class DataInitializer {
 
     private void initOrders(OrderService orderService, ClientService clientService, ProductService productService) {
         // Crear un pedido con sus detalles
-        Order order = new Order(null, LocalDate.now(), null, OrderStatus.PENDING,
-                PaymentMethod.CREDIT_CARD, "nombre de la calle", "Número de la calle",
-                "ANOTACIONES", clientService.findById(2L), null);
+        Order order = new Order(LocalDate.now(), OrderStatus.PENDING, PaymentMethod.CREDIT_CARD, "nombre de la calle", "Número de la calle", "ANOTACIONES", clientService.findById(2L));
 
         // Crear detalles del pedido
         OrderDetails od1 = new OrderDetails(null, productService.findById(2L), 2, null);

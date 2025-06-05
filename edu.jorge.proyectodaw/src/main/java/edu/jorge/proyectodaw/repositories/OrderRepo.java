@@ -5,8 +5,10 @@ import org.springframework.stereotype.Repository;
 
 import edu.jorge.proyectodaw.entity.Order;
 
+import java.util.List;
+
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
 
-//    List<Order> findByUserId(Long userId); // TODO
+    List<Order> findByClientId(Long clientId);
 }

@@ -12,7 +12,8 @@ public enum OrderStatus {
     SHIPPED("Enviado"),
     DELIVERED("Entregado"),
     CANCELLED("Cancelado"),
-    PAID("Pagado"),;
+    PAID("Pagado"),
+    NEW("Nuevo"),;
 
     private final String status;
 }
