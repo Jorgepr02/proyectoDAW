@@ -288,6 +288,13 @@ export const AllProducts = () => {
 			}
 		}
 
+		// AGREGAR: Filtro principal por categoría desde URL
+		if (activeFilter !== "Todos") {
+			if (activeFilter === "Snowboard" && product.type !== "snowboard") return false;
+			if (activeFilter === "Esquí" && product.type !== "ski") return false;
+			if (activeFilter === "Accesorios" && product.type !== "accesorios") return false;
+		}
+
 		return true;
 	});
 
@@ -375,7 +382,25 @@ export const AllProducts = () => {
 	return (
 		<div className={styles.container}>
 			<section className={styles.section}>
-				<h1 className={styles.title}>Productos</h1>
+				<h1 className={styles.title}>
+					{activeFilter !== "Todos" ? `Productos - ${activeFilter}` : "Productos"}
+				</h1>
+
+				{/* Mostrar filtro activo desde URL si existe */}
+				{activeFilter !== "Todos" && (
+					<div className={styles.activeUrlFilter}>
+						<span>Mostrando: {activeFilter}</span>
+						<button
+							onClick={() => {
+								setActiveFilter("Todos");
+								setSearchParams({});
+							}}
+							className={styles.clearUrlFilter}
+						>
+							Ver todos los productos
+						</button>
+					</div>
+				)}
 
 				{error && (
 					<div
@@ -539,7 +564,7 @@ export const AllProducts = () => {
 								<input
 									type="range"
 									min="0"
-									max="1000"
+								max="1000"
 									value={activeFilters.priceRange.max}
 									onChange={(e) =>
 										handlePriceRangeChange(
