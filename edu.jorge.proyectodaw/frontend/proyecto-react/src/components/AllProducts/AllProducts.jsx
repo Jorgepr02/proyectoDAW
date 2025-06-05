@@ -32,6 +32,7 @@ export const AllProducts = () => {
 		},
 	});
 	const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 	const productsPerPage = 16; // 4 filas x 4 productos por fila
 
 	// Fetch productos del backend
@@ -99,6 +100,7 @@ export const AllProducts = () => {
 		const filterParam = searchParams.get("filter");
 		const pageParam = searchParams.get("page");
 		const sortParam = searchParams.get("sort");
+		const searchParam = searchParams.get("search");
 
 		if (filterParam && ["Snowboard", "Esquí", "Accesorios"].includes(filterParam)) {
 			setActiveFilter(filterParam);
@@ -113,6 +115,10 @@ export const AllProducts = () => {
 
 		if (sortParam && ["price-low", "price-high", "name"].includes(sortParam)) {
 			setSortBy(sortParam);
+		}
+
+		if (searchParam) {
+			setSearchQuery(searchParam);
 		}
 	}, [searchParams]);
 
@@ -249,6 +255,17 @@ export const AllProducts = () => {
 			if (!matchesCategory) return false;
 		}
 
+		// Filtro de búsqueda por texto
+		if (searchQuery) {
+			const query = searchQuery.toLowerCase();
+			const matchesSearch =
+				product.title.toLowerCase().includes(query) ||
+				product.category.toLowerCase().includes(query) ||
+				product.type.toLowerCase().includes(query);
+
+			if (!matchesSearch) return false;
+		}
+
 		// Price filter
 		const productPrice = parsePrice(product.price);
 		if (
@@ -378,53 +395,59 @@ export const AllProducts = () => {
 				)}
 
 				<div className={styles.filtersContainer}>
-					<div className={styles.activeFilters}>
-						{activeFilters.categories.map((filter) => (
-							<button
-								key={filter}
-								className={styles.activeFilter}
-								onClick={() => handleFilterRemove(filter)}
-							>
-								{filter}{" "}
-								<span className={styles.removeFilter}>×</span>
-							</button>
-						))}
-						{activeFilters.priceRange.min > 0 ||
-						activeFilters.priceRange.max < 1000 ? (
-							<button
-								className={styles.activeFilter}
-								onClick={() => handlePriceRangeChange(0, 1000)}
-							>
-								{`${activeFilters.priceRange.min}€ - ${activeFilters.priceRange.max}€`}
-								<span className={styles.removeFilter}>×</span>
-							</button>
-						) : null}
-						{Object.entries(activeFilters.characteristics).map(
-							([key, value]) =>
-								value > 0 ? (
-									<button
-										key={key}
-										className={styles.activeFilter}
-										onClick={() => handleCharacteristicChange(key, 0)}
-									>
-										{`${key}: ${value}/5`}{" "}
-										<span className={styles.removeFilter}>×</span>
-									</button>
-								) : null
+					<div className={styles.leftSection}>
+						{/* Mostrar búsqueda activa */}
+						{searchQuery && (
+							<div className={styles.searchActive}>
+								<span>Buscando: "{searchQuery}"</span>
+								<button
+									onClick={() => {
+										setSearchQuery("");
+										setSearchParams({});
+									}}
+									className={styles.clearSearch}
+								>
+									×
+								</button>
+							</div>
 						)}
-						<div className={styles.sortContainer}>
-							<span className={styles.sortLabel}>Ordenar por:</span>
-							<select
-								value={sortBy}
-								onChange={handleSortChange}
-								className={styles.sortSelect}
-							>
-								<option value="default">Seleccionar</option>
-								<option value="price-low">Precio: menor a mayor</option>
-								<option value="price-high">Precio: mayor a menor</option>
-								<option value="name">Nombre A-Z</option>
-							</select>
+
+						<div className={styles.activeFilters}>
+							{activeFilters.categories.map((filter) => (
+								<button
+									key={filter}
+									className={styles.activeFilter}
+									onClick={() => handleFilterRemove(filter)}
+								>
+									{filter}{" "}
+									<span className={styles.removeFilter}>×</span>
+								</button>
+							))}
+							{activeFilters.priceRange.min > 0 ||
+							activeFilters.priceRange.max < 1000 ? (
+								<button
+									className={styles.activeFilter}
+									onClick={() => handlePriceRangeChange(0, 1000)}
+								>
+									{`${activeFilters.priceRange.min}€ - ${activeFilters.priceRange.max}€`}
+									<span className={styles.removeFilter}>×</span>
+								</button>
+							) : null}
+							{Object.entries(activeFilters.characteristics).map(
+								([key, value]) =>
+									value > 0 ? (
+										<button
+											key={key}
+											className={styles.activeFilter}
+											onClick={() => handleCharacteristicChange(key, 0)}
+										>
+											{`${key}: ${value}/5`}{" "}
+											<span className={styles.removeFilter}>×</span>
+										</button>
+									) : null
+							)}
 						</div>
+
 						<button
 							className={styles.filterButton}
 							onClick={() => setIsFilterSidebarOpen(!isFilterSidebarOpen)}
@@ -437,145 +460,155 @@ export const AllProducts = () => {
 						</button>
 					</div>
 
-					<div
-						className={`${styles.filterSidebar} ${
-							isFilterSidebarOpen ? styles.open : ""
-						}`}
-					>
-						<div className={styles.filterSidebarHeader}>
-							<h3>Filtros</h3>
-							<button onClick={() => setIsFilterSidebarOpen(false)}>×</button>
-						</div>
+					<div className={styles.sortContainer}>
+						<div className={styles.sortLabel}>Ordenar por:</div>
+						<select
+							value={sortBy}
+							onChange={handleSortChange}
+							className={styles.sortSelect}
+						>
+							<option value="default">Seleccionar</option>
+							<option value="price-low">Precio: menor a mayor</option>
+							<option value="price-high">Precio: mayor a menor</option>
+							<option value="name">Nombre A-Z</option>
+						</select>
+					</div>
+				</div>
 
-						<div className={styles.filterSection}>
-							<h4>Categoría</h4>
-							<div className={styles.filterOptions}>
-								{["Snowboard", "Esquí", "Accesorios"].map((filter) => (
-									<button
-										key={filter}
-										className={`${styles.filterOption} ${
-											activeFilters.categories.includes(filter) ? styles.selected : ""
-										}`}
-										onClick={() => handleFilterAdd(filter)}
-									>
-										{filter}
-									</button>
-								))}
+				<div className={`${styles.filterSidebar} ${isFilterSidebarOpen ? styles.open : ''}`}>
+					<div className={styles.filterSidebarHeader}>
+						<h3>Filtros</h3>
+						<button onClick={() => setIsFilterSidebarOpen(false)}>×</button>
+					</div>
+
+					<div className={styles.filterSection}>
+						<h4>Categoría</h4>
+						<div className={styles.filterOptions}>
+							{["Snowboard", "Esquí", "Accesorios"].map((filter) => (
+								<button
+									key={filter}
+									className={`${styles.filterOption} ${
+										activeFilters.categories.includes(filter) ? styles.selected : ""
+									}`}
+									onClick={() => handleFilterAdd(filter)}
+								>
+									{filter}
+								</button>
+							))}
+						</div>
+					</div>
+
+					<div className={styles.filterSection}>
+						<h4>Rango de Precio</h4>
+						<div className={styles.priceRange}>
+							<div className={styles.priceInputs}>
+								<span>€</span>
+								<input
+									type="number"
+									min="0"
+									max="1000"
+									value={activeFilters.priceRange.min}
+									onChange={(e) =>
+										handlePriceRangeChange(
+											Number(e.target.value),
+											activeFilters.priceRange.max
+										)
+									}
+								/>
+								<span>-</span>
+								<span>€</span>
+								<input
+									type="number"
+									min="0"
+									max="1000"
+									value={activeFilters.priceRange.max}
+									onChange={(e) =>
+										handlePriceRangeChange(
+											activeFilters.priceRange.min,
+											Number(e.target.value)
+										)
+									}
+								/>
+							</div>
+							<div className={styles.priceSliderContainer}>
+								<div
+									className={styles.priceSliderFill}
+									style={{
+										width: `${(activeFilters.priceRange.max / 1000) * 100}%`,
+									}}
+								/>
+								<input
+									type="range"
+									min="0"
+									max="1000"
+									value={activeFilters.priceRange.max}
+									onChange={(e) =>
+										handlePriceRangeChange(
+											activeFilters.priceRange.min,
+											Number(e.target.value)
+										)
+									}
+									className={styles.priceSlider}
+								/>
 							</div>
 						</div>
+					</div>
 
-						<div className={styles.filterSection}>
-							<h4>Rango de Precio</h4>
-							<div className={styles.priceRange}>
-								<div className={styles.priceInputs}>
-									<span>€</span>
-									<input
-										type="number"
-										min="0"
-										max="1000"
-										value={activeFilters.priceRange.min}
-										onChange={(e) =>
-											handlePriceRangeChange(
-												Number(e.target.value),
-												activeFilters.priceRange.max
-											)
-										}
-									/>
-									<span>-</span>
-									<span>€</span>
-									<input
-										type="number"
-										min="0"
-										max="1000"
-										value={activeFilters.priceRange.max}
-										onChange={(e) =>
-											handlePriceRangeChange(
-												activeFilters.priceRange.min,
-												Number(e.target.value)
-											)
-										}
-									/>
-								</div>
-								<div className={styles.priceSliderContainer}>
-									<div
-										className={styles.priceSliderFill}
-										style={{
-											width: `${(activeFilters.priceRange.max / 1000) * 100}%`,
-										}}
-									/>
-									<input
-										type="range"
-										min="0"
-										max="1000"
-										value={activeFilters.priceRange.max}
-										onChange={(e) =>
-											handlePriceRangeChange(
-												activeFilters.priceRange.min,
-												Number(e.target.value)
-											)
-										}
-										className={styles.priceSlider}
-									/>
-								</div>
-							</div>
-						</div>
-
-						<div className={styles.filterSection}>
-							<h4>Características</h4>
-							<div className={styles.characteristicsContainer}>
-								{Object.entries({
-									polivalencia: "Polivalencia",
-									agarre: "Agarre",
-									rigidez: "Rigidez",
-									estabilidad: "Estabilidad",
-								}).map(([key, label]) => (
-									<div key={key} className={styles.characteristicItem}>
-										<div className={styles.characteristicHeader}>
-											<span>{label}</span>
-											<span>{activeFilters.characteristics[key]}/5</span>
-										</div>
-										<div className={styles.barContainer}>
-											<div
-												className={styles.barFill}
-												style={{
-													width: `${(activeFilters.characteristics[key] / 5) * 100}%`,
-												}}
-											/>
-											<input
-												type="range"
-												min="0"
-												max="5"
-												value={activeFilters.characteristics[key]}
-												onChange={(e) =>
-													handleCharacteristicChange(key, Number(e.target.value))
-												}
-												className={styles.characteristicSlider}
-											/>
-										</div>
+					<div className={styles.filterSection}>
+						<h4>Características</h4>
+						<div className={styles.characteristicsContainer}>
+							{Object.entries({
+								polivalencia: "Polivalencia",
+								agarre: "Agarre",
+								rigidez: "Rigidez",
+								estabilidad: "Estabilidad",
+							}).map(([key, label]) => (
+								<div key={key} className={styles.characteristicItem}>
+									<div className={styles.characteristicHeader}>
+										<span>{label}</span>
+										<span>{activeFilters.characteristics[key]}/5</span>
 									</div>
-								))}
-							</div>
+									<div className={styles.barContainer}>
+										<div
+											className={styles.barFill}
+											style={{
+												width: `${(activeFilters.characteristics[key] / 5) * 100}%`,
+											}}
+										/>
+										<input
+											type="range"
+											min="0"
+											max="5"
+											value={activeFilters.characteristics[key]}
+											onChange={(e) =>
+												handleCharacteristicChange(key, Number(e.target.value))
+											}
+											className={styles.characteristicSlider}
+										/>
+									</div>
+								</div>
+							))}
 						</div>
+					</div>
 
-						<div className={styles.actions}>
-							<button
-								className={styles.clearFilters}
-								onClick={() =>
-									setActiveFilters({
-										categories: [],
-										priceRange: { min: 0, max: 1000 },
-										characteristics: {
-											polivalencia: 0,
-											agarre: 0,
-											rigidez: 0,
-											estabilidad: 0,
-										},
-									})
-								}
-							>
-								Limpiar Filtros
-							</button>
-						</div>
+					<div className={styles.actions}>
+						<button
+							className={styles.clearFilters}
+							onClick={() =>
+								setActiveFilters({
+									categories: [],
+									priceRange: { min: 0, max: 1000 },
+									characteristics: {
+										polivalencia: 0,
+										agarre: 0,
+										rigidez: 0,
+										estabilidad: 0,
+									},
+								})
+							}
+						>
+							Limpiar Filtros
+						</button>
 					</div>
 				</div>
 

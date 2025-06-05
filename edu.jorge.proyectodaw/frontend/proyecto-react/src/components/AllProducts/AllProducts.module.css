@@ -239,12 +239,22 @@
   height: 40px;
 }
 
+.leftSection {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* CAMBIAR: de space-between a flex-start */
+  gap: 16px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
 .activeFilters {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  flex: 1;
+  order: 3; /* Mantener: posición después del botón filtros */
+  /* QUITAR: margin-left: auto; */
 }
 
 .activeFilter {
@@ -276,6 +286,7 @@
   cursor: pointer;
   font-size: 14px;
   color: var(--text-tertiary);
+  order: 1; /* Mantener: posición a la izquierda */
 }
 
 .filterButton img {
@@ -539,4 +550,58 @@
   .sortContainer {
     justify-content: center;
   }
+}
+
+.searchActive {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid #90caf9;
+  order: 2; /* Mantener: posición en el medio */
+}
+
+.clearSearch {
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1565c0;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 4px;
+}
+
+.clearSearch:hover {
+  color: #0d47a1;
+}
+
+.searchDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 300px;
+  padding: 12px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: var(--primary);
 }

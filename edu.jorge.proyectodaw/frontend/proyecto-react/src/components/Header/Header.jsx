@@ -9,8 +9,6 @@ export const Header = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -24,31 +22,21 @@ export const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearch = async (term) => {
-    if (!term.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(`http://localhost:8080/api/products/search?name=${term}`);
-      const data = await response.json();
-      setSearchResults(data);
-    } catch (error) {
-      console.error('Error searching products:', error);
-    } finally {
-      setIsLoading(false);
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      // Redirigir a la página de productos con el parámetro de búsqueda
+      navigate(`/productos?search=${encodeURIComponent(searchTerm.trim())}`);
+      setIsSearchOpen(false);
+      setSearchTerm("");
     }
   };
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      handleSearch(searchTerm);
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchTerm]);
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit(e);
+    }
+  };
 
   const scrollToTop = (path) => {
     if (path === location.pathname) {
@@ -77,39 +65,21 @@ export const Header = () => {
         />
       </button>
       
-      <div className={styles.searchDropdown}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Buscar productos..."
-          className={styles.searchInput}
-          autoFocus
-        />
-        
-        {isLoading ? (
-          <div className={styles.searchMessage}>Buscando...</div>
-        ) : searchResults.length > 0 ? (
-          <div className={styles.searchResults}>
-            {searchResults.map((product) => (
-              <Link
-                key={product.id}
-                to={`/producto/${product.id}`}
-                className={styles.searchResult}
-                onClick={() => setIsSearchOpen(false)}
-              >
-                <img src={product.image} alt={product.name} />
-                <div>
-                  <h4>{product.name}</h4>
-                  <p>{product.price}€</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : searchTerm && (
-          <div className={styles.searchMessage}>No se encontraron resultados</div>
-        )}
-      </div>
+      {isSearchOpen && (
+        <div className={styles.searchDropdown}>
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Buscar productos... (presiona Enter)"
+              className={styles.searchInput}
+              autoFocus
+            />
+          </form>
+        </div>
+      )}
     </div>
   );
 
