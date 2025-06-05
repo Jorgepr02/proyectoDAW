@@ -10,6 +10,6 @@ import lombok.Setter;
 public class FeatureProductSimpleOutputDTO {
 
     private Long id;
-    private String mame;
+    private String name;
     private String value;
 }
