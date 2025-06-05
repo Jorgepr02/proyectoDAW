@@ -1,0 +1,195 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './WishlistPage.module.css';
+import WishlistItem from '../components/WishlistItem/WishlistItem';
+
+const WishlistPage = () => {
+  const navigate = useNavigate();
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      try {
+        setLoading(true);
+        // Obtener el usuario del localStorage
+        const userString = localStorage.getItem('user');
+        const user = userString ? JSON.parse(userString) : null;
+        
+        if (!user) {
+          navigate('/login');
+          return;
+        }
+        
+        const response = await fetch(`http://localhost:8080/api/wishlists/user/${user.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('Wishlist obtenida:', data);
+        
+        // Mapear los datos del backend al formato del frontend
+        const mappedItems = data.map(item => ({
+          id: item.id, // Este es el ID del producto, no del item de wishlist
+          productId: item.id, // ID del producto
+          image: item.images && item.images.length > 0 
+            ? item.images[0] 
+            : "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748935575/CosmicX_xfvdog.png",
+          title: item.name, // Cambiar de item.product.name a item.name
+          category: item.categoryName, // Cambiar de item.product.categoryName a item.categoryName
+          price: item.price, // Cambiar de item.product.price a item.price
+          originalPrice: null,
+          inStock: true // El backend no envía stock, asumir true por ahora
+        }));
+        
+        setWishlistItems(mappedItems);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching wishlist:', err);
+        setError(err.message);
+        // Mantener array vacío en caso de error
+        setWishlistItems([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWishlist();
+  }, []);
+
+  const handleRemoveItem = async (productId) => {
+    try {
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
+      
+      if (!user) {
+        navigate('/login');
+        return;
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/api/wishlists?productAction=remove`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            productId: productId
+          })
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error('Error al eliminar el producto de la lista de deseos');
+      }
+      
+      // Actualizar el estado local
+      setWishlistItems(items => items.filter(item => item.productId !== productId));
+    } catch (err) {
+      console.error('Error removing item from wishlist:', err);
+      alert('Error al eliminar el producto de la lista de deseos');
+    }
+  };
+
+  const handleAddToCart = async (wishlistItemId) => {
+    try {
+      const item = wishlistItems.find(item => item.id === wishlistItemId);
+      if (!item) return;
+
+      // Aquí implementarías la lógica para añadir al carrito
+      // Por ejemplo, llamar a una API del carrito
+      const cartData = {
+        productId: item.productId,
+        quantity: 1
+      };
+
+      // Ejemplo de llamada a API del carrito (ajustar según tu backend)
+      // const response = await fetch('http://localhost:8080/api/cart/add', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify(cartData)
+      // });
+
+      console.log('Añadir al carrito:', cartData);
+      alert('Producto añadido al carrito');
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      alert('Error al añadir el producto al carrito');
+    }
+  };
+
+  const handleContactSupport = () => {
+    navigate('/contacto');
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.wishlistPage}>
+        <div className={styles.container}>
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <h2>Cargando lista de deseos...</h2>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.wishlistPage}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Mi Lista de Deseos</h1>
+        
+        {error && (
+          <div style={{ 
+            backgroundColor: '#fee', 
+            padding: '15px', 
+            borderRadius: '8px', 
+            marginBottom: '20px',
+            textAlign: 'center',
+            color: '#dc2626'
+          }}>
+            <p>Error al cargar la lista de deseos: {error}</p>
+          </div>
+        )}
+        
+        <div className={styles.wishlistItems}>
+          {wishlistItems.length > 0 ? (
+            wishlistItems.map(item => (
+              <WishlistItem
+                key={item.id}
+                {...item}
+                onRemove={handleRemoveItem}
+                onAddToCart={handleAddToCart}
+              />
+            ))
+          ) : (
+            <div className={styles.emptyWishlist}>
+              <p>Tu lista de deseos está vacía</p>
+            </div>
+          )}
+        </div>
+
+        <div className={styles.helpSection}>
+          <div className={styles.helpContent}>
+            <h2 className={styles.helpTitle}>¿Necesitas ayuda?</h2>
+            <p className={styles.helpText}>
+              Nuestro equipo está aquí para ayudarte con cualquier pregunta
+            </p>
+          </div>
+          <button className={styles.contactButton} onClick={handleContactSupport}>
+            Contactar Soporte
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WishlistPage;

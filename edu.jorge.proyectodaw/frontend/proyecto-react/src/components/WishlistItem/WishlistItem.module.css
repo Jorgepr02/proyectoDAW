@@ -1,0 +1,175 @@
+.wishlistItem {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+}
+
+.productInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+
+.productImage {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.productTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+  text-align: left;
+}
+
+.productCategory {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  text-align: left;
+}
+
+.priceSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2d1282;
+}
+
+.originalPrice {
+  font-size: 14px;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.removeButton {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 0;
+  text-decoration: underline;
+}
+
+.removeButton:hover {
+  color: #dc2626;
+}
+
+.bottomActions {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stockStatus {
+  display: flex;
+  align-items: center;
+}
+
+.inStock {
+  background-color: #dcfce7;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #bbf7d0;
+}
+
+.outOfStock {
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #fecaca;
+}
+
+.addToCartButton {
+  background-color: #2d1282;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.addToCartButton:hover {
+  background-color: #1e0d5f;
+}
+
+.addToCartButton.disabled {
+  background-color: #e2e8f0;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .wishlistItem {
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 80px;
+  }
+
+  .productInfo {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .removeButton {
+    position: static;
+    align-self: flex-end;
+    margin-top: 12px;
+  }
+
+  .bottomActions {
+    position: static;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .stockStatus {
+    order: 1;
+  }
+
+  .addToCartButton {
+    order: 2;
+    flex: 0 0 auto;
+  }
+}
