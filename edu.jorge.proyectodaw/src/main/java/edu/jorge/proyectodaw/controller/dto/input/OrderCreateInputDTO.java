@@ -1,27 +1,23 @@
-package edu.jorge.proyectodaw.controller.dto.output;
+package edu.jorge.proyectodaw.controller.dto.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDetailsOutputDTO {
-    private Long id;
-    private LocalDate date;
-    private Double amount;
-    private String orderStatus;
+public class OrderCreateInputDTO {
+
     private String orderPaymentMethod;
     private String shippingNameAddress;
     private String shippingNumberAddress;
     private String notes;
-    private String clientEmail;
+    private Long idClient;
 
-    List<OrderDetailsSimpleOutputDTO> details;
+    List<OrderDetailsCreateInputDTO> details;
 }
