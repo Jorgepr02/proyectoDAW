@@ -1,32 +1,21 @@
 package edu.jorge.proyectodaw.controller;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import edu.jorge.proyectodaw.entity.OrderDetails;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import edu.jorge.proyectodaw.controller.dto.input.OrderInputDTO;
+import edu.jorge.proyectodaw.controller.dto.output.OrderDetailsOutputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.OrderSimpleOutputDTO;
+import edu.jorge.proyectodaw.controller.dto.output.ProductSimpleOutputDTO;
 import edu.jorge.proyectodaw.entity.Client;
 import edu.jorge.proyectodaw.entity.Order;
 import edu.jorge.proyectodaw.enums.OrderStatus;
 import edu.jorge.proyectodaw.enums.PaymentMethod;
 import edu.jorge.proyectodaw.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -36,8 +25,21 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<OrderSimpleOutputDTO>> findAll() {
+    public ResponseEntity<List<?>> findAll(
+            @RequestParam (required = false, defaultValue = "simple") String data
+    ) {
         List<Order> orders = orderService.findAll();
+
+        if (data.equalsIgnoreCase("details")) {
+            List<OrderDetailsOutputDTO> orderDetailsOutputDTOS = new ArrayList<>();
+            for (Order order : orders) {
+                orderDetailsOutputDTOS.add(
+                        convertToOrderDetailsDTO(order)
+                );
+            }
+            return ResponseEntity.ok(orderDetailsOutputDTOS);
+        }
+
         List<OrderSimpleOutputDTO> orderDTOs = new ArrayList<>();
         for (Order order : orders) {
             OrderSimpleOutputDTO dto = convertToDTO(order);
@@ -96,6 +98,19 @@ public class OrderController {
 
     private OrderSimpleOutputDTO convertToDTO(Order order) {
         OrderSimpleOutputDTO dto = new OrderSimpleOutputDTO();
+        dto.setDate(order.getDate());
+        dto.setAmount(order.getAmount());
+        dto.setOrderStatus(order.getOrderStatus().name());
+        
+        if (order.getClient() != null) {
+            dto.setClientEmail(order.getClient().getEmail());
+        }
+        
+        return dto;
+    }
+
+    private OrderDetailsOutputDTO convertToOrderDetailsDTO(Order order) {
+        OrderDetailsOutputDTO dto = new OrderDetailsOutputDTO();
         dto.setId(order.getId());
         dto.setDate(order.getDate());
         dto.setAmount(order.getAmount());
@@ -104,11 +119,24 @@ public class OrderController {
         dto.setShippingNameAddress(order.getShippingNameAddress());
         dto.setShippingNumberAddress(order.getShippingNumberAddress());
         dto.setNotes(order.getNotes());
-        
+
         if (order.getClient() != null) {
             dto.setClientEmail(order.getClient().getEmail());
         }
-        
+
+        if (order.getOrderDetails() != null) {
+            List<ProductSimpleOutputDTO> products = new ArrayList<>();
+            order.getOrderDetails().forEach(orderDetail -> {
+                ProductSimpleOutputDTO productDTO = new ProductSimpleOutputDTO(
+                    orderDetail.getProduct().getName(),
+                    orderDetail.getProduct().getPrice(),
+                    orderDetail.getProduct().getCategory().getCategoryType().name()
+                );
+                products.add(productDTO);
+            });
+            dto.setProducts(products);
+        }
+
         return dto;
     }
 }
