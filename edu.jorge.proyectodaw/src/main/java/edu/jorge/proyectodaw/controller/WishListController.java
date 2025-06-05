@@ -57,6 +57,19 @@ public class WishListController {
         return ResponseEntity.ok(productListOutputDTOs);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ProductListOutputDTO>> findAllByUserId(
+            @PathVariable Long userId
+    ) {
+        WishList wishList = wishListService.findByUserId(userId);
+        if (wishList == null || wishList.getProducts().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+        List<ProductListOutputDTO> productListOutputDTOs = mapWishListToProductDTOs(wishList);
+
+        return ResponseEntity.ok(productListOutputDTOs);
+    }
+
     @GetMapping("/exists")
     public ResponseEntity<Boolean> isInWishList(
             @RequestParam Long userId,
