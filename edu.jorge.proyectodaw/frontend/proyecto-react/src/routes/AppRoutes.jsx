@@ -12,6 +12,7 @@ import FaqPage from "../pages/Faq";
 import CartPage from "../pages/CartPage";
 import OrdersPage from "../pages/OrdersPage";
 import WishlistPage from "../pages/WishlistPage";
+import ContactPage from "../pages/ContactPage";
 
 const AppRoutes = () => {
   return (
@@ -30,6 +31,7 @@ const AppRoutes = () => {
             <Route path="/carrito" element={<CartPage />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/lista-deseos" element={<WishlistPage />} />
+            <Route path="/contacto" element={<ContactPage />} />
           </Routes>
         </main>
         <Footer />

@@ -65,7 +65,7 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
-  margin-left: auto; /* Esto alinea a la derecha */
+  margin-left: auto;
 }
 
 .sortLabel {
@@ -213,21 +213,6 @@
   color: var(--white);
 }
 
-.prevBtn {
-  background-image: url('https://res.cloudinary.com/dluvwj5lo/image/upload/v1748965283/arrow_gtemug.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px 12px;
-  transform: rotate(180deg);
-}
-
-.nextBtn {
-  background-image: url('https://res.cloudinary.com/dluvwj5lo/image/upload/v1748965283/arrow_gtemug.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px 12px;
-}
-
 .ellipsis {
   color: var(--text-tertiary);
   font-size: 14px;
@@ -242,7 +227,7 @@
 .leftSection {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* CAMBIAR: de space-between a flex-start */
+  justify-content: flex-start;
   gap: 16px;
   flex-wrap: wrap;
   flex: 1;
@@ -253,8 +238,7 @@
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-  order: 3; /* Mantener: posición después del botón filtros */
-  /* QUITAR: margin-left: auto; */
+  order: 3;
 }
 
 .activeFilter {
@@ -286,7 +270,7 @@
   cursor: pointer;
   font-size: 14px;
   color: var(--text-tertiary);
-  order: 1; /* Mantener: posición a la izquierda */
+  order: 1;
 }
 
 .filterButton img {
@@ -562,7 +546,7 @@
   border-radius: 20px;
   font-size: 14px;
   border: 1px solid #90caf9;
-  order: 2; /* Mantener: posición en el medio */
+  order: 2;
 }
 
 .clearSearch {

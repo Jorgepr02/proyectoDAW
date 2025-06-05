@@ -396,7 +396,6 @@ export const AllProducts = () => {
 
 				<div className={styles.filtersContainer}>
 					<div className={styles.leftSection}>
-						{/* Mostrar búsqueda activa */}
 						{searchQuery && (
 							<div className={styles.searchActive}>
 								<span>Buscando: "{searchQuery}"</span>
