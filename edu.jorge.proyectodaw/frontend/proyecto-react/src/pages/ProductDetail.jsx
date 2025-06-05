@@ -105,7 +105,7 @@ const ProductDetail = () => {
           description: data.description || `La tabla ${data.name} es perfecta para riders que buscan calidad y rendimiento. Diseñada con los mejores materiales para ofrecer una experiencia única en la montaña.`,
           sizes: ['152', '152W', '154', '154W', '156', '156W'],
           characteristics: data.features ? data.features.map(feature => ({
-            name: feature.name,
+            name: feature.name, // Cambia esto a feature.name
             value: parseInt(feature.value)
           })) : [
             { name: "Polivalencia", value: 4 },
@@ -235,11 +235,32 @@ const ProductDetail = () => {
       <div className={styles.productGrid}>
         <div className={styles.imageSection}>
           <div className={styles.imageGallery}>
-            <img 
-              src={product.thumbnails[currentImage]} 
-              alt={product.name} 
-              className={styles.mainImage} 
-            />
+            <div className={styles.mainImageContainer}>
+              <img 
+                src={product.thumbnails[currentImage]} 
+                alt={product.name} 
+                className={styles.mainImage} 
+              />
+              <button 
+                className={`${styles.wishlistButton} ${isInWishlist ? styles.wishlistActive : ''}`}
+                onClick={handleWishlistToggle}
+                disabled={wishlistLoading}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill={isInWishlist ? "#2d1282" : "none"}
+                  stroke={isInWishlist ? "#2d1282" : "currentColor"}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                {wishlistLoading && <span className={styles.loadingSpinner}></span>}
+              </button>
+            </div>
             <div className={styles.thumbnails}>
               {product.thumbnails.map((thumb, index) => (
                 <img 
@@ -258,50 +279,27 @@ const ProductDetail = () => {
             {product.characteristics.map((char, index) => (
               <div key={index} className={styles.characteristicBar}>
                 <span>{char.name}</span>
-                <div className={styles.barContainer}>
-                  <div 
-                    className={styles.barFill} 
-                    style={{ width: `${char.value * 20}%` }}
-                  />
+                <div className={styles.barAndValue}>
+                  <div className={styles.barContainer}>
+                    <div 
+                      className={styles.barFill} 
+                      style={{ width: `${char.value * 20}%` }}
+                    />
+                  </div>
+                  <span className={styles.characteristicValue}>{char.value}/5</span>
                 </div>
-                <span className={styles.characteristicValue}>{char.value}/5</span>
               </div>
             ))}
           </div>
         </div>
         
         <div className={styles.productInfo}>
-          <div className={styles.breadcrumbs}>
-            Inicio / Productos / {product.category} / {product.name}
-          </div>
-          
           <div className={styles.productHeader}>
             <h1 className={styles.productTitle}>{product.name}</h1>
-            <button 
-              className={`${styles.wishlistButton} ${isInWishlist ? styles.wishlistActive : ''}`}
-              onClick={handleWishlistToggle}
-              disabled={wishlistLoading}
-              title={isInWishlist ? 'Quitar de lista de deseos' : 'Agregar a lista de deseos'}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill={isInWishlist ? "#ff4757" : "none"}
-                stroke={isInWishlist ? "#ff4757" : "currentColor"}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M3 5v14l9-7 9 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
-              </svg>
-              {wishlistLoading && <span className={styles.loadingSpinner}></span>}
-            </button>
           </div>
 
           <div className={styles.priceSection}>
             <span className={styles.price}>{product.price}€</span>
-            <span className={styles.originalPrice}>{product.originalPrice}€</span>
           </div>
 
           <div className={styles.ratings}>
@@ -335,64 +333,50 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className={styles.quantitySelector}>
-            <label>Cantidad</label>
-            <div className={styles.quantityControls}>
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-              <input type="number" value={quantity} readOnly />
-              <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}>+</button>
+          <div className={styles.quantityAndWishlist}>
+            <div className={styles.quantitySelector}>
+              <label>Cantidad</label>
+              <div className={styles.quantityControls}>
+                <button 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className={styles.quantityButton}
+                >
+                  -
+                </button>
+                <input type="number" value={quantity} readOnly />
+                <button 
+                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                  className={styles.quantityButton}
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
 
-          <button 
-            className={styles.addToCartButton}
-            disabled={product.stock === 0 || !selectedSize}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={styles.cartIcon}
-            >
-              <path d="M1 1H3L3.4 3M3.4 3H19L15 11H5M3.4 3L5 11M5 11L2.707 13.293C2.077 13.923 2.523 15 3.414 15H15" />
-              <circle cx="6.5" cy="17.5" r="1.5" />
-              <circle cx="14.5" cy="17.5" r="1.5" />
-            </svg>
-            <span>
-              {product.stock === 0 ? 'Sin stock' : 
-               !selectedSize ? 'Selecciona una talla' : 
-               'Añadir al Carrito'}
-            </span>
+          <button className={styles.addToCartButton}>
+            <span>Añadir al carrito</span>
           </button>
 
-          {/* Sección de reseñas */}
-          {product.productReviews && product.productReviews.length > 0 && (
-            <div className={styles.reviewsSection}>
-              <h3>Reseñas de clientes</h3>
-              {product.productReviews.map((review, index) => (
-                <div key={index} className={styles.review}>
-                  <div className={styles.reviewHeader}>
-                    <span className={styles.reviewName}>{review.clientName}</span>
-                    <div className={styles.reviewStars}>
-                      {"★".repeat(review.stars)}{"☆".repeat(5 - review.stars)}
+          <div className={styles.reviewsSection}>
+            {product.productReviews && product.productReviews.length > 0 && (
+              <>
+                <h3 className={styles.reviewsTitle}>Reseñas de clientes</h3>
+                <div className={styles.reviewsGrid}>
+                  {product.productReviews.map((review, index) => (
+                    <div key={index} className={styles.review}>
+                      <div className={styles.reviewHeader}>
+                        <span className={styles.reviewName}>{review.clientName}</span>
+                        <div className={styles.reviewStars}>
+                          {"★".repeat(review.stars)}{"☆".repeat(5 - review.stars)}
+                        </div>
+                      </div>
+                      <p className={styles.reviewComment}>{review.comment}</p>
                     </div>
-                  </div>
-                  <p className={styles.reviewComment}>{review.comment}</p>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-
-          <div className={styles.camberSection}>
-            <h3 className={styles.camberTitle}>Camber | Normal</h3>
-            <p className={styles.camberDescription}>
-              El camber clásico o tradicional presenta una curvatura hacia arriba en el centro de la tabla cuando está apoyada en el suelo, dejando contacto con la nieve únicamente en la zona del nose y el tail. Esta forma proporciona una excelente precisión en el giro, máximo agarre en nieve dura y un gran pop para los saltos.
-            </p>
+              </>
+            )}
           </div>
         </div>
       </div>
