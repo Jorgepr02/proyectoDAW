@@ -38,3 +38,8 @@ ecommerce:
       header: Authorization
       prefix: Bearer
       token-type: JWT
+stripe:
+    api:
+        key: sk_test_51RWhPMCl5ptckBIgPUlG9qrrRI4AwQWrsNrevMQXmQEkWtJcTAebdUw5Ho1RTfchxuw3UrTPtoF7P6G1z0eKaGyK00pJ2W2tpN
+    public:
+        key: pk_test_51RWhPMCl5ptckBIgGNXYayCs0T5Wz40KSYXaS1cG7L3SD7zPIPfFOCry3A1djS6xdQdp0NV8YQ2ehOtJpcVi6buS00Faf3T9fx
