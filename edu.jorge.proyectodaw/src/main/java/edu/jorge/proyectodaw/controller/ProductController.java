@@ -253,6 +253,17 @@ public class ProductController {
     }
 
     @GetMapping("/featured")
+    public ResponseEntity<List<ProductFullOutputDTO>> getFeaturedProducts() {
+        List<Product> products = productService.findAll();
+        
+        List<ProductFullOutputDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            productDTOs.add(convertToFullDTO(product));
+        }
+        
+        return ResponseEntity.ok(productDTOs);
+    }
+
     private ProductFullOutputDTO convertToFullDTO(Product product) {
         ProductFullOutputDTO dto = new ProductFullOutputDTO();
         dto.setId(product.getId());

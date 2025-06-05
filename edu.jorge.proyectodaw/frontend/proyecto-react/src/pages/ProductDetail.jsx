@@ -171,7 +171,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
       title: "Fijaciones para snowboard",
       category: "Accesorios",
-      variant: "Talla única",
       price: "119,99"
     },
     {
@@ -179,7 +178,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904513/Vanilla_Luv_red_mzurex.png",
       title: "Guantes térmicos",
       category: "Accesorios",
-      variant: "Varias tallas",
       price: "35,50"
     },
     {
@@ -187,7 +185,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904510/Etherreum_h2ehdk.png",
       title: "Botas de snowboard",
       category: "Calzado",
-      variant: "Varias tallas",
       price: "109,90"
     }
   ];
@@ -198,7 +195,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904513/Cosmic_Wanderer1_riyfal.png",
       title: "Burton Custom X",
       category: "Snowboard",
-      variant: "Varias tallas",
       price: "649,99"
     },
     {
@@ -206,7 +202,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904512/Cosmic_Reaver_jkfwgw.png",
       title: "K2 Manifest",
       category: "Snowboard",
-      variant: "Varias tallas",
       price: "589,99"
     },
     {
@@ -214,7 +209,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904517/Purple_Thunder_iol78a.png",
       title: "Nitro Team Pro",
       category: "Snowboard",
-      variant: "Varias tallas",
       price: "559,99"
     },
     {
@@ -222,7 +216,6 @@ const ProductDetail = () => {
       image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Kaizen_egtrjx.png",
       title: "Ride Algorythm",
       category: "Snowboard",
-      variant: "Varias tallas",
       price: "579,99"
     }
   ];

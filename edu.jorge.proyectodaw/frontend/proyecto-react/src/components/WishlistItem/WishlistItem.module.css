@@ -59,12 +59,6 @@
   color: #2d1282;
 }
 
-.originalPrice {
-  font-size: 14px;
-  color: #64748b;
-  text-decoration: line-through;
-}
-
 .removeButton {
   position: absolute;
   top: 24px;

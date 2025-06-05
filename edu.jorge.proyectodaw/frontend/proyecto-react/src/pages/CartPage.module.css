@@ -90,14 +90,6 @@
   font-size: 18px;
 }
 
-.originalPrice {
-  display: block;
-  color: #64748b;
-  text-decoration: line-through;
-  font-size: 14px;
-  font-weight: normal;
-}
-
 .orderSummary {
   background: white;
   border-radius: 12px;

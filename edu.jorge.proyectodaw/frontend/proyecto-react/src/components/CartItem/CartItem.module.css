@@ -100,12 +100,6 @@
   margin-right: 12px;
 }
 
-.originalPrice {
-  color: #64748b;
-  text-decoration: line-through;
-  font-size: 14px;
-}
-
 @media (max-width: 768px) {
   .cartItem {
     padding: 24px 32px;

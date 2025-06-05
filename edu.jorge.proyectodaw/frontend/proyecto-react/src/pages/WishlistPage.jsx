@@ -13,7 +13,6 @@ const WishlistPage = () => {
     const fetchWishlist = async () => {
       try {
         setLoading(true);
-        // Obtener el usuario del localStorage
         const userString = localStorage.getItem('user');
         const user = userString ? JSON.parse(userString) : null;
         
@@ -31,18 +30,16 @@ const WishlistPage = () => {
         const data = await response.json();
         console.log('Wishlist obtenida:', data);
         
-        // Mapear los datos del backend al formato del frontend
         const mappedItems = data.map(item => ({
-          id: item.id, // Este es el ID del producto, no del item de wishlist
-          productId: item.id, // ID del producto
+          id: item.id,
+          productId: item.id,
           image: item.images && item.images.length > 0 
             ? item.images[0] 
             : "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748935575/CosmicX_xfvdog.png",
-          title: item.name, // Cambiar de item.product.name a item.name
-          category: item.categoryName, // Cambiar de item.product.categoryName a item.categoryName
-          price: item.price, // Cambiar de item.product.price a item.price
-          originalPrice: null,
-          inStock: true // El backend no envía stock, asumir true por ahora
+          title: item.name,
+          category: item.categoryName,
+          price: item.price,
+          inStock: true
         }));
         
         setWishlistItems(mappedItems);
@@ -50,7 +47,6 @@ const WishlistPage = () => {
       } catch (err) {
         console.error('Error fetching wishlist:', err);
         setError(err.message);
-        // Mantener array vacío en caso de error
         setWishlistItems([]);
       } finally {
         setLoading(false);
@@ -88,7 +84,6 @@ const WishlistPage = () => {
         throw new Error('Error al eliminar el producto de la lista de deseos');
       }
       
-      // Actualizar el estado local
       setWishlistItems(items => items.filter(item => item.productId !== productId));
     } catch (err) {
       console.error('Error removing item from wishlist:', err);
@@ -100,22 +95,10 @@ const WishlistPage = () => {
     try {
       const item = wishlistItems.find(item => item.id === wishlistItemId);
       if (!item) return;
-
-      // Aquí implementarías la lógica para añadir al carrito
-      // Por ejemplo, llamar a una API del carrito
       const cartData = {
         productId: item.productId,
         quantity: 1
       };
-
-      // Ejemplo de llamada a API del carrito (ajustar según tu backend)
-      // const response = await fetch('http://localhost:8080/api/cart/add', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(cartData)
-      // });
 
       console.log('Añadir al carrito:', cartData);
       alert('Producto añadido al carrito');

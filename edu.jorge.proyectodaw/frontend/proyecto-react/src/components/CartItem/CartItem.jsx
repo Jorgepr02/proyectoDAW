@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './CartItem.module.css';
 
 const CartItem = ({ item, onQuantityChange, onRemove }) => {
-  const { name, category, image, price, originalPrice, size, quantity } = item;
+  const { name, category, image, price, size, quantity } = item;
 
   return (
     <div className={styles.cartItem}>
@@ -19,9 +19,6 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
           <div className={styles.priceContainer}>
             <div className={styles.priceWrapper}>
               <span className={styles.price}>€{price.toFixed(2)}</span>
-              {originalPrice && (
-                <span className={styles.originalPrice}>€{originalPrice.toFixed(2)}</span>
-              )}
             </div>
           </div>
         </div>

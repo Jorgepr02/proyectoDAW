@@ -16,7 +16,6 @@ export const ProductCard = ({ id, image, title, category, price }) => {
       <div className={styles.content}>
         <h3 className={styles.title}>{title}</h3>
         <p className={styles.category}>{category}</p>
-        <p>Diseños 2</p>
         <div className={styles.price}>
           <span className={styles.currency}>€</span>
           <span className={styles.amount}>{price}</span>

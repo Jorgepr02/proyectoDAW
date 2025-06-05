@@ -26,8 +26,7 @@
 
 /* Texto común */
 .title,
-.category,
-.variant {
+.category {
   text-align: left;
   font-weight: 700;
 }
@@ -39,19 +38,14 @@
   color: var(--text-primary);
 }
 
-.category,
-.variant {
+.category {
   font-size: 14px;
   line-height: 14px;
   color: var(--text-secondary);
 }
 
 .category {
-  margin-bottom: 4px;
-}
-
-.variant {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .price {
@@ -82,8 +76,7 @@
   .image { height: 200px; }
   .content { padding: 12px; }
   .title { font-size: 15px; }
-  .category,
-  .variant { font-size: 13px; }
+  .category { font-size: 13px; }
 }
 
 @media (max-width: 480px) {
@@ -91,6 +84,5 @@
   .image { height: 180px; }
   .content { padding: 10px; }
   .title { font-size: 14px; }
-  .category,
-  .variant { font-size: 12px; }
+  .category { font-size: 12px; }
 }

@@ -13,7 +13,6 @@ const CartPage = () => {
       category: 'Tabla snowboard',
       image: 'https://res.cloudinary.com/dluvwj5lo/image/upload/v1748935575/CosmicX_xfvdog.png',
       price: 599.99,
-      originalPrice: 649.99,
       size: '152',
       quantity: 1
     },

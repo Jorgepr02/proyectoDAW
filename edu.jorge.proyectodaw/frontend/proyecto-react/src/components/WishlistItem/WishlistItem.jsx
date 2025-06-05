@@ -7,8 +7,7 @@ const WishlistItem = ({
   image, 
   title, 
   category, 
-  price, 
-  originalPrice, 
+  price,
   inStock, 
   onRemove, 
   onAddToCart 
@@ -22,9 +21,6 @@ const WishlistItem = ({
           <p className={styles.productCategory}>{category}</p>
           <div className={styles.priceSection}>
             <span className={styles.price}>€ {price}</span>
-            {originalPrice && (
-              <span className={styles.originalPrice}>{originalPrice}</span>
-            )}
           </div>
         </div>
       </div>

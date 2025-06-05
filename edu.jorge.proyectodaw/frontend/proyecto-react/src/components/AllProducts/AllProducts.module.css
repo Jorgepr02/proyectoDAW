@@ -22,7 +22,7 @@
 .filtersContainer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 40px;
   flex-wrap: wrap;
   gap: 20px;
@@ -64,6 +64,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto; /* Esto alinea a la derecha */
 }
 
 .sortLabel {
@@ -106,11 +108,26 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
+
+  .sortContainer {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .filters {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sortContainer {
+    justify-content: center;
   }
 }
 
@@ -227,6 +244,7 @@
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
+  flex: 1;
 }
 
 .activeFilter {
@@ -519,7 +537,6 @@
   }
 
   .sortContainer {
-    width: 100%;
-    justify-content: space-between;
+    justify-content: center;
   }
 }
