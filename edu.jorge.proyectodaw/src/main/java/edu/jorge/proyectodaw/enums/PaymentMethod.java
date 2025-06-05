@@ -9,8 +9,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum PaymentMethod {
     CREDIT_CARD("tarjeta de crédito"),
-    PAYPAL("PayPal"),
-    BANK_TRANSFER("transferencia bancaria"),;
+    BANK_TRANSFER("transferencia bancaria"),
+    STRIPE("Stripe"),;
 
     private final String method;
 }
