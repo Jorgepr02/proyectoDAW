@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ProductCard } from '../components/ProductCard/ProductCard';
 import SizeCalculator from '../components/SizeCalculator/SizeCalculator';
 import styles from './ProductDetail.module.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +22,6 @@ const ProductDetail = () => {
     return userString ? JSON.parse(userString) : null;
   };
 
-  // Verificar si el producto está en la wishlist
   const checkWishlistStatus = async (productId) => {
     const user = getUser();
     if (!user) return;
@@ -37,12 +37,10 @@ const ProductDetail = () => {
     }
   };
 
-  // Manejar toggle de wishlist
   const handleWishlistToggle = async () => {
     const user = getUser();
     if (!user) {
-      // Redirigir al login si no está autenticado
-      alert('Debes iniciar sesión para agregar productos a tu lista de deseos');
+      navigate('/login');
       return;
     }
 
@@ -67,11 +65,11 @@ const ProductDetail = () => {
       if (response.ok) {
         setIsInWishlist(!isInWishlist);
       } else {
-        throw new Error('Error al actualizar la lista de deseos');
+        navigate('/login');
       }
     } catch (error) {
       console.error('Error toggling wishlist:', error);
-      alert('Error al actualizar la lista de deseos. Inténtalo de nuevo.');
+      navigate('/login');
     } finally {
       setWishlistLoading(false);
     }
@@ -105,7 +103,7 @@ const ProductDetail = () => {
           description: data.description || `La tabla ${data.name} es perfecta para riders que buscan calidad y rendimiento. Diseñada con los mejores materiales para ofrecer una experiencia única en la montaña.`,
           sizes: ['152', '152W', '154', '154W', '156', '156W'],
           characteristics: data.features ? data.features.map(feature => ({
-            name: feature.name, // Cambia esto a feature.name
+            name: feature.name,
             value: parseInt(feature.value)
           })) : [
             { name: "Polivalencia", value: 4 },
@@ -119,7 +117,6 @@ const ProductDetail = () => {
         setProduct(mappedProduct);
         setLoading(false);
         
-        // Verificar estado en wishlist después de cargar el producto
         checkWishlistStatus(data.id);
       })
       .catch(err => {

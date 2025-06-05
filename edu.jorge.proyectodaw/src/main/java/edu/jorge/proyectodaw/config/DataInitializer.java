@@ -74,15 +74,15 @@ public class DataInitializer {
         Category accessoryCategory = categoryService.findById(3L);
 
         // Crear productos
-        Product snowboard = new Product("Tabla Snowboard", "Tabla profesional para snowboard", 199.99, 20, snowboardCategory);
+        Product cosmicx = new Product("Cosmic X", "La tabla Cosmic X es una leyenda en el mundo del snowboard. Diseñada para riders avanzados que buscan máximo rendimiento y respuesta precisa. Con tecnología Carbon Highlight y núcleo FSC™ Certified Super Fly II™ para una experiencia inigualable en la montaña.", 599.99, 20, snowboardCategory);
         Product skiBoots = new Product("Botas Ski", "Botas cómodas y resistentes para ski", 129.99, 50, skiCategory);
         Product sunglasses = new Product("Gafas de Sol", "Gafas de sol para deportes extremos", 49.99, 100, accessoryCategory);
 
         // Agregar características a los productos
-        ProductFeature feature11 = new ProductFeature(snowboard, featureService.findById(1L), 2);
-        ProductFeature feature12 = new ProductFeature(snowboard, featureService.findById(2L), 2);
-        ProductFeature feature13 = new ProductFeature(snowboard, featureService.findById(3L), 2);
-        ProductFeature feature14 = new ProductFeature(snowboard, featureService.findById(4L), 2);
+        ProductFeature feature11 = new ProductFeature(cosmicx, featureService.findById(1L), 4);
+        ProductFeature feature12 = new ProductFeature(cosmicx, featureService.findById(2L), 5);
+        ProductFeature feature13 = new ProductFeature(cosmicx, featureService.findById(3L), 5);
+        ProductFeature feature14 = new ProductFeature(cosmicx, featureService.findById(4L), 5);
 
         ProductFeature feature21 = new ProductFeature(skiBoots, featureService.findById(1L), 3);
         ProductFeature feature22 = new ProductFeature(skiBoots, featureService.findById(2L), 3);
@@ -94,7 +94,7 @@ public class DataInitializer {
         ProductFeature feature33 = new ProductFeature(sunglasses, featureService.findById(3L), 5);
         ProductFeature feature34 = new ProductFeature(sunglasses, featureService.findById(4L), 5);
 
-        snowboard.setProductFeatures(List.of(feature11,feature12, feature13, feature14));
+        cosmicx.setProductFeatures(List.of(feature11,feature12, feature13, feature14));
         skiBoots.setProductFeatures(List.of(feature21,feature22, feature23, feature24));
         sunglasses.setProductFeatures(List.of(feature31,feature32, feature33, feature34));
 
@@ -105,21 +105,29 @@ public class DataInitializer {
                 "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903377/White_Fury_rw4ugu.png"
         );
 
-        snowboard.setImages(defaultImages);
+        List<String> cosmicxImages = List.of(
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748935575/CosmicX_xfvdog.png",
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/model_3_uhc9dd.png",
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/model_1_dfrjf4.png",
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/model_2_dhavwg.png",
+                "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/model_gv4ddo.png"
+        );
+
+        cosmicx.setImages(cosmicxImages);
         skiBoots.setImages(defaultImages);
         sunglasses.setImages(defaultImages);
 
         // Agregar reseñas a los productos
-        Review review1 = new Review(5.0,"Excelente tabla", snowboard, clientService.findById(1L));
+        Review review1 = new Review(5.0,"Excelente tabla", cosmicx, clientService.findById(1L));
         Review review2 = new Review(4.0,"Muy cómodas", skiBoots, clientService.findById(2L));
         Review review3 = new Review(5.0,"Protegen bien del sol", sunglasses, clientService.findById(2L));
 
-        snowboard.setReview(List.of(review1));
+        cosmicx.setReview(List.of(review1));
         skiBoots.setReview(List.of(review2));
         sunglasses.setReview(List.of(review3));
 
         // Guardar productos
-        productService.save(snowboard);
+        productService.save(cosmicx);
         productService.save(skiBoots);
         productService.save(sunglasses);
     }

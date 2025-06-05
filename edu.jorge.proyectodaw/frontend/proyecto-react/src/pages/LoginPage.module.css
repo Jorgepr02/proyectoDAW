@@ -1,16 +1,18 @@
 .loginPage {
-  min-height: 80vh;
+  min-height: 100vh;
   background: linear-gradient(to bottom, #2d1282, #ffffff);
-  padding-top: 20px;
+  padding-top: 97px;
   font-family: "Poppins", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
-  padding: 40px 24px 20px;
+  flex: 1;
+  padding: 40px 24px;
 }
 
 .formContainer {
