@@ -16,6 +16,7 @@ const ProductDetail = () => {
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showSizeAlert, setShowSizeAlert] = useState(false); 
+  const [addedToCart, setAddedToCart] = useState(false);
 
   // Obtener usuario del localStorage
   const getUser = () => {
@@ -148,8 +149,49 @@ const ProductDetail = () => {
       setShowSizeAlert(true);
       return;
     }
-    // Lógica para añadir al carrito
-    console.log('Añadir al carrito:', { id: product.id, size: selectedSize, quantity });
+
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      size: selectedSize,
+      quantity: quantity,
+      image: product.thumbnails[0],
+      stock: product.stock
+    };
+
+    // Obtener el carrito actual del localStorage
+    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Buscar si el producto ya existe en el carrito con la misma talla
+    const existingItemIndex = currentCart.findIndex(
+      item => item.id === cartItem.id && item.size === cartItem.size
+    );
+
+    if (existingItemIndex >= 0) {
+      // Actualizar cantidad si el producto ya existe
+      const updatedCart = [...currentCart];
+      const newQuantity = updatedCart[existingItemIndex].quantity + quantity;
+      
+      if (newQuantity <= product.stock) {
+        updatedCart[existingItemIndex].quantity = newQuantity;
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        
+        // Cambiar estado del botón
+        setAddedToCart(true);
+        setTimeout(() => setAddedToCart(false), 2000); // Volver al estado normal después de 2 segundos
+      } else {
+        alert('No hay suficiente stock disponible');
+      }
+    } else {
+      // Añadir nuevo producto al carrito
+      const updatedCart = [...currentCart, cartItem];
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      
+      // Cambiar estado del botón
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000); // Volver al estado normal después de 2 segundos
+    }
   };
 
   const handleBuyNow = () => {
@@ -365,10 +407,20 @@ const ProductDetail = () => {
 
           <div className={styles.actionButtons}>
             <button 
-              className={styles.addToCartButton}
+              className={`${styles.addToCartButton} ${addedToCart ? styles.addedToCart : ''}`}
               onClick={handleAddToCart}
+              disabled={addedToCart}
             >
-              <span>Añadir al carrito</span>
+              {addedToCart ? (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                  </svg>
+                  <span>¡Añadido!</span>
+                </>
+              ) : (
+                <span>Añadir al carrito</span>
+              )}
             </button>
             <button 
               className={styles.buyNowButton}

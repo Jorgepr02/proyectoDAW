@@ -1,46 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './CartPage.module.css';
 import CartItem from '../components/CartItem/CartItem';
 
 const CartPage = () => {
   const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
 
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Cosmic X',
-      category: 'Tabla snowboard',
-      image: 'https://res.cloudinary.com/dluvwj5lo/image/upload/v1748935575/CosmicX_xfvdog.png',
-      price: 599.99,
-      size: '152',
-      quantity: 1
-    },
-    {
-      id: 2,
-      name: 'Fijaciones para snowboard',
-      category: 'Accesorios',
-      image: 'https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/fijaciones_y7cuou.png',
-      price: 119.99,
-      quantity: 2
-    },
-    {
-      id: 3,
-      name: 'Guantes térmicos',
-      category: 'Accesorios',
-      image: 'https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904515/Guantes_p94a8p.png',
-      price: 35.50,
-      quantity: 1
-    }
-  ];
+  // Cargar los productos del localStorage al montar el componente
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartItems(storedCart);
+  }, []);
 
-  const handleQuantityChange = (id, change) => {
-    // Lógica para cambiar cantidad
+  const handleQuantityChange = (id, size, change) => {
+    const updatedCart = cartItems.map(item => {
+      if (item.id === id && item.size === size) {
+        const newQuantity = Math.max(1, Math.min(item.stock, item.quantity + change));
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    });
+    setCartItems(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  const handleRemoveItem = (id) => {
-    // Lógica para eliminar item
+  const handleRemoveItem = (id, size) => {
+    const updatedCart = cartItems.filter(item => !(item.id === id && item.size === size));
+    setCartItems(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
+
+  // Calcular totales
+  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const shipping = 0; // Envío gratis
+  const total = subtotal + shipping;
+
+  if (cartItems.length === 0) {
+    return (
+      <div className={styles.cartPage}>
+        <h1 className={styles.title}>Tu Carrito</h1>
+        <div className={styles.emptyCart}>
+          <h2>Tu carrito está vacío</h2>
+          <p>¡Añade algunos productos increíbles!</p>
+          <button 
+            className={styles.continueShoppingButton}
+            onClick={() => navigate('/productos')}
+          >
+            Continuar Comprando
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.cartPage}>
@@ -50,7 +62,7 @@ const CartPage = () => {
         <div className={styles.cartItems}>
           {cartItems.map(item => (
             <CartItem
-              key={item.id}
+              key={`${item.id}-${item.size}`}
               item={item}
               onQuantityChange={handleQuantityChange}
               onRemove={handleRemoveItem}
@@ -63,7 +75,7 @@ const CartPage = () => {
           <div className={styles.summaryDetails}>
             <div className={styles.summaryRow}>
               <span>Subtotal</span>
-              <span>€875.47</span>
+              <span>€{subtotal.toFixed(2)}</span>
             </div>
             <div className={styles.summaryRow}>
               <span>Envío</span>
@@ -71,7 +83,7 @@ const CartPage = () => {
             </div>
             <div className={styles.summaryTotal}>
               <span>Total</span>
-              <span>€875.47</span>
+              <span>€{total.toFixed(2)}</span>
             </div>
           </div>
           <button className={styles.checkoutButton}>

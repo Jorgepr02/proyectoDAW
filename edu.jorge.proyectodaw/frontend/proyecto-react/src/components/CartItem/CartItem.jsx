@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './CartItem.module.css';
 
 const CartItem = ({ item, onQuantityChange, onRemove }) => {
-  const { name, category, image, price, size, quantity } = item;
+  const { id, name, image, price, size, quantity, stock } = item;
 
   return (
     <div className={styles.cartItem}>
@@ -10,31 +10,39 @@ const CartItem = ({ item, onQuantityChange, onRemove }) => {
         <img src={image} alt={name} className={styles.itemImage} />
         <div className={styles.itemInfo}>
           <h3 className={styles.itemName}>{name}</h3>
-          <p className={styles.itemCategory}>{category}</p>
           {size && (
             <p className={styles.itemSize}>
-              <span>Talla:</span> <span>{size}</span>
+              <span>Talla: {size}</span>
             </p>
           )}
+          <p className={styles.itemStock}>Stock disponible: {stock}</p>
           <div className={styles.priceContainer}>
-            <div className={styles.priceWrapper}>
-              <span className={styles.price}>€{price.toFixed(2)}</span>
-            </div>
+            <span className={styles.price}>€{price.toFixed(2)}</span>
           </div>
         </div>
       </div>
 
       <div className={styles.itemActions}>
         <button 
-          onClick={() => onRemove(item.id)}
+          onClick={() => onRemove(id, size)}
           className={styles.removeButton}
         >
           Eliminar
         </button>
         <div className={styles.quantityControls}>
-          <button onClick={() => onQuantityChange(item.id, -1)}>−</button>
+          <button 
+            onClick={() => onQuantityChange(id, size, -1)}
+            disabled={quantity <= 1}
+          >
+            −
+          </button>
           <span>{quantity}</span>
-          <button onClick={() => onQuantityChange(item.id, 1)}>+</button>
+          <button 
+            onClick={() => onQuantityChange(id, size, 1)}
+            disabled={quantity >= stock}
+          >
+            +
+          </button>
         </div>
       </div>
     </div>

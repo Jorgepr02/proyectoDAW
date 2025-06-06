@@ -191,6 +191,36 @@
   gap: 8px;
 }
 
+.addToCartButton.addedToCart {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.addToCartButton.addedToCart:hover {
+  background-color: #059669;
+  border-color: #059669;
+}
+
+.addToCartButton.addedToCart svg {
+  margin-right: 0;
+}
+
+.addToCartButton.addedToCart:disabled {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 .actionButtons {
   display: grid;
   grid-template-columns: 1fr 1fr;

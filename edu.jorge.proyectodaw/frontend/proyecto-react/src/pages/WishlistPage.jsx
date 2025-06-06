@@ -16,6 +16,7 @@ const WishlistPage = () => {
         const userString = localStorage.getItem('user');
         const user = userString ? JSON.parse(userString) : null;
         
+        // Verificar autenticación inmediatamente
         if (!user) {
           navigate('/login');
           return;
@@ -24,7 +25,19 @@ const WishlistPage = () => {
         const response = await fetch(`http://localhost:8080/api/wishlists/user/${user.id}`);
         
         if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
+          if (response.status === 404) {
+            setWishlistItems([]);
+            setError(null);
+          } else if (response.status === 401 || response.status === 403 || response.status === 500) {
+            // Token expirado, no válido, o error del servidor relacionado con auth
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            navigate('/login');
+            return;
+          } else {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+          }
+          return;
         }
         
         const data = await response.json();
@@ -46,6 +59,12 @@ const WishlistPage = () => {
         setError(null);
       } catch (err) {
         console.error('Error fetching wishlist:', err);
+        // Si hay cualquier error y no hay usuario, redirigir a login
+        const userString = localStorage.getItem('user');
+        if (!userString) {
+          navigate('/login');
+          return;
+        }
         setError(err.message);
         setWishlistItems([]);
       } finally {
@@ -54,7 +73,7 @@ const WishlistPage = () => {
     };
 
     fetchWishlist();
-  }, []);
+  }, [navigate]);
 
   const handleRemoveItem = async (productId) => {
     try {

@@ -192,6 +192,28 @@
   color: #64748b;
 }
 
+.emptyCart {
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.emptyCart h2 {
+  font-size: 24px;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.emptyCart p {
+  color: #94a3b8;
+  margin-bottom: 32px;
+}
+
+.itemStock {
+  color: #64748b;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
 @media (max-width: 991px) {
   .cartContent {
     grid-template-columns: 1fr;
