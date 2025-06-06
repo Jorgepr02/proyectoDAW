@@ -9,6 +9,8 @@ const ContactForm = () => {
     subject: '',
     message: ''
   });
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,8 +22,29 @@ const ContactForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Enviando mensaje:', formData);
-    // Aquí implementaré la lógica de envío
+    setIsSubmitting(true);
+
+    // Simular envío (mockeado)
+    setTimeout(() => {
+      console.log('Mensaje enviado (mockeado):', formData);
+      
+      // Mostrar popup de éxito
+      setShowSuccessPopup(true);
+      
+      // Vaciar formulario
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+
+      setIsSubmitting(false);
+
+      setTimeout(() => {
+        setShowSuccessPopup(false);
+      }, 3000);
+    }, 1000);
   };
 
   return (
@@ -100,10 +123,36 @@ const ContactForm = () => {
           </div>
         </div>
 
-        <button type="submit" className={styles.submitButton}>
-          Enviar mensaje
+        <button 
+          type="submit" 
+          className={styles.submitButton}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Enviando...' : 'Enviar mensaje'}
         </button>
       </form>
+
+      {/* Popup de éxito */}
+      {showSuccessPopup && (
+        <>
+          <div className={styles.overlay} onClick={() => setShowSuccessPopup(false)} />
+          <div className={styles.successPopup}>
+            <div className={styles.successIcon}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+              </svg>
+            </div>
+            <h3>¡Mensaje enviado!</h3>
+            <p>Gracias por contactarnos. Te responderemos pronto.</p>
+            <button 
+              className={styles.closeButton}
+              onClick={() => setShowSuccessPopup(false)}
+            >
+              Cerrar
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

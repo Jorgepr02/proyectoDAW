@@ -8,9 +8,7 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 public enum PaymentMethod {
-    CREDIT_CARD("tarjeta de crédito"),
-    BANK_TRANSFER("transferencia bancaria"),
-    STRIPE("Stripe"),;
+    STRIPE("Stripe");
 
     private final String method;
 }

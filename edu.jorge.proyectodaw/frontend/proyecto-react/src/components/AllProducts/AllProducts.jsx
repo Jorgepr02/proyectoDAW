@@ -266,7 +266,7 @@ export const AllProducts = () => {
 			if (!matchesSearch) return false;
 		}
 
-		// Price filter
+		// Filtro de precio
 		const productPrice = parsePrice(product.price);
 		if (
 			productPrice < activeFilters.priceRange.min ||
@@ -288,7 +288,7 @@ export const AllProducts = () => {
 			}
 		}
 
-		// AGREGAR: Filtro principal por categoría desde URL
+		// Filtro principal por categoría desde URL
 		if (activeFilter !== "Todos") {
 			if (activeFilter === "Snowboard" && product.type !== "snowboard") return false;
 			if (activeFilter === "Esquí" && product.type !== "ski") return false;
