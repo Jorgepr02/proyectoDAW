@@ -165,30 +165,6 @@ const LoginPage = () => {
                   </span>
                 </button>
 
-                <div className={styles.socialLogin}>
-                  <button type="button" className={styles.socialButton}>
-                    <img
-                      src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748982304/image_24_lze0ty.png"
-                      alt="Google"
-                      className={styles.socialIcon}
-                    />
-                  </button>
-                  <button type="button" className={styles.socialButton}>
-                    <img
-                      src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748982303/image_26_dsipnb.png"
-                      alt="Microsoft"
-                      className={styles.socialIcon}
-                    />
-                  </button>
-                  <button type="button" className={styles.socialButton}>
-                    <img
-                      src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748982304/image_25_hdqly9.png"
-                      alt="Discord"
-                      className={styles.socialIcon}
-                    />
-                  </button>
-                </div>
-
                 <div className={styles.registerPrompt}>
                   <span>No tienes cuenta? </span>
                   <button
@@ -203,7 +179,7 @@ const LoginPage = () => {
             </div>
             <div className={styles.imageSection}>
               <img
-                src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904522/ChatGPT_Image_22_abr_2025_14_21_21_nhqemj.png"
+                src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748984522/ChatGPT_Image_22_abr_2025_14_21_21_nhqemj.png"
                 alt="Miku Snowboarding"
                 className={styles.sideImage}
               />
