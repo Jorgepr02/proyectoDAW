@@ -2,6 +2,7 @@
   width: 100%;
   background-color: #fff;
   padding-top: 120px;
+  padding-bottom: 80px;
 }
 
 .hero {
@@ -23,6 +24,7 @@
   padding: 40px 32px 0;
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 40px;
 }
 
 .title {
@@ -42,6 +44,7 @@
 @media (max-width: 991px) {
   .container {
     padding-top: 100px;
+    padding-bottom: 60px;
   }
 
   .hero {
@@ -55,6 +58,7 @@
 
   .content {
     padding: 32px 24px 0;
+    margin-bottom: 32px;
   }
 
   .title {
@@ -72,6 +76,7 @@
 @media (max-width: 640px) {
   .container {
     padding-top: 90px;
+    padding-bottom: 40px;
   }
 
   .hero {
@@ -85,6 +90,7 @@
 
   .content {
     padding: 24px 16px 0;
+    margin-bottom: 24px;
   }
 
   .title {

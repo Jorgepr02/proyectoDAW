@@ -15,6 +15,7 @@ const ProductDetail = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [showSizeAlert, setShowSizeAlert] = useState(false); 
 
   // Obtener usuario del localStorage
   const getUser = () => {
@@ -140,6 +141,24 @@ const ProductDetail = () => {
     if (!reviews || reviews.length === 0) return 5;
     const totalStars = reviews.reduce((sum, review) => sum + review.stars, 0);
     return (totalStars / reviews.length).toFixed(1);
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedSize) {
+      setShowSizeAlert(true);
+      return;
+    }
+    // Lógica para añadir al carrito
+    console.log('Añadir al carrito:', { id: product.id, size: selectedSize, quantity });
+  };
+
+  const handleBuyNow = () => {
+    if (!selectedSize) {
+      setShowSizeAlert(true);
+      return;
+    }
+    // Lógica para comprar ahora
+    console.log('Comprar ahora:', { id: product.id, size: selectedSize, quantity });
   };
 
   if (loading) {
@@ -344,9 +363,20 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <button className={styles.addToCartButton}>
-            <span>Añadir al carrito</span>
-          </button>
+          <div className={styles.actionButtons}>
+            <button 
+              className={styles.addToCartButton}
+              onClick={handleAddToCart}
+            >
+              <span>Añadir al carrito</span>
+            </button>
+            <button 
+              className={styles.buyNowButton}
+              onClick={handleBuyNow}
+            >
+              <span>Comprar ahora</span>
+            </button>
+          </div>
 
           <div className={styles.reviewsSection}>
             {product.productReviews && product.productReviews.length > 0 && (
@@ -390,6 +420,36 @@ const ProductDetail = () => {
           ))}
         </div>
       </div>
+
+      {showSizeAlert && (
+        <>
+          <div className={styles.overlay} onClick={() => setShowSizeAlert(false)} />
+          <div className={styles.sizeAlert}>
+            <h3>Selecciona una talla</h3>
+            <p>Por favor, selecciona una talla antes de continuar</p>
+            <div className={styles.sizeOptionsPopup}>
+              {product.sizes.map(size => (
+                <button 
+                  key={size}
+                  className={`${styles.sizeButton} ${selectedSize === size ? styles.selected : ''}`}
+                  onClick={() => {
+                    setSelectedSize(size);
+                    setShowSizeAlert(false);
+                  }}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+            <button 
+              className={styles.cancelButton} 
+              onClick={() => setShowSizeAlert(false)}
+            >
+              Cancelar
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
