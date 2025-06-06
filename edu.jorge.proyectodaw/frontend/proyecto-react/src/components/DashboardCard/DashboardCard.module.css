@@ -1,0 +1,59 @@
+.card {
+  border-radius: 8px;
+  border: 0.3px solid #8d8d8d;
+  box-shadow:
+    0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background-color: #fff;
+}
+
+.title {
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  margin-bottom: 10px;
+}
+
+.value {
+  color: #111;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 54px;
+  margin-bottom: 5px;
+}
+
+.trend {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.trend.positive {
+  color: #58ca52;
+}
+
+.trend.negative {
+  color: #e54e4e;
+}
+
+@media (max-width: 991px) {
+  .card {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .value {
+    font-size: 20px;
+  }
+}

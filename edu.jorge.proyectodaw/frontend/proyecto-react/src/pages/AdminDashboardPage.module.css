@@ -1,0 +1,137 @@
+.content {
+  margin-left: 276px;
+  padding: 24px 40px;
+  width: calc(100% - 276px);
+  min-height: 100vh;
+}
+
+.title {
+  color: #111;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 54px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  grid-template-areas:
+    "ventas-totales ventas-mes clientes-nuevos"
+    "productos-tendencia productos-stock pedidos-mes"
+    "productos-tendencia productos-stock pedidos-pendientes";
+}
+
+.totalSales { grid-area: ventas-totales; }
+.monthlySales { grid-area: ventas-mes; }
+.newCustomers { grid-area: clientes-nuevos; }
+.monthlyOrders { grid-area: pedidos-mes; }
+.pendingOrders { grid-area: pedidos-pendientes; }
+.trendingProducts { grid-area: productos-tendencia; }
+.lowStock { grid-area: productos-stock; }
+
+.productList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.productItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.productImage {
+  width: 63px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.productInfo h3 {
+  color: #111;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  margin-bottom: 2px;
+}
+
+.salesCount {
+  color: #58ca52;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.stockCount {
+  color: #e54e4e;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+@media (max-width: 991px) {
+  .content {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 80px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "ventas-totales ventas-mes"
+      "clientes-nuevos pedidos-mes"
+      "productos-tendencia productos-stock"
+      "pedidos-pendientes pedidos-pendientes";
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: 80px 20px 20px;
+  }
+
+  .title {
+    font-size: 20px;
+    line-height: 32px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    grid-template-areas:
+      "ventas-totales"
+      "ventas-mes"
+      "clientes-nuevos"
+      "pedidos-mes"
+      "productos-tendencia"
+      "productos-stock"
+      "pedidos-pendientes";
+  }
+
+  .productItem {
+    gap: 8px;
+  }
+
+  .productImage {
+    width: 50px;
+    height: 48px;
+  }
+
+  .productInfo h3 {
+    font-size: 14px;
+  }
+
+  .salesCount,
+  .stockCount {
+    font-size: 14px;
+  }
+}
+
+/* Ajustar el sidebar para que tenga en cuenta el header */
+.sidebar {
+  top: 97px; /* añadir top para que empiece después del header */
+  height: calc(100vh - 97px); /* ajustar height */
+}
