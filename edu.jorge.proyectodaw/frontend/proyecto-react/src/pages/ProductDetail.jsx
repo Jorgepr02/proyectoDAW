@@ -145,7 +145,8 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
+    // Solo verificar talla si NO es un accesorio
+    if (!isAccessory && !selectedSize) {
       setShowSizeAlert(true);
       return;
     }
@@ -154,7 +155,7 @@ const ProductDetail = () => {
       id: product.id,
       name: product.name,
       price: product.price,
-      size: selectedSize,
+      size: isAccessory ? 'Única' : selectedSize, // Talla única para accesorios
       quantity: quantity,
       image: product.thumbnails[0],
       stock: product.stock
@@ -195,12 +196,17 @@ const ProductDetail = () => {
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
+    // Solo verificar talla si NO es un accesorio
+    if (!isAccessory && !selectedSize) {
       setShowSizeAlert(true);
       return;
     }
     // Lógica para comprar ahora
-    console.log('Comprar ahora:', { id: product.id, size: selectedSize, quantity });
+    console.log('Comprar ahora:', { 
+      id: product.id, 
+      size: isAccessory ? 'Única' : selectedSize, 
+      quantity 
+    });
   };
 
   if (loading) {
@@ -281,6 +287,9 @@ const ProductDetail = () => {
     }
   ];
 
+  // Verificar si el producto actual es un accesorio
+  const isAccessory = product && (product.category === 'Accesory' || product.category === 'Accesorios');
+
   return (
     <div className={styles.container}>
       <div className={styles.productGrid}>
@@ -325,23 +334,26 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className={styles.characteristics}>
-            <h3 className={styles.characteristicsTitle}>Características</h3>
-            {product.characteristics.map((char, index) => (
-              <div key={index} className={styles.characteristicBar}>
-                <span>{char.name}</span>
-                <div className={styles.barAndValue}>
-                  <div className={styles.barContainer}>
-                    <div 
-                      className={styles.barFill} 
-                      style={{ width: `${char.value * 20}%` }}
-                    />
+          {/* Solo mostrar características si NO es un accesorio */}
+          {!isAccessory && (
+            <div className={styles.characteristics}>
+              <h3 className={styles.characteristicsTitle}>Características</h3>
+              {product.characteristics.map((char, index) => (
+                <div key={index} className={styles.characteristicBar}>
+                  <span>{char.name}</span>
+                  <div className={styles.barAndValue}>
+                    <div className={styles.barContainer}>
+                      <div 
+                        className={styles.barFill} 
+                        style={{ width: `${char.value * 20}%` }}
+                      />
+                    </div>
+                    <span className={styles.characteristicValue}>{char.value}/5</span>
                   </div>
-                  <span className={styles.characteristicValue}>{char.value}/5</span>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
         
         <div className={styles.productInfo}>
@@ -350,7 +362,7 @@ const ProductDetail = () => {
           </div>
 
           <div className={styles.priceSection}>
-            <span className={styles.price}>{product.price}€</span>
+            <span className={styles.price}>{parseFloat(product.price).toFixed(2).replace('.', ',')}€</span>
           </div>
 
           <div className={styles.ratings}>
@@ -369,20 +381,23 @@ const ProductDetail = () => {
             </span>
           </div>
 
-          <div className={styles.sizeSelector}>
-            <label>Talla</label>
-            <div className={styles.sizeOptions}>
-              {product.sizes.map(size => (
-                <button 
-                  key={size}
-                  className={`${styles.sizeButton} ${selectedSize === size ? styles.selected : ''}`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
+          {/* Solo mostrar selector de talla si NO es un accesorio */}
+          {!isAccessory && (
+            <div className={styles.sizeSelector}>
+              <label>Talla</label>
+              <div className={styles.sizeOptions}>
+                {product.sizes.map(size => (
+                  <button 
+                    key={size}
+                    className={`${styles.sizeButton} ${selectedSize === size ? styles.selected : ''}`}
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className={styles.quantityAndWishlist}>
             <div className={styles.quantitySelector}>
@@ -453,16 +468,20 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className={styles.complementaryProducts}>
-        <h2>Complementa tu pedido</h2>
-        <div className={styles.complementaryGrid}>
-          {relatedProducts.map((product, index) => (
-            <ProductCard key={index} {...product} />
-          ))}
+      {/* Solo mostrar "Complementa tu pedido" si NO es un accesorio */}
+      {!isAccessory && (
+        <div className={styles.complementaryProducts}>
+          <h2>Complementa tu pedido</h2>
+          <div className={styles.complementaryGrid}>
+            {relatedProducts.map((product, index) => (
+              <ProductCard key={index} {...product} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <SizeCalculator />
+      {/* Solo mostrar calculadora de tallas si NO es un accesorio */}
+      {!isAccessory && <SizeCalculator />}
 
       <div className={styles.recommendedProducts}>
         <h2>También te podría interesar</h2>
@@ -473,7 +492,8 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {showSizeAlert && (
+      {/* Solo mostrar alerta de talla si NO es un accesorio */}
+      {!isAccessory && showSizeAlert && (
         <>
           <div className={styles.overlay} onClick={() => setShowSizeAlert(false)} />
           <div className={styles.sizeAlert}>
