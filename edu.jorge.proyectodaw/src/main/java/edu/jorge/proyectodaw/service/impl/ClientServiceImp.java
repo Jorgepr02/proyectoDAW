@@ -1,14 +1,14 @@
 package edu.jorge.proyectodaw.service.impl;
 
-import java.util.List;
-
+import edu.jorge.proyectodaw.entity.Client;
+import edu.jorge.proyectodaw.repositories.ClientRepo;
 import edu.jorge.proyectodaw.service.ClientService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.jorge.proyectodaw.entity.Client;
-import edu.jorge.proyectodaw.repositories.ClientRepo;
-import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ClientServiceImp implements ClientService {
@@ -33,6 +33,16 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Override
+    public Client create(Client client) {
+        client.setRegistrationDate(LocalDate.now());
+        if (client.getName() == null || client.getName().isEmpty()) {
+           String namePart = client.getUser().getEmail().split("@")[0];
+            client.setName(namePart);
+        }
+        return clientRepo.save(client);
+    }
+
+    @Override
     public Client update(Long id, Client client) {
         Client existingClient = findById(id);
         existingClient.setName(client.getName());
@@ -48,5 +58,10 @@ public class ClientServiceImp implements ClientService {
     public void delete(Long id) {
         Client client = findById(id);
         clientRepo.delete(client);
+    }
+
+    @Override
+    public Client findByUserId(Long userId) {
+        return clientRepo.findByUserId(userId);
     }
 }

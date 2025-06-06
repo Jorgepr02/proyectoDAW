@@ -3,6 +3,7 @@ package edu.jorge.proyectodaw.service.impl;
 import edu.jorge.proyectodaw.entity.Order;
 import edu.jorge.proyectodaw.entity.OrderDetails;
 import edu.jorge.proyectodaw.enums.OrderStatus;
+import edu.jorge.proyectodaw.enums.PaymentMethod;
 import edu.jorge.proyectodaw.repositories.OrderDetailsRepo;
 import edu.jorge.proyectodaw.repositories.OrderRepo;
 import edu.jorge.proyectodaw.service.ClientService;
@@ -54,6 +55,7 @@ public class OrderServiceImp implements OrderService {
     @Transactional
     public Order create(Order order) {
         order.setDate(LocalDate.now());
+        order.setOrderPaymentMethod(PaymentMethod.STRIPE);
 
         List<OrderDetails> orderDetails = order.getOrderDetails();
         List<OrderDetails> orderDetailsCreated = new ArrayList<>();
@@ -116,6 +118,7 @@ public class OrderServiceImp implements OrderService {
     @Override
     @Transactional
     public Order createOrderWithDetails(Order order, List<OrderDetails> orderDetails) {
+        order.setOrderPaymentMethod(PaymentMethod.STRIPE);
         // Calcular el precio total
         Double totalPrice = 0.0;
         for (OrderDetails od : orderDetails) {

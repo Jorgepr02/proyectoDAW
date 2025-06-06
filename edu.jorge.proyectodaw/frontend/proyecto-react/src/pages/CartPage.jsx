@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './CartPage.module.css';
 import CartItem from '../components/CartItem/CartItem';
+import CheckoutModal from '../components/CheckoutModal/CheckoutModal';
+import PaymentConfirmationModal from '../components/PaymentConfirmationModal/PaymentConfirmationModal';
 
 const CartPage = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [isPaymentConfirmationOpen, setIsPaymentConfirmationOpen] = useState(false);
+  const [pendingOrderData, setPendingOrderData] = useState(null);
+  const [createdOrder, setCreatedOrder] = useState(null);
 
   // Cargar los productos del localStorage al montar el componente
   useEffect(() => {
@@ -31,9 +37,130 @@ const CartPage = () => {
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
-  // Calcular totales
+  const handleCheckout = async (orderData) => {
+    try {
+      console.log('Datos del pedido a enviar:', orderData);
+      
+      const orderResponse = await fetch('http://localhost:8080/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      if (!orderResponse.ok) {
+        const errorText = await orderResponse.text();
+        throw new Error(`Error al crear pedido: ${orderResponse.status} - ${errorText}`);
+      }
+
+      const orderResult = await orderResponse.json();
+      console.log('Pedido creado exitosamente:', orderResult);
+      
+      // Guardar datos del pedido y mostrar modal de confirmación de pago
+      setCreatedOrder(orderResult);
+      setPendingOrderData(orderData);
+      setIsCheckoutModalOpen(false);
+      setIsPaymentConfirmationOpen(true);
+      
+    } catch (error) {
+      console.error('Error al procesar el pedido:', error);
+      alert(`Error: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+    }
+  };
+
+  const handleConfirmPayment = async () => {
+    try {
+      if (!createdOrder) {
+        throw new Error('No se encontró información del pedido');
+      }
+
+      // Obtener usuario del localStorage
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
+      
+      if (!user) {
+        alert('No se encontró información del usuario. Por favor, inicia sesión.');
+        navigate('/login');
+        return;
+      }
+
+      const orderId = createdOrder.id;
+      const amountCents = Math.round(createdOrder.amount * 100);
+
+      const clientId = user.clientId || user.id;
+
+      console.log('Procesando pago:', { orderId, amountCents, clientId, userInfo: user });
+
+      const createPaymentResponse = await fetch(
+        `http://localhost:8080/api/payments/create?orderId=${orderId}&amount=${amountCents}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!createPaymentResponse.ok) {
+        const errorText = await createPaymentResponse.text();
+        throw new Error(`Error al crear payment intent: ${createPaymentResponse.status} - ${errorText}`);
+      }
+
+      const paymentData = await createPaymentResponse.json();
+      console.log('Payment intent creado:', paymentData);
+
+      const processPaymentResponse = await fetch(
+        `http://localhost:8080/api/payments/${orderId}/pay?clientId=${clientId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!processPaymentResponse.ok) {
+        const errorText = await processPaymentResponse.text();
+        throw new Error(`Error al procesar pago: ${processPaymentResponse.status} - ${errorText}`);
+      }
+
+      const paymentResult = await processPaymentResponse.json();
+      console.log('Pago procesado exitosamente:', paymentResult);
+      
+      localStorage.removeItem('cart');
+      setCartItems([]);
+      setIsPaymentConfirmationOpen(false);
+      setPendingOrderData(null);
+      setCreatedOrder(null);
+      
+
+      alert(`¡Pago procesado con éxito!\nID del pedido: ${orderId}`);
+      navigate('/orders');
+      
+    } catch (error) {
+      console.error('Error al procesar el pago:', error);
+      alert(`Error en el pago: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+    }
+  };
+
+  // Función para debuggear información del usuario
+  const debugUserInfo = () => {
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    
+    console.log('=== DEBUG USER INFO ===');
+    console.log('LocalStorage user:', user);
+    console.log('user.id:', user?.id);
+    console.log('user.clientId:', user?.clientId);
+    console.log('clientId a usar:', user?.clientId || user?.id);
+    console.log('=======================');
+  };
+
+  // Llamar esta función antes de procesar el pago para verificar
+
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  const shipping = 0; // Envío gratis
+  const shipping = 0; 
   const total = subtotal + shipping;
 
   if (cartItems.length === 0) {
@@ -86,7 +213,10 @@ const CartPage = () => {
               <span>€{total.toFixed(2)}</span>
             </div>
           </div>
-          <button className={styles.checkoutButton}>
+          <button 
+            className={styles.checkoutButton}
+            onClick={() => setIsCheckoutModalOpen(true)}
+          >
             Proceder al Pago
           </button>
           <button 
@@ -96,15 +226,32 @@ const CartPage = () => {
             Continuar Comprando
           </button>
           <div className={styles.paymentMethods}>
-            <h3>Métodos de Pago Aceptados</h3>
+            <h3>Método de Pago</h3>
             <div className={styles.paymentTypes}>
-              <span>Visa</span>
-              <span>Mastercard</span>
-              <span>PayPal</span>
+              <span>Stripe</span>
             </div>
           </div>
         </div>
       </div>
+
+      <CheckoutModal
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setIsCheckoutModalOpen(false)}
+        cartItems={cartItems}
+        onSubmit={handleCheckout}
+      />
+
+      <PaymentConfirmationModal
+        isOpen={isPaymentConfirmationOpen}
+        onClose={() => {
+          setIsPaymentConfirmationOpen(false);
+          setPendingOrderData(null);
+          setCreatedOrder(null);
+        }}
+        orderData={pendingOrderData}
+        total={total}
+        onConfirmPayment={handleConfirmPayment}
+      />
     </div>
   );
 };

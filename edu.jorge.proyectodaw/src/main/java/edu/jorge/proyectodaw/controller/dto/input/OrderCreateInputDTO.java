@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderCreateInputDTO {
 
-    private String orderPaymentMethod;
     private String shippingNameAddress;
     private String shippingNumberAddress;
     private String notes;

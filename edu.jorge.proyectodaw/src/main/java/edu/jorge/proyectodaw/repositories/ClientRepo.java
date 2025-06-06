@@ -7,5 +7,5 @@ import edu.jorge.proyectodaw.entity.Client;
 
 @Repository
 public interface ClientRepo extends JpaRepository<Client, Long> {
-
+    Client findByUserId(Long userId);
 }

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSimpleOutputDTO {
+    private Long id;
     private LocalDate date;
     private Double amount;
     private String orderStatus;

@@ -59,10 +59,9 @@ public class Order {
     @Column(name = "stripe_payment_status")
     private String stripePaymentStatus;
 
-    public Order(LocalDate date, OrderStatus orderStatus, PaymentMethod orderPaymentMethod, String shippingNameAddress, String shippingNumberAddress, String notes, Client client) {
+    public Order(LocalDate date, OrderStatus orderStatus, String shippingNameAddress, String shippingNumberAddress, String notes, Client client) {
         this.date = date;
         this.orderStatus = orderStatus;
-        this.orderPaymentMethod = orderPaymentMethod;
         this.shippingNameAddress = shippingNameAddress;
         this.shippingNumberAddress = shippingNumberAddress;
         this.notes = notes;

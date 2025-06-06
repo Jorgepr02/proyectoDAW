@@ -131,7 +131,6 @@ public class OrderController {
         Order order = new Order();
         order.setDate(LocalDate.now());
         order.setOrderStatus(OrderStatus.PENDING); // Estado inicial por defecto
-        order.setOrderPaymentMethod(PaymentMethod.valueOf(orderCreateInputDTO.getOrderPaymentMethod().toUpperCase()));
         order.setShippingNameAddress(orderCreateInputDTO.getShippingNameAddress());
         order.setShippingNumberAddress(orderCreateInputDTO.getShippingNumberAddress());
         order.setNotes(orderCreateInputDTO.getNotes());
@@ -161,6 +160,7 @@ public class OrderController {
 
     private OrderSimpleOutputDTO convertToDTO(Order order) {
         OrderSimpleOutputDTO dto = new OrderSimpleOutputDTO();
+        dto.setId(order.getId());
         dto.setDate(order.getDate());
         dto.setAmount(order.getAmount());
         dto.setOrderStatus(order.getOrderStatus().name());

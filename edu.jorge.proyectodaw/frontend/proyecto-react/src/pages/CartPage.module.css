@@ -157,14 +157,16 @@
 }
 
 .paymentMethods {
-  border-top: 1px solid #e2e8f0;
-  padding-top: 24px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .paymentMethods h3 {
-  font-size: 14px;
-  color: #64748b;
-  margin-bottom: 16px;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
 }
 
 .paymentIcons {
@@ -181,15 +183,18 @@
 
 .paymentTypes {
   display: flex;
-  gap: 8px;
+  gap: 12px;
+  align-items: center;
 }
 
 .paymentTypes span {
   padding: 8px 16px;
-  background-color: #f1f5f9;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
-  color: #64748b;
+  font-weight: 500;
+  color: #374151;
 }
 
 .emptyCart {

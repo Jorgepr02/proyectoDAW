@@ -1,21 +1,13 @@
 package edu.jorge.proyectodaw.entity;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "client")
@@ -29,7 +21,7 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
     @Column(nullable = false)
@@ -55,4 +47,18 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private List<Order> orders;
+
+    public Client(String name, String email, String phone, String nameAddr, String numberAddr, User user) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.nameAddr = nameAddr;
+        this.numberAddr = numberAddr;
+        this.user = user;
+    }
+
+    public Client(String email, User user) {
+        this.email = email;
+        this.user = user;
+    }
 }

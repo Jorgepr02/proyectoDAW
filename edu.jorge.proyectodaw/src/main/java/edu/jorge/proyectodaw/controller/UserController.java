@@ -3,6 +3,7 @@ package edu.jorge.proyectodaw.controller;
 import edu.jorge.proyectodaw.controller.dto.input.UserInputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.UserSimpleOutputDTO;
 import edu.jorge.proyectodaw.entity.User;
+import edu.jorge.proyectodaw.service.ClientService;
 import edu.jorge.proyectodaw.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ClientService clientService;
 
     @GetMapping
     public ResponseEntity<List<UserSimpleOutputDTO>> findAll() {

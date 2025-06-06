@@ -3,14 +3,17 @@ package edu.jorge.proyectodaw.controller;
 import edu.jorge.proyectodaw.controller.dto.input.LoginRequest;
 import edu.jorge.proyectodaw.controller.dto.input.RegisterRequest;
 import edu.jorge.proyectodaw.controller.dto.input.Valid;
-import edu.jorge.proyectodaw.controller.dto.output.JwtResponse;
+import edu.jorge.proyectodaw.controller.dto.output.LoginOutputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.MessageResponse;
+import edu.jorge.proyectodaw.controller.dto.output.UserOutputDTO;
+import edu.jorge.proyectodaw.entity.Client;
 import edu.jorge.proyectodaw.entity.Role;
 import edu.jorge.proyectodaw.entity.User;
 import edu.jorge.proyectodaw.enums.ERole;
 import edu.jorge.proyectodaw.repositories.RoleRepo;
 import edu.jorge.proyectodaw.repositories.UserRepo;
 import edu.jorge.proyectodaw.security.jwt.JwtUtils;
+import edu.jorge.proyectodaw.service.ClientService;
 import edu.jorge.proyectodaw.service.impl.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +48,11 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    ClientService clientService;
+
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginOutputDTO> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -59,11 +65,19 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles));
+        Client client = clientService.findByUserId(userDetails.getId());
+        Long clientId = client.getId();
+
+        return ResponseEntity.ok(
+                new LoginOutputDTO(
+                        jwt,
+                        userDetails.getId(),
+                        userDetails.getUsername(),
+                        userDetails.getEmail(),
+                        roles,
+                        clientId
+                )
+        );
     }
 
     @PostMapping("/register")
@@ -116,8 +130,24 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+        User createdUser = userRepository.save(user);
+        Client createdClient = clientService.create(new Client(user.getEmail(), createdUser));
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        return ResponseEntity
+                .ok(
+                        convertToUserOutputDTO(createdUser, createdClient)
+        );
+    }
+
+    private UserOutputDTO convertToUserOutputDTO(User user, Client client) {
+        return new UserOutputDTO(
+            user.getId(),
+            user.getUsername(),
+            user.getEmail(),
+            user.getRoles().stream()
+                .map(role -> role.getName().name())
+                .collect(Collectors.joining(", ")),
+                client.getId()
+        );
     }
 }

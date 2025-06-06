@@ -74,12 +74,36 @@ const RegisterPage = () => {
       const data = await response.json();
       
       if (response.ok) {
-        setSuccess("¡Usuario registrado exitosamente!");
+        console.log('Usuario registrado:', data);
+        
+        setSuccess(`¡Usuario ${data.username} registrado exitosamente!`);
+        
+        const userInfo = {
+          id: data.clientId, 
+          userId: data.id,
+          clientId: data.clientId,
+          username: data.username,
+          email: data.email,
+          roles: data.roles
+        };
+        
+        localStorage.setItem('user', JSON.stringify(userInfo));
+        
         setTimeout(() => {
-          navigate("/login");
+          navigate("/");
         }, 2000);
       } else {
-        setError(data.message || "Error al registrar usuario");
+        if (data.message) {
+          if (data.message.includes("Username is already taken")) {
+            setError("El nombre de usuario ya está en uso");
+          } else if (data.message.includes("Email is already in use")) {
+            setError("El email ya está registrado");
+          } else {
+            setError(data.message);
+          }
+        } else {
+          setError("Error al registrar usuario");
+        }
       }
     } catch (err) {
       console.error('Error registering user:', err);

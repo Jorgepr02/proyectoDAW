@@ -334,7 +334,6 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Solo mostrar características si NO es un accesorio */}
           {!isAccessory && (
             <div className={styles.characteristics}>
               <h3 className={styles.characteristicsTitle}>Características</h3>
@@ -381,7 +380,6 @@ const ProductDetail = () => {
             </span>
           </div>
 
-          {/* Solo mostrar selector de talla si NO es un accesorio */}
           {!isAccessory && (
             <div className={styles.sizeSelector}>
               <label>Talla</label>
@@ -468,7 +466,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Solo mostrar "Complementa tu pedido" si NO es un accesorio */}
       {!isAccessory && (
         <div className={styles.complementaryProducts}>
           <h2>Complementa tu pedido</h2>
@@ -480,7 +477,6 @@ const ProductDetail = () => {
         </div>
       )}
 
-      {/* Solo mostrar calculadora de tallas si NO es un accesorio */}
       {!isAccessory && <SizeCalculator />}
 
       <div className={styles.recommendedProducts}>
@@ -492,7 +488,6 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      {/* Solo mostrar alerta de talla si NO es un accesorio */}
       {!isAccessory && showSizeAlert && (
         <>
           <div className={styles.overlay} onClick={() => setShowSizeAlert(false)} />

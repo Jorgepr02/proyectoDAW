@@ -2,7 +2,6 @@ package edu.jorge.proyectodaw.config;
 
 import edu.jorge.proyectodaw.entity.*;
 import edu.jorge.proyectodaw.enums.OrderStatus;
-import edu.jorge.proyectodaw.enums.PaymentMethod;
 import edu.jorge.proyectodaw.repositories.RoleRepo;
 import edu.jorge.proyectodaw.service.*;
 import org.springframework.boot.CommandLineRunner;
@@ -240,7 +239,7 @@ public class DataInitializer {
 
     private void initOrders(OrderService orderService, ClientService clientService, ProductService productService) {
         // Crear un pedido con sus detalles
-        Order order = new Order(LocalDate.now(), OrderStatus.PENDING, PaymentMethod.STRIPE, "nombre de la calle", "Número de la calle", "ANOTACIONES", clientService.findById(2L));
+        Order order = new Order(LocalDate.now(), OrderStatus.PENDING, "nombre de la calle", "Número de la calle", "ANOTACIONES", clientService.findById(2L));
 
         // Crear detalles del pedido
         OrderDetails od1 = new OrderDetails(null, productService.findById(2L), 2, null);

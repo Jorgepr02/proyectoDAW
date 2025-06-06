@@ -130,8 +130,7 @@
   }
 }
 
-/* Ajustar el sidebar para que tenga en cuenta el header */
 .sidebar {
-  top: 97px; /* añadir top para que empiece después del header */
-  height: calc(100vh - 97px); /* ajustar height */
+  top: 97px;
+  height: calc(100vh - 97px);
 }

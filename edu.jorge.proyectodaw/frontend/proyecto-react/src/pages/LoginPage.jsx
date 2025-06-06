@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    username: "", // Cambiado de email a username
+    username: "",
     password: "",
   });
 
@@ -51,7 +51,7 @@ const LoginPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: formData.username, // Usar username
+          username: formData.username,
           password: formData.password
         })
       });
@@ -59,17 +59,24 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Guardar token y datos del usuario en localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify({
-          id: data.id,
+        const userInfo = {
+          id: data.clientId || data.id, 
+          userId: data.id,      
+          clientId: data.clientId,
           username: data.username,
           email: data.email,
-          roles: data.roles
-        }));
+          roles: Array.isArray(data.roles) ? data.roles : [data.roles]
+        };
         
-        // Redirigir a página principal
-        navigate("/");
+        localStorage.setItem('user', JSON.stringify(userInfo));
+        
+        const authToken = `${data.type} ${data.token}`;
+        localStorage.setItem('authToken', authToken);
+        
+        console.log('Usuario logueado:', userInfo);
+        console.log('Token guardado:', authToken);
+        
+        navigate('/');
       } else {
         setError(data.message || "Error al iniciar sesión");
       }
