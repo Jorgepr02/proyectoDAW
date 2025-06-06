@@ -225,59 +225,59 @@ const ProductDetail = () => {
     );
   }
 
-  // Productos relacionados (hardcodeados por ahora)
+  // Productos relacionados (hardcodeados)
   const relatedProducts = [
-    {
-      id: 1,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Divinium_Pure_sh38fd.png",
-      title: "Fijaciones para snowboard",
-      category: "Accesorios",
-      price: "119,99"
-    },
-    {
-      id: 2,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904513/Vanilla_Luv_red_mzurex.png",
-      title: "Guantes térmicos",
-      category: "Accesorios",
-      price: "35,50"
-    },
-    {
-      id: 3,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904510/Etherreum_h2ehdk.png",
-      title: "Botas de snowboard",
-      category: "Calzado",
-      price: "109,90"
-    }
+  {
+    id: 9,
+    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904515/Gafas_ch5po3.png",
+    title: "Gafas de Snow Antiniebla",
+    category: "Accesorios",
+    price: "49,99"
+  },
+  {
+    id: 10,
+    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904515/Guantes_p94a8p.png",
+    title: "Guantes Térmicos",
+    category: "Accesorios",
+    price: "35,50"
+  },
+  {
+    id: 11,
+    image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/botas_kl6eqm.png",
+    title: "Botas de Snowboard",
+    category: "Accesorios",
+    price: "109,90"
+  }
   ];
 
   const recommendedProducts = [
     {
-      id: 4,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904513/Cosmic_Wanderer1_riyfal.png",
-      title: "Burton Custom X",
-      category: "Snowboard",
-      price: "649,99"
-    },
-    {
       id: 5,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904512/Cosmic_Reaver_jkfwgw.png",
-      title: "K2 Manifest",
-      category: "Snowboard",
-      price: "589,99"
+      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903377/Cosmic_Y_utppmw.png",
+      title: "Cosmic Y",
+      category: "Esquís",
+      price: "399,99"
     },
     {
-      id: 6,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904517/Purple_Thunder_iol78a.png",
-      title: "Nitro Team Pro",
-      category: "Snowboard",
-      price: "559,99"
+      id: 3,
+      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/Vanilla_Luv_red_ckwphd.png",
+      title: "Vanilla Luv",
+      category: "Tabla snowboard",
+      price: "339,99"
     },
     {
       id: 7,
-      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904509/Kaizen_egtrjx.png",
-      title: "Ride Algorythm",
-      category: "Snowboard",
-      price: "579,99"
+      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/Vanilla_Disluv_l5iayv.png",
+      title: "Vanilla Disluv",
+      category: "Esquís",
+      price: "339,99"
+    },
+    {
+      id: 2,
+      image: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748904508/Divinium_Fallen_gr7oya.png",
+      title: "Divinium",
+      category: "Tabla snowboard",
+      price: "669,99"
     }
   ];
 
