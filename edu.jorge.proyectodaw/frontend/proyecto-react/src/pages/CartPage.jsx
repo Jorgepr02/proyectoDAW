@@ -13,7 +13,6 @@ const CartPage = () => {
   const [pendingOrderData, setPendingOrderData] = useState(null);
   const [createdOrder, setCreatedOrder] = useState(null);
 
-  // Cargar los productos del localStorage al montar el componente
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCartItems(storedCart);
@@ -39,6 +38,7 @@ const CartPage = () => {
 
   const handleCheckout = async (orderData) => {
     try {
+      console.log('=== INICIANDO CHECKOUT ===');
       console.log('Datos del pedido a enviar:', orderData);
       
       const orderResponse = await fetch('http://localhost:8080/api/orders', {
@@ -49,19 +49,26 @@ const CartPage = () => {
         body: JSON.stringify(orderData)
       });
 
+      console.log('Response status:', orderResponse.status);
+
       if (!orderResponse.ok) {
         const errorText = await orderResponse.text();
+        console.error('Error en response:', errorText);
         throw new Error(`Error al crear pedido: ${orderResponse.status} - ${errorText}`);
       }
 
       const orderResult = await orderResponse.json();
       console.log('Pedido creado exitosamente:', orderResult);
       
-      // Guardar datos del pedido y mostrar modal de confirmación de pago
       setCreatedOrder(orderResult);
       setPendingOrderData(orderData);
-      setIsCheckoutModalOpen(false);
-      setIsPaymentConfirmationOpen(true);
+      
+      setTimeout(() => {
+        setIsCheckoutModalOpen(false)
+        setTimeout(() => {
+          setIsPaymentConfirmationOpen(true);
+        }, 100);
+      }, 100);
       
     } catch (error) {
       console.error('Error al procesar el pedido:', error);
@@ -75,7 +82,6 @@ const CartPage = () => {
         throw new Error('No se encontró información del pedido');
       }
 
-      // Obtener usuario del localStorage
       const userString = localStorage.getItem('user');
       const user = userString ? JSON.parse(userString) : null;
       
@@ -144,7 +150,6 @@ const CartPage = () => {
     }
   };
 
-  // Función para debuggear información del usuario
   const debugUserInfo = () => {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
@@ -156,8 +161,6 @@ const CartPage = () => {
     console.log('clientId a usar:', user?.clientId || user?.id);
     console.log('=======================');
   };
-
-  // Llamar esta función antes de procesar el pago para verificar
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   const shipping = 0; 

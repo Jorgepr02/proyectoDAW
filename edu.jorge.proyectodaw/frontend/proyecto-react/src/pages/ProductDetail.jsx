@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ProductCard } from '../components/ProductCard/ProductCard';
 import SizeCalculator from '../components/SizeCalculator/SizeCalculator';
+import CheckoutModal from '../components/CheckoutModal/CheckoutModal';
+import PaymentConfirmationModal from '../components/PaymentConfirmationModal/PaymentConfirmationModal';
 import styles from './ProductDetail.module.css';
 
 const ProductDetail = () => {
@@ -17,8 +19,12 @@ const ProductDetail = () => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [showSizeAlert, setShowSizeAlert] = useState(false); 
   const [addedToCart, setAddedToCart] = useState(false);
+  
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [isPaymentConfirmationOpen, setIsPaymentConfirmationOpen] = useState(false);
+  const [pendingOrderData, setPendingOrderData] = useState(null);
+  const [createdOrder, setCreatedOrder] = useState(null);
 
-  // Obtener usuario del localStorage
   const getUser = () => {
     const userString = localStorage.getItem('user');
     return userString ? JSON.parse(userString) : null;
@@ -29,7 +35,6 @@ const ProductDetail = () => {
     if (!user) return;
 
     try {
-      // CAMBIO: Usar específicamente userId
       const userId = user.userId || user.id;
       const response = await fetch(
         `http://localhost:8080/api/wishlists/exists?userId=${userId}&productId=${productId}`
@@ -52,7 +57,6 @@ const ProductDetail = () => {
     
     try {
       const action = isInWishlist ? 'remove' : 'add';
-      // CAMBIO: Usar específicamente userId
       const userId = user.userId || user.id;
       
       const response = await fetch(
@@ -63,7 +67,7 @@ const ProductDetail = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: userId, // Usar userId correcto
+            userId: userId,
             productId: parseInt(id)
           })
         }
@@ -150,7 +154,6 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    // Solo verificar talla si NO es un accesorio
     if (!isAccessory && !selectedSize) {
       setShowSizeAlert(true);
       return;
@@ -160,7 +163,7 @@ const ProductDetail = () => {
       id: product.id,
       name: product.name,
       price: product.price,
-      size: isAccessory ? 'Única' : selectedSize, // Talla única para accesorios
+      size: isAccessory ? 'Única' : selectedSize,
       quantity: quantity,
       image: product.thumbnails[0],
       stock: product.stock
@@ -206,12 +209,139 @@ const ProductDetail = () => {
       setShowSizeAlert(true);
       return;
     }
-    // Lógica para comprar ahora
-    console.log('Comprar ahora:', { 
-      id: product.id, 
-      size: isAccessory ? 'Única' : selectedSize, 
-      quantity 
-    });
+    
+    // Verificar que el usuario esté logueado
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    // Abrir modal de checkout directamente
+    setIsCheckoutModalOpen(true);
+  };
+  const handleDirectCheckout = async (orderData) => {
+    try {
+      console.log('=== INICIANDO CHECKOUT DIRECTO ===');
+      console.log('Datos del pedido directo a enviar:', orderData);
+      
+      const orderResponse = await fetch('http://localhost:8080/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      console.log('Response status:', orderResponse.status);
+
+      if (!orderResponse.ok) {
+        const errorText = await orderResponse.text();
+        console.error('Error en response:', errorText);
+        throw new Error(`Error al crear pedido: ${orderResponse.status} - ${errorText}`);
+      }
+
+      const orderResult = await orderResponse.json();
+      console.log('Pedido directo creado exitosamente:', orderResult);
+      
+      setCreatedOrder(orderResult);
+      setPendingOrderData(orderData);
+      
+      setTimeout(() => {
+        setIsCheckoutModalOpen(false);
+        setTimeout(() => {
+          setIsPaymentConfirmationOpen(true);
+        }, 100);
+      }, 100);
+      
+    } catch (error) {
+      console.error('Error al procesar el pedido directo:', error);
+      alert(`Error: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+    }
+  };
+
+  const handleConfirmDirectPayment = async () => {
+    try {
+      if (!createdOrder) {
+        throw new Error('No se encontró información del pedido');
+      }
+
+      const userString = localStorage.getItem('user');
+      const user = userString ? JSON.parse(userString) : null;
+      
+      if (!user) {
+        alert('No se encontró información del usuario. Por favor, inicia sesión.');
+        navigate('/login');
+        return;
+      }
+
+      const orderId = createdOrder.id;
+      const amountCents = Math.round(createdOrder.amount * 100);
+      const clientId = user.clientId || user.id;
+
+      console.log('Procesando pago directo:', { orderId, amountCents, clientId, userInfo: user });
+
+      const createPaymentResponse = await fetch(
+        `http://localhost:8080/api/payments/create?orderId=${orderId}&amount=${amountCents}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!createPaymentResponse.ok) {
+        const errorText = await createPaymentResponse.text();
+        throw new Error(`Error al crear payment intent: ${createPaymentResponse.status} - ${errorText}`);
+      }
+
+      const paymentData = await createPaymentResponse.json();
+      console.log('Payment intent creado:', paymentData);
+
+      const processPaymentResponse = await fetch(
+        `http://localhost:8080/api/payments/${orderId}/pay?clientId=${clientId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!processPaymentResponse.ok) {
+        const errorText = await processPaymentResponse.text();
+        throw new Error(`Error al procesar pago: ${processPaymentResponse.status} - ${errorText}`);
+      }
+
+      const paymentResult = await processPaymentResponse.json();
+      console.log('Pago directo procesado exitosamente:', paymentResult);
+      
+      setIsPaymentConfirmationOpen(false);
+      setPendingOrderData(null);
+      setCreatedOrder(null);
+      
+      alert(`¡Pago procesado con éxito!\nID del pedido: ${orderId}`);
+      navigate('/orders');
+      
+    } catch (error) {
+      console.error('Error al procesar el pago directo:', error);
+      alert(`Error en el pago: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+    }
+  };
+
+  const createDirectPurchaseItem = () => {
+    return {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      size: isAccessory ? 'Única' : selectedSize,
+      quantity: quantity,
+      image: product.thumbnails[0],
+      stock: product.stock
+    };
   };
 
   if (loading) {
@@ -443,6 +573,7 @@ const ProductDetail = () => {
             <button 
               className={styles.buyNowButton}
               onClick={handleBuyNow}
+              disabled={product?.stock <= 0}
             >
               <span>Comprar ahora</span>
             </button>
@@ -522,6 +653,25 @@ const ProductDetail = () => {
           </div>
         </>
       )}
+
+      <CheckoutModal
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setIsCheckoutModalOpen(false)}
+        cartItems={product ? [createDirectPurchaseItem()] : []}
+        onSubmit={handleDirectCheckout}
+      />
+
+      <PaymentConfirmationModal
+        isOpen={isPaymentConfirmationOpen}
+        onClose={() => {
+          setIsPaymentConfirmationOpen(false);
+          setPendingOrderData(null);
+          setCreatedOrder(null);
+        }}
+        orderData={pendingOrderData}
+        total={product ? (product.price * quantity) : 0}
+        onConfirmPayment={handleConfirmDirectPayment}
+      />
     </div>
   );
 };
