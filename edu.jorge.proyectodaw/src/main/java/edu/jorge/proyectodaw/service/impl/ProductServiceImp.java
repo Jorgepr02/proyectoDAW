@@ -1,8 +1,6 @@
 package edu.jorge.proyectodaw.service.impl;
 
 import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
-import edu.jorge.proyectodaw.controller.dto.output.ProductSimpleOutputDTO;
-import edu.jorge.proyectodaw.entity.Category;
 import edu.jorge.proyectodaw.entity.Feature;
 import edu.jorge.proyectodaw.entity.Product;
 import edu.jorge.proyectodaw.entity.ProductFeature;
@@ -17,9 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -49,6 +45,33 @@ public class ProductServiceImp implements ProductService {
     public Product save(Product product) {
         product.setCategory(categoryService.findById(product.getCategory().getId()));
         return productRepo.save(product);
+    }
+
+    @Override
+    public Product create(Product product) {
+        product.setCategory(categoryService.findById(product.getCategory().getId()));
+        product.setStock(10);
+
+        Product createdProduct = productRepo.save(product);
+
+        if (product.getProductFeatures() != null) {
+            for (ProductFeature productFeature : product.getProductFeatures()) {
+                Feature feature = featureService.findById(productFeature.getFeature().getId());
+                productFeature.setProduct(createdProduct);
+                productFeature.setFeature(feature);
+                productFeatureRepo.save(productFeature);
+            }
+        }
+
+        if (product.getCategory().getCategoryType() == CategoryType.ACCESORY) {
+            product.setProductFeatures(null);
+        } else {
+            if (product.getProductFeatures() == null || product.getProductFeatures().isEmpty()) {
+                throw new IllegalArgumentException("Los productos de tipo " + product.getCategory().getCategoryType() + " deben tener al menos una característica.");
+            }
+        }
+
+        return createdProduct;
     }
 
 // TODO ESTO ES UN EJEMPLO ¡¡NO SE UTILIZA!!

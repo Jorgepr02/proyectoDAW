@@ -11,13 +11,18 @@ import edu.jorge.proyectodaw.service.ProductService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -81,7 +86,7 @@ public class ProductController {
         product.setProductFeatures(productFeatures);
 
         // Entity
-        Product createdProduct = productService.save(product);
+        Product createdProduct = productService.create(product);
 
         // Output DTO
         ProductFullOutputDTO createdProductDTO = new ProductFullOutputDTO();
@@ -149,6 +154,15 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ningún archivo válido para subir");
         }
 
+        Product product = productService.findById(productId);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado con ID: " + productId);
+        }
+        List<String> existingImages = product.getImages() != null ? product.getImages() : new ArrayList<>();
+        existingImages.addAll(fileDownloadUris);
+        product.setImages(existingImages);
+        productService.save(product);
+
         return ResponseEntity.ok("Fotos subidas correctamente: " + fileDownloadUris);
     }
 
@@ -190,6 +204,37 @@ public class ProductController {
                         productService.findById(id)
                 )
         );
+    }
+
+    @GetMapping("/imgs/{filename:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
+        try {
+            Path filePath = storagePath.resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists()) {
+                String contentType = null;
+                try {
+                    contentType = Files.probeContentType(filePath);
+                } catch (IOException ex) {
+                    System.out.println("Could not determine file type.");
+                }
+
+                // Fallback para tipos de contenido
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
