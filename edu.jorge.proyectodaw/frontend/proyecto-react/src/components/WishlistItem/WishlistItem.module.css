@@ -133,6 +133,120 @@
   cursor: not-allowed;
 }
 
+.clickable {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.clickable:hover {
+  opacity: 0.8;
+}
+
+.productTitle.clickable:hover {
+  text-decoration: underline;
+}
+
+.addToCartButton.addedToCart {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+  color: white !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.addToCartButton.addedToCart:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+}
+
+.addToCartButton.addedToCart:disabled {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+  color: white !important;
+  cursor: default;
+}
+
+.sizeAlert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  z-index: 1000;
+  width: 90%;
+  max-width: 400px;
+}
+
+.sizeAlert h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.sizeAlert p {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.sizeOptionsPopup {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.sizeOptionsPopup .sizeButton {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.sizeOptionsPopup .sizeButton.selected {
+  border-color: #2d1282;
+  color: #2d1282;
+  background-color: #f8f7fd;
+}
+
+.sizeOptionsPopup .sizeButton:hover {
+  border-color: #2d1282;
+}
+
+.cancelButton {
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background: #e2e8f0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
 @media (max-width: 768px) {
   .wishlistItem {
     flex-direction: column;

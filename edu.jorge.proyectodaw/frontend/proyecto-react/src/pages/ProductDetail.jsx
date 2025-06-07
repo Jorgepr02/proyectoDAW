@@ -29,8 +29,10 @@ const ProductDetail = () => {
     if (!user) return;
 
     try {
+      // CAMBIO: Usar específicamente userId
+      const userId = user.userId || user.id;
       const response = await fetch(
-        `http://localhost:8080/api/wishlists/exists?userId=${user.id}&productId=${productId}`
+        `http://localhost:8080/api/wishlists/exists?userId=${userId}&productId=${productId}`
       );
       const isInList = await response.json();
       setIsInWishlist(isInList);
@@ -50,6 +52,9 @@ const ProductDetail = () => {
     
     try {
       const action = isInWishlist ? 'remove' : 'add';
+      // CAMBIO: Usar específicamente userId
+      const userId = user.userId || user.id;
+      
       const response = await fetch(
         `http://localhost:8080/api/wishlists?productAction=${action}`,
         {
@@ -58,7 +63,7 @@ const ProductDetail = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: user.id,
+            userId: userId, // Usar userId correcto
             productId: parseInt(id)
           })
         }

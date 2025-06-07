@@ -22,7 +22,13 @@ const WishlistPage = () => {
           return;
         }
         
-        const response = await fetch(`http://localhost:8080/api/wishlists/user/${user.clientId || user.id}`);
+        const userId = user.userId || user.id;
+        console.log('=== DEBUG WISHLIST ===');
+        console.log('User object:', user);
+        console.log('Using userId:', userId);
+        console.log('======================');
+        
+        const response = await fetch(`http://localhost:8080/api/wishlists/user/${userId}`);
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -43,6 +49,12 @@ const WishlistPage = () => {
         const data = await response.json();
         console.log('Wishlist obtenida:', data);
         
+        if (!Array.isArray(data)) {
+          console.error('La respuesta no es un array:', data);
+          setWishlistItems([]);
+          return;
+        }
+        
         const mappedItems = data.map(item => ({
           id: item.id,
           productId: item.id,
@@ -52,9 +64,10 @@ const WishlistPage = () => {
           title: item.name,
           category: item.categoryName,
           price: item.price,
-          inStock: true
+          inStock: item.stock !== undefined ? item.stock > 0 : true
         }));
         
+        console.log('Mapped items:', mappedItems);
         setWishlistItems(mappedItems);
         setError(null);
       } catch (err) {
@@ -85,6 +98,8 @@ const WishlistPage = () => {
         return;
       }
 
+      const userId = user.userId || user.id;
+
       const response = await fetch(
         `http://localhost:8080/api/wishlists?productAction=remove`,
         {
@@ -93,7 +108,7 @@ const WishlistPage = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: user.clientId || user.id,
+            userId: userId,
             productId: productId
           })
         }
@@ -113,14 +128,38 @@ const WishlistPage = () => {
   const handleAddToCart = async (wishlistItemId) => {
     try {
       const item = wishlistItems.find(item => item.id === wishlistItemId);
-      if (!item) return;
-      const cartData = {
-        productId: item.productId,
-        quantity: 1
+      if (!item) {
+        console.error('Item no encontrado en wishlist');
+        return;
+      }
+
+      const cartItem = {
+        id: item.productId,
+        name: item.title,
+        price: item.price,
+        image: item.image,
+        size: 'Única',
+        quantity: 1,
+        stock: 10
       };
 
-      console.log('Añadir al carrito:', cartData);
-      alert('Producto añadido al carrito');
+      const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+      
+      const existingItemIndex = currentCart.findIndex(
+        cartItem => cartItem.id === item.productId && cartItem.size === 'Única'
+      );
+
+      if (existingItemIndex >= 0) {
+        const updatedCart = [...currentCart];
+        updatedCart[existingItemIndex].quantity += 1;
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+      } else {
+        const updatedCart = [...currentCart, cartItem];
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+      }
+
+      alert(`${item.title} añadido al carrito`);
+      
     } catch (err) {
       console.error('Error adding to cart:', err);
       alert('Error al añadir el producto al carrito');
@@ -129,6 +168,10 @@ const WishlistPage = () => {
 
   const handleContactSupport = () => {
     navigate('/contacto');
+  };
+
+  const handleProductClick = (productId) => {
+    navigate(`/productos/${productId}`);
   };
 
   if (loading) {
@@ -169,6 +212,7 @@ const WishlistPage = () => {
                 {...item}
                 onRemove={handleRemoveItem}
                 onAddToCart={handleAddToCart}
+                onProductClick={handleProductClick}
               />
             ))
           ) : (
