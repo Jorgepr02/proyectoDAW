@@ -24,6 +24,9 @@ const AdminProductFormPage = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [error, setError] = useState('');
+  
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -56,7 +59,6 @@ const AdminProductFormPage = () => {
         const data = await response.json();
         setFeatures(data);
         
-        // Inicializar las primeras 4 features con valor 1
         const initialFeatures = data.slice(0, 4).map(feature => ({
           idFeature: feature.id,
           value: 1
@@ -80,7 +82,6 @@ const AdminProductFormPage = () => {
       if (response.ok) {
         const product = await response.json();
         
-        // Mapear las features del producto o usar las primeras 4 por defecto
         const productFeatures = product.features && product.features.length > 0 ? 
           product.features.map(feature => ({
             idFeature: feature.id,
@@ -99,7 +100,6 @@ const AdminProductFormPage = () => {
           productFeatures: productFeatures
         });
 
-        // Cargar imágenes existentes
         if (product.images && product.images.length > 0) {
           setUploadedImages(product.images);
         }
@@ -145,7 +145,6 @@ const AdminProductFormPage = () => {
     
     if (files.length === 0) return;
 
-    // Validar tipos de archivo
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     const invalidFiles = files.filter(file => !validTypes.includes(file.type));
     
@@ -154,7 +153,6 @@ const AdminProductFormPage = () => {
       return;
     }
 
-    // Validar tamaño de archivo (máximo 5MB por archivo)
     const maxSize = 5 * 1024 * 1024; // 5MB
     const oversizedFiles = files.filter(file => file.size > maxSize);
     
@@ -165,7 +163,6 @@ const AdminProductFormPage = () => {
 
     setSelectedFiles(files);
     
-    // Crear previsualizaciones
     const previews = [];
     files.forEach(file => {
       const reader = new FileReader();
@@ -214,7 +211,6 @@ const AdminProductFormPage = () => {
         const result = await response.text();
         console.log('Imágenes subidas:', result);
         
-        // Limpiar archivos seleccionados después de subir
         setSelectedFiles([]);
         setImagePreviews([]);
         
@@ -270,20 +266,24 @@ const AdminProductFormPage = () => {
         const result = await response.json();
         const productId = isEditing ? id : result.id;
 
-        // Subir imágenes si hay alguna seleccionada
+        let message = `Producto ${isEditing ? 'actualizado' : 'creado'} exitosamente`;
+
         if (selectedFiles.length > 0) {
           const imageUploadSuccess = await uploadImages(productId);
           if (!imageUploadSuccess) {
-            // Si falló la subida de imágenes pero el producto se creó/actualizó
-            alert(`Producto ${isEditing ? 'actualizado' : 'creado'} exitosamente, pero hubo un error al subir las imágenes`);
+            message += ', pero hubo un error al subir las imágenes';
           } else {
-            alert(`Producto ${isEditing ? 'actualizado' : 'creado'} exitosamente con imágenes`);
+            message += ' con imágenes';
           }
-        } else {
-          alert(`Producto ${isEditing ? 'actualizado' : 'creado'} exitosamente`);
         }
+
+        setSuccessMessage(message);
+        setShowSuccessModal(true);
         
-        navigate('/admin/productos');
+        setTimeout(() => {
+          setShowSuccessModal(false);
+          navigate('/admin/productos');
+        }, 2000);
       } else {
         const errorData = await response.text();
         setError(`Error al ${isEditing ? 'actualizar' : 'crear'} el producto: ${errorData}`);
@@ -453,37 +453,40 @@ const AdminProductFormPage = () => {
 
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Características del Producto *</h2>
-            <div className={styles.featuresDescription}>
-              <strong>Instrucciones:</strong> Complete las 4 características principales del producto. 
-              Cada característica debe tener un valor entre 1 (mínimo) y 5 (máximo).
-            </div>
-            
             <div className={styles.featuresGrid}>
               {formData.productFeatures.slice(0, 4).map((productFeature, index) => (
                 <div key={productFeature.idFeature} className={styles.featureGroup}>
-                  <label className={styles.featureLabel}>
-                    {getFeatureName(productFeature.idFeature)} *
-                  </label>
-                  <div className={styles.featureInputContainer}>
-                    <input
-                      type="number"
-                      min="1"
-                      max="5"
-                      value={productFeature.value}
-                      onChange={(e) => handleFeatureChange(productFeature.idFeature, e.target.value)}
-                      className={styles.featureInput}
-                      required
-                    />
-                    <div className={styles.featureRange}>
+                  <div className={styles.featureHeader}>
+                    <span className={styles.featureLabel}>
+                      {getFeatureName(productFeature.idFeature)} *
+                    </span>
+                    <span className={styles.featureValue}>
+                      {productFeature.value}/5
+                    </span>
+                  </div>
+                  <div className={styles.featureSliderContainer}>
+                    <div className={styles.featureBarContainer}>
+                      <div
+                        className={styles.featureBarFill}
+                        style={{
+                          width: `${((productFeature.value - 1) / 4) * 100}%`,
+                        }}
+                      />
+                      <input
+                        type="range"
+                        min="1"
+                        max="5"
+                        value={productFeature.value}
+                        onChange={(e) => handleFeatureChange(productFeature.idFeature, e.target.value)}
+                        className={styles.featureSlider}
+                        required
+                      />
+                    </div>
+                    <div className={styles.featureScale}>
                       <span>1</span>
-                      <div className={styles.rangeDots}>
-                        {[1, 2, 3, 4, 5].map(num => (
-                          <span
-                            key={num}
-                            className={`${styles.dot} ${num <= productFeature.value ? styles.active : ''}`}
-                          />
-                        ))}
-                      </div>
+                      <span>2</span>
+                      <span>3</span>
+                      <span>4</span>
                       <span>5</span>
                     </div>
                   </div>
@@ -495,10 +498,9 @@ const AdminProductFormPage = () => {
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>Imágenes del Producto</h2>
             <div className={styles.imagesDescription}>
-              Sube imágenes del producto (JPG, PNG, GIF, WebP - máximo 5MB por imagen)
+              Sube imágenes del producto (PNG- máximo 1MB por imagen)
             </div>
 
-            {/* Imágenes ya subidas (solo en edición) */}
             {isEditing && uploadedImages.length > 0 && (
               <div className={styles.uploadedImagesSection}>
                 <h3 className={styles.subsectionTitle}>Imágenes actuales</h3>
@@ -520,7 +522,6 @@ const AdminProductFormPage = () => {
               </div>
             )}
 
-            {/* Selector de archivos */}
             <div className={styles.fileUploadSection}>
               <label htmlFor="images" className={styles.fileUploadLabel}>
                 <input
@@ -543,7 +544,6 @@ const AdminProductFormPage = () => {
               </label>
             </div>
 
-            {/* Previsualizaciones de nuevas imágenes */}
             {imagePreviews.length > 0 && (
               <div className={styles.previewSection}>
                 <h3 className={styles.subsectionTitle}>Nuevas imágenes para subir</h3>
@@ -589,19 +589,19 @@ const AdminProductFormPage = () => {
           </div>
         </form>
 
-        {/* Debug info - remover en producción */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f3f4f6', borderRadius: '8px' }}>
-            <h3>Debug Info:</h3>
-            <p><strong>Categorías cargadas:</strong> {categories.length}</p>
-            <p><strong>Features cargadas:</strong> {features.length}</p>
-            <p><strong>Categoría seleccionada:</strong> {getCategoryName(formData.idCategory)}</p>
-            <p><strong>Archivos seleccionados:</strong> {selectedFiles.length}</p>
-            <p><strong>Imágenes subidas:</strong> {uploadedImages.length}</p>
-            <pre style={{ fontSize: '12px', backgroundColor: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto' }}>
-              {JSON.stringify({ formData }, null, 2)}
-            </pre>
-          </div>
+        {showSuccessModal && (
+          <>
+            <div className={styles.modalOverlay} />
+            <div className={styles.modal}>
+              <div className={styles.modalHeader}>
+                <div className={styles.successIcon}>✓</div>
+                <h3>¡Operación exitosa!</h3>
+              </div>
+              <div className={styles.modalContent}>
+                <p>{successMessage}</p>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>
