@@ -12,6 +12,9 @@ const AdminProductsPage = () => {
   const [activeFilter, setActiveFilter] = useState('Todos');
   const [sortOrder, setSortOrder] = useState('name');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
   const productsPerPage = 10;
 
   useEffect(() => {
@@ -103,24 +106,43 @@ const AdminProductsPage = () => {
     navigate(`/admin/productos/editar/${productId}`);
   };
 
-  const handleDelete = async (productId) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-      try {
-        const response = await fetch(`http://localhost:8080/api/products/${productId}`, {
-          method: 'DELETE'
-        });
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+    setShowDeleteModal(true);
+  };
 
-        if (response.ok) {
-          setProducts(products.filter(product => product.id !== productId));
-          alert('Producto eliminado exitosamente');
-        } else {
-          throw new Error('Error al eliminar el producto');
-        }
-      } catch (err) {
-        console.error('Error deleting product:', err);
-        alert('Error al eliminar el producto');
+  const handleDeleteConfirm = async () => {
+    if (!productToDelete) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/products/${productToDelete.id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setProducts(products.filter(product => product.id !== productToDelete.id));
+        setShowDeleteModal(false);
+        setProductToDelete(null);
+        setShowSuccessModal(true);
+        
+        // Auto-cerrar el modal de éxito después de 2 segundos
+        setTimeout(() => {
+          setShowSuccessModal(false);
+        }, 2000);
+      } else {
+        throw new Error('Error al eliminar el producto');
       }
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      setError('Error al eliminar el producto');
+      setShowDeleteModal(false);
+      setProductToDelete(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setProductToDelete(null);
   };
 
   const handleCreateNew = () => {
@@ -171,8 +193,50 @@ const AdminProductsPage = () => {
   };
 
   const formatFeatures = (features) => {
-    if (!features || features.length === 0) return 'Sin características';
-    return features.slice(0, 2).map(f => `${f.name}: ${f.value}`).join(', ');
+    if (!features || features.length === 0) {
+      return (
+        <div className={styles.featuresContainer}>
+          <div className={`${styles.featureItem} ${styles.emptyFeature}`}>Polivalencia: -</div>
+          <div className={`${styles.featureItem} ${styles.emptyFeature}`}>Agarre: -</div>
+          <div className={`${styles.featureItem} ${styles.emptyFeature}`}>Rigidez: -</div>
+          <div className={`${styles.featureItem} ${styles.emptyFeature}`}>Estabilidad: -</div>
+        </div>
+      );
+    }
+
+    // Crear un mapa de características para acceso fácil
+    const featuresMap = {};
+    features.forEach(feature => {
+      const featureName = feature.name.toLowerCase();
+      featuresMap[featureName] = feature.value;
+    });
+
+    // Definir las 4 características principales
+    const mainFeatures = [
+      { key: 'polivalencia', name: 'Polivalencia' },
+      { key: 'agarre', name: 'Agarre' },
+      { key: 'rigidez', name: 'Rigidez' },
+      { key: 'estabilidad', name: 'Estabilidad' }
+    ];
+
+    return (
+      <div className={styles.featuresContainer}>
+        {mainFeatures.map(feature => {
+          const value = featuresMap[feature.key];
+          const displayValue = value !== undefined && value !== null && value !== 0 ? `${value}/5` : '-';
+          const isEmpty = displayValue === '-';
+          
+          return (
+            <div 
+              key={feature.key} 
+              className={`${styles.featureItem} ${isEmpty ? styles.emptyFeature : ''}`}
+            >
+              {feature.name}: {displayValue}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   // Componente para manejar errores de imagen
@@ -220,10 +284,6 @@ const AdminProductsPage = () => {
       <div className={styles.content}>
         <div className={styles.header}>
           <h1 className={styles.title}>Productos</h1>
-          <button onClick={handleCreateNew} className={styles.createButton}>
-            <span className={styles.plusIcon}>+</span>
-            Crear Nuevo Producto
-          </button>
         </div>
 
         {error && (
@@ -233,38 +293,47 @@ const AdminProductsPage = () => {
         )}
 
         <div className={styles.filtersSection}>
-          <div className={styles.categoryFilters}>
-            <button
-              onClick={() => handleFilterChange('Todos')}
-              className={`${styles.filterButton} ${activeFilter === 'Todos' ? styles.active : ''}`}
-            >
-              Todos
-            </button>
-            {getUniqueCategories().map(category => (
+          <div className={styles.leftSection}>
+            <div className={styles.categoryFilters}>
               <button
-                key={category}
-                onClick={() => handleFilterChange(category)}
-                className={`${styles.filterButton} ${activeFilter === category ? styles.active : ''}`}
+                onClick={() => handleFilterChange('Todos')}
+                className={`${styles.filterButton} ${activeFilter === 'Todos' ? styles.active : ''}`}
               >
-                {category}
+                Todos
               </button>
-            ))}
+              {getUniqueCategories().map(category => (
+                <button
+                  key={category}
+                  onClick={() => handleFilterChange(category)}
+                  className={`${styles.filterButton} ${activeFilter === category ? styles.active : ''}`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className={styles.sortSection}>
-            <label htmlFor="sort" className={styles.sortLabel}>Ordenar por</label>
-            <select
-              id="sort"
-              value={sortOrder}
-              onChange={handleSortChange}
-              className={styles.sortSelect}
-            >
-              <option value="name">Nombre</option>
-              <option value="price">Precio</option>
-              <option value="stock">Stock</option>
-              <option value="category">Categoría</option>
-              <option value="rating">Valoración</option>
-            </select>
+          <div className={styles.rightSection}>
+            <button onClick={handleCreateNew} className={styles.createButton}>
+              <span className={styles.plusIcon}>+</span>
+              Crear Nuevo Producto
+            </button>
+            
+            <div className={styles.sortSection}>
+              <label htmlFor="sort" className={styles.sortLabel}>Ordenar por</label>
+              <select
+                id="sort"
+                value={sortOrder}
+                onChange={handleSortChange}
+                className={styles.sortSelect}
+              >
+                <option value="name">Nombre</option>
+                <option value="price">Precio</option>
+                <option value="stock">Stock</option>
+                <option value="category">Categoría</option>
+                <option value="rating">Valoración</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -273,9 +342,9 @@ const AdminProductsPage = () => {
             <thead>
               <tr className={styles.tableHeader}>
                 <th>Producto</th>
+                <th>Categoría</th>
                 <th>Precio</th>
                 <th>Stock</th>
-                <th>Categoría</th>
                 <th>Valoración</th>
                 <th>Características</th>
                 <th>Imágenes</th>
@@ -311,13 +380,13 @@ const AdminProductsPage = () => {
                         </div>
                       </div>
                     </td>
+                    <td className={styles.categoryCell}>{product.categoryName}</td>
                     <td className={styles.priceCell}>€{product.price.toFixed(2)}</td>
                     <td className={styles.stockCell}>
                       <span className={`${styles.stockBadge} ${stockStatus.class}`}>
                         {product.stock} - {stockStatus.text}
                       </span>
                     </td>
-                    <td className={styles.categoryCell}>{product.categoryName}</td>
                     <td className={styles.ratingCell}>
                       <div className={styles.ratingContainer}>
                         <span className={styles.rating}>★ {product.averageRating}</span>
@@ -325,9 +394,7 @@ const AdminProductsPage = () => {
                       </div>
                     </td>
                     <td className={styles.featuresCell}>
-                      <span className={styles.features}>
-                        {formatFeatures(product.features)}
-                      </span>
+                      {formatFeatures(product.features)}
                     </td>
                     <td className={styles.imagesCell}>
                       <div className={styles.imageGallery}>
@@ -350,27 +417,20 @@ const AdminProductsPage = () => {
                       </div>
                     </td>
                     <td className={styles.actionsCell}>
-                      <button
-                        onClick={() => handleEdit(product.id)}
-                        className={styles.editButton}
-                        title="Editar"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                          <path d="m18.5 2.5-1.5 1.5-6 6h-3v3l6-6 1.5-1.5"/>
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        className={styles.deleteButton}
-                        title="Eliminar"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M3 6h18"/>
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                        </svg>
-                      </button>
+                      <div className={styles.actionButtons}>
+                        <button
+                          onClick={() => handleEdit(product.id)}
+                          className={styles.editButton}
+                          title="Editar"
+                        >
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(product)}
+                          className={styles.deleteButton}
+                          title="Eliminar"
+                        >
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -386,50 +446,84 @@ const AdminProductsPage = () => {
               disabled={currentPage === 1}
               className={styles.pageButton}
             >
-              ←
+              Anterior
             </button>
             
-            <span className={styles.pageInfo}>
-              {currentPage}
-            </span>
+            <div className={styles.pageNumbers}>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`${styles.pageNumber} ${currentPage === pageNum ? styles.activePage : ''}`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
             
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className={styles.pageButton}
             >
-              →
+              Siguiente
             </button>
-            
-            <span className={styles.totalPages}>
-              de {totalPages}
-            </span>
-          </div>
-        )}
-
-        {filteredProducts.length === 0 && !loading && (
-          <div className={styles.emptyState}>
-            <h3>No se encontraron productos</h3>
-            <p>No hay productos que coincidan con los filtros seleccionados.</p>
-          </div>
-        )}
-
-        {/* Debug info - remover en producción */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f3f4f6', borderRadius: '8px' }}>
-            <h3>Debug Info:</h3>
-            <p><strong>Total productos:</strong> {products.length}</p>
-            <p><strong>Productos filtrados:</strong> {filteredProducts.length}</p>
-            <p><strong>Categorías encontradas:</strong> {getUniqueCategories().join(', ')}</p>
-            <details>
-              <summary>Ver URLs de imágenes procesadas</summary>
-              <pre style={{ fontSize: '11px', backgroundColor: 'white', padding: '10px', borderRadius: '4px', overflow: 'auto', maxHeight: '200px' }}>
-                {JSON.stringify(products.map(p => ({ id: p.id, name: p.name, images: p.images })), null, 2)}
-              </pre>
-            </details>
           </div>
         )}
       </div>
+
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteModal && (
+        <>
+          <div className={styles.modalOverlay} onClick={handleDeleteCancel} />
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h3>Confirmar eliminación</h3>
+            </div>
+            <div className={styles.modalContent}>
+              <p>¿Estás seguro de que quieres eliminar el producto <strong>"{productToDelete?.name}"</strong>?</p>
+              <p className={styles.modalWarning}>Esta acción no se puede deshacer.</p>
+            </div>
+            <div className={styles.modalActions}>
+              <button onClick={handleDeleteCancel} className={styles.modalCancelButton}>
+                Cancelar
+              </button>
+              <button onClick={handleDeleteConfirm} className={styles.modalDeleteButton}>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Modal de éxito */}
+      {showSuccessModal && (
+        <>
+          <div className={styles.modalOverlay} />
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <div className={styles.successIcon}>✓</div>
+              <h3>¡Producto eliminado!</h3>
+            </div>
+            <div className={styles.modalContent}>
+              <p>El producto ha sido eliminado correctamente del sistema.</p>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
