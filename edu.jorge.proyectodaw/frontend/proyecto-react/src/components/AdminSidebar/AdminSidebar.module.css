@@ -1,0 +1,184 @@
+.sidebar {
+  width: 276px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #2d1282;
+  color: white;
+  padding-top: 20px;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.header {
+  padding: 20px 25px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 25px;
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.navItem.active {
+  background-color: white;
+  color: #2d1282;
+  margin-left: 16px;
+  border-radius: 8px 0 0 8px;
+  padding-right: 0;
+}
+
+.navItem.active span {
+  color: #2d1282;
+  font-weight: 600;
+}
+
+.navItem:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(16px);
+  margin-right: 16px;
+  border-radius: 8px 0 0 8px;
+  color: white;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.navItem span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.backLink {
+  position: absolute;
+  bottom: 30px;
+  left: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.backLink:hover {
+  opacity: 0.7;
+  color: white;
+}
+
+.mobileMenuButton,
+.closeButton,
+.overlay {
+  display: none;
+}
+
+.mobileMenuButton.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobileMenuButton {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: #2d1282;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1001;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mobileMenuButton span {
+    width: 20px;
+    height: 2px;
+    background: white;
+    transition: 0.3s;
+  }
+
+  .closeButton {
+    display: flex;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .navItem {
+    padding: 10px 20px;
+  }
+
+  .navItem span {
+    font-size: 14px;
+  }
+
+  .backLink {
+    left: 20px;
+    font-size: 14px;
+  }
+}
