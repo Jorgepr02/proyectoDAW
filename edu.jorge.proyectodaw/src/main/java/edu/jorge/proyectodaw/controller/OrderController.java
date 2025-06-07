@@ -130,7 +130,7 @@ public class OrderController {
     private Order convertFromOrderCreateInputDtoToEntity(OrderCreateInputDTO orderCreateInputDTO) {
         Order order = new Order();
         order.setDate(LocalDate.now());
-        order.setOrderStatus(OrderStatus.PENDING); // Estado inicial por defecto
+        order.setOrderStatus(OrderStatus.PENDING); 
         order.setShippingNameAddress(orderCreateInputDTO.getShippingNameAddress());
         order.setShippingNumberAddress(orderCreateInputDTO.getShippingNumberAddress());
         order.setNotes(orderCreateInputDTO.getNotes());
@@ -149,7 +149,7 @@ public class OrderController {
                 product.setId(detailDTO.getProductId());
                 orderDetail.setProduct(product);
                 orderDetail.setQuantity(detailDTO.getAmount());
-                orderDetail.setOrder(order); // Relación bidireccional
+                orderDetail.setOrder(order); 
                 orderDetailsList.add(orderDetail);
             }
             order.setOrderDetails(orderDetailsList);

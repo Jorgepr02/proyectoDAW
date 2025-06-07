@@ -22,7 +22,7 @@ const WishlistPage = () => {
           return;
         }
         
-        const response = await fetch(`http://localhost:8080/api/wishlists/user/${user.id}`);
+        const response = await fetch(`http://localhost:8080/api/wishlists/user/${user.clientId || user.id}`);
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -93,7 +93,7 @@ const WishlistPage = () => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: user.id,
+            userId: user.clientId || user.id,
             productId: productId
           })
         }

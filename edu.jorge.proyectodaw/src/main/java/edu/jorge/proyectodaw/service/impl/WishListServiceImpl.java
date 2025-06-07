@@ -6,6 +6,7 @@ import edu.jorge.proyectodaw.service.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,11 +48,14 @@ public class WishListServiceImpl implements WishListService {
     public WishList findByUserId(Long userId) {
         List<WishList> wishLists = wishListRepo.findAll();
         for (WishList wishList : wishLists) {
-            if (wishList.getUser().getId().equals(userId)) {
+            if (wishList.getUser() != null && wishList.getUser().getId().equals(userId)) {
                 return wishList;
             }
         }
-        return new WishList();
+
+        WishList emptyWishList = new WishList();
+        emptyWishList.setProducts(new ArrayList<>());
+        return emptyWishList;
     }
 
     @Override

@@ -62,11 +62,12 @@ public class WishListController {
             @PathVariable Long userId
     ) {
         WishList wishList = wishListService.findByUserId(userId);
-        if (wishList == null || wishList.getProducts().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        
+        if (wishList == null || wishList.getProducts() == null || wishList.getProducts().isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
         }
+        
         List<ProductListOutputDTO> productListOutputDTOs = mapWishListToProductDTOs(wishList);
-
         return ResponseEntity.ok(productListOutputDTOs);
     }
 

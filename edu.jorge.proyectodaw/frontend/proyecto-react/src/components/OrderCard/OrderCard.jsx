@@ -8,6 +8,7 @@ const OrderCard = ({
   total,
   productCount,
   showCancelButton,
+  onCancel,
 }) => {
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
@@ -24,6 +25,16 @@ const OrderCard = ({
     }
   };
 
+  const handleCancel = () => {
+    if (
+      window.confirm(
+        "¿Estás seguro de que quieres cancelar este pedido?"
+      )
+    ) {
+      onCancel && onCancel();
+    }
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -31,8 +42,10 @@ const OrderCard = ({
         <div className={`${styles.status} ${getStatusStyle(status)}`}>
           {status.charAt(0).toUpperCase() + status.slice(1)}
         </div>
-        {showCancelButton && (
-          <button className={styles.cancelButton}>Cancelar</button>
+        {showCancelButton && status === "pendiente" && onCancel && (
+          <button className={styles.cancelButton} onClick={handleCancel}>
+            Cancelar
+          </button>
         )}
       </div>
 
@@ -48,7 +61,9 @@ const OrderCard = ({
               <div className={styles.productHeader}>
                 <span className={styles.productName}>{product.name}</span>
                 {product.model && (
-                  <span className={styles.productModel}>{product.model}</span>
+                  <span className={styles.productModel}>
+                    Modelo: {product.model}
+                  </span>
                 )}
               </div>
               <div className={styles.productDetails}>

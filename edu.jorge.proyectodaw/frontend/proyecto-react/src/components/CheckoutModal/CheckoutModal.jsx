@@ -5,6 +5,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
   const [formData, setFormData] = useState({
     shippingNameAddress: '',
     shippingNumberAddress: '',
+    phone: '',
     notes: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,6 +34,12 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
     
     if (!formData.shippingNumberAddress.trim()) {
       newErrors.shippingNumberAddress = 'El número es obligatorio';
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'El teléfono es obligatorio';
+    } else if (!/^\d{9,15}$/.test(formData.phone.replace(/\s/g, ''))) {
+      newErrors.phone = 'Ingresa un número de teléfono válido';
     }
     
     setErrors(newErrors);
@@ -64,10 +71,10 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
         amount: item.quantity
       }));
 
-      // Usar clientId del usuario logueado
       const orderData = {
         shippingNameAddress: formData.shippingNameAddress,
         shippingNumberAddress: formData.shippingNumberAddress,
+        phone: formData.phone,
         notes: formData.notes,
         idClient: user.clientId || user.id,
         details
@@ -128,6 +135,22 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
                 <span className={styles.errorText}>{errors.shippingNumberAddress}</span>
               )}
             </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="phone">Teléfono *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className={`${styles.input} ${errors.phone ? styles.error : ''}`}
+              placeholder="Ej: 612345678"
+            />
+            {errors.phone && (
+              <span className={styles.errorText}>{errors.phone}</span>
+            )}
           </div>
 
           <div className={styles.formGroup}>

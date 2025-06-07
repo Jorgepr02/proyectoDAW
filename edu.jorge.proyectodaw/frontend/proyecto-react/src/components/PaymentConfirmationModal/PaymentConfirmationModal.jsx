@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './PaymentConfirmationModal.module.css';
 
 const PaymentConfirmationModal = ({ isOpen, onClose, orderData, total, onConfirmPayment }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [clientPhone, setClientPhone] = useState('');
+
+  useEffect(() => {
+    const fetchClientPhone = async () => {
+      if (orderData && orderData.idClient) {
+        try {
+          const response = await fetch(`http://localhost:8080/api/clients/${orderData.idClient}`);
+          if (response.ok) {
+            const clientData = await response.json();
+            setClientPhone(clientData.phone || orderData.phone || 'No disponible');
+          }
+        } catch (error) {
+          console.error('Error fetching client phone:', error);
+          setClientPhone(orderData.phone || 'No disponible');
+        }
+      }
+    };
+
+    if (isOpen) {
+      fetchClientPhone();
+    }
+  }, [isOpen, orderData]);
 
   const handleConfirmPayment = async () => {
     setIsProcessing(true);
     try {
-      // Llamar a la función que se pasa como prop desde CartPage
       await onConfirmPayment();
     } catch (error) {
       console.error('Error en el pago:', error);
@@ -41,10 +62,16 @@ const PaymentConfirmationModal = ({ isOpen, onClose, orderData, total, onConfirm
                 <span>Stripe</span>
               </div>
               {orderData && (
-                <div className={styles.summaryRow}>
-                  <span>Dirección:</span>
-                  <span>{orderData.shippingNameAddress}, {orderData.shippingNumberAddress}</span>
-                </div>
+                <>
+                  <div className={styles.summaryRow}>
+                    <span>Dirección:</span>
+                    <span>{orderData.shippingNameAddress}, {orderData.shippingNumberAddress}</span>
+                  </div>
+                  <div className={styles.summaryRow}>
+                    <span>Teléfono:</span>
+                    <span>{clientPhone}</span>
+                  </div>
+                </>
               )}
             </div>
           </div>
