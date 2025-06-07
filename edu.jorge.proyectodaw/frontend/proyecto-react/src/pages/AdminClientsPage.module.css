@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #2563eb;
+  background-color: #2d1282;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -41,7 +41,7 @@
 }
 
 .createButton:hover {
-  background-color: #1d4ed8;
+  background-color: #1e0d5f;
 }
 
 .plusIcon {
@@ -67,23 +67,38 @@
 
 .filtersSection {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .sortSection {
   display: flex;
   align-items: center;
   gap: 12px;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .sortLabel {
-  color: #6b7280;
+  color: #374151;
   font-size: 14px;
   font-weight: 500;
 }
@@ -100,7 +115,7 @@
 
 .sortSelect:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: #2d1282;
 }
 
 .tableContainer {
@@ -147,33 +162,61 @@
   vertical-align: middle;
 }
 
-.nameCell {
-  color: #111827;
-  font-size: 14px;
+.idCell {
   font-weight: 600;
-  min-width: 150px;
+  color: #374151;
+  width: 80px;
+  text-align: center;
+  font-size: 14px;
 }
 
-.emailCell {
-  color: #6b7280;
-  font-size: 14px;
+.nameCell {
+  color: #111827;
+  font-size: 16px;
+  font-weight: 600;
   min-width: 200px;
 }
 
-.phoneCell {
+.emailCell {
   color: #374151;
   font-size: 14px;
-  min-width: 130px;
+  min-width: 250px;
 }
 
-.addressCell {
-  color: #374151;
-  font-size: 14px;
-  min-width: 150px;
+.roleCell {
+  min-width: 100px;
+}
+
+.adminBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.userBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #dcfce7;
+  color: #16a34a;
 }
 
 .actionsCell {
-  width: 100px;
+  width: 120px;
+  text-align: center;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .editButton,
@@ -186,58 +229,50 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  margin-right: 8px;
   transition: all 0.2s;
-}
-
-.editButton {
-  background-color: #e0f2fe;
-  color: #0369a1;
+  padding: 4px;
+  background: transparent;
 }
 
 .editButton:hover {
-  background-color: #bae6fd;
-  color: #0c4a6e;
-}
-
-.deleteButton {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background-color: #f3f4f6;
+  transform: scale(1.05);
 }
 
 .deleteButton:hover {
-  background-color: #fecaca;
-  color: #b91c1c;
+  background-color: #f3f4f6;
+  transform: scale(1.05);
+}
+
+.actionIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .pagination {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  gap: 8px;
+  padding: 32px 0;
 }
 
 .pageButton {
-  width: 36px;
-  height: 36px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
   color: #374151;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 80px;
 }
 
 .pageButton:hover:not(:disabled) {
   background-color: #f3f4f6;
-  border-color: #9ca3af;
 }
 
 .pageButton:disabled {
@@ -245,42 +280,32 @@
   cursor: not-allowed;
 }
 
-.pageInfo {
-  width: 40px;
-  height: 36px;
+.pageNumbers {
   display: flex;
+  gap: 4px;
   align-items: center;
-  justify-content: center;
-  background-color: #2563eb;
-  color: white;
+}
+
+.pageNumber {
+  padding: 8px 12px;
+  border: none;
   border-radius: 6px;
-  font-weight: 600;
-}
-
-.totalPages {
-  color: #6b7280;
+  background: transparent;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
   font-size: 14px;
+  font-weight: 500;
+  min-width: 40px;
 }
 
-.emptyState {
-  text-align: center;
-  padding: 60px 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.pageNumber:hover {
+  background-color: #f3f4f6;
 }
 
-.emptyState h3 {
-  color: #111827;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.emptyState p {
-  color: #6b7280;
-  font-size: 14px;
-  margin: 0;
+.pageNumber.activePage {
+  background-color: #2d1282;
+  color: white;
 }
 
 @media (max-width: 1024px) {
@@ -289,17 +314,88 @@
     width: 100%;
     padding: 24px 20px;
   }
-}
-
-@media (max-width: 768px) {
-  .header {
+  
+  .filtersSection {
     flex-direction: column;
     gap: 16px;
     align-items: stretch;
   }
   
+  .rightSection {
+    justify-content: space-between;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 768px) {
+  .rightSection {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
   .createButton {
+    order: 2;
     justify-content: center;
+  }
+  
+  .sortSection {
+    order: 1;
+    justify-content: center;
+  }
+  
+  .content {
+    padding: 16px;
+  }
+  
+  .title {
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .filtersSection {
+    justify-content: center;
+  }
+  
+  .tableHeader th,
+  .tableRow td {
+    padding: 12px 8px;
+  }
+  
+  .nameCell {
+    font-size: 14px;
+    min-width: 150px;
+  }
+  
+  .emailCell {
+    font-size: 13px;
+    min-width: 180px;
+  }
+  
+  .pagination {
+    gap: 4px;
+  }
+  
+  .pageButton {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-width: 60px;
+  }
+  
+  .pageNumber {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-width: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    gap: 12px;
   }
   
   .tableContainer {
@@ -307,21 +403,109 @@
   }
   
   .table {
-    min-width: 700px;
+    min-width: 600px;
+  }
+  
+  .actionButtons {
+    gap: 8px;
+  }
+  
+  .editButton,
+  .deleteButton {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .editButton svg,
+  .deleteButton svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .emptyState {
+    padding: 40px 16px;
+  }
+  
+  .emptyState h3 {
+    font-size: 16px;
+  }
+  
+  .emptyState p {
+    font-size: 13px;
+  }
+  
+  .pageNumbers {
+    gap: 2px;
+  }
+  
+  .pageNumber {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 28px;
+  }
+  
+  .pageButton {
+    padding: 4px 8px;
+    font-size: 12px;
+    min-width: 50px;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .content {
-    padding: 16px;
+    padding: 12px;
   }
   
   .title {
-    font-size: 24px;
+    font-size: 20px;
+  }
+  
+  .createButton {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  
+  .plusIcon {
+    font-size: 16px;
   }
   
   .tableHeader th,
   .tableRow td {
-    padding: 12px 8px;
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+  
+  .nameCell {
+    font-size: 13px;
+  }
+  
+  .emailCell {
+    font-size: 12px;
+  }
+  
+  .adminBadge,
+  .userBadge {
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+  
+  .pagination {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  
+  .pageNumbers {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin: 8px 0;
+  }
+  
+  .pageButton {
+    order: 1;
+  }
+  
+  .pageButton:last-child {
+    order: 3;
   }
 }

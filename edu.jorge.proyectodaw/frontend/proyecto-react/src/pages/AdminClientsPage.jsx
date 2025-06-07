@@ -6,44 +6,40 @@ import styles from './AdminClientsPage.module.css';
 const AdminClientsPage = () => {
   const navigate = useNavigate();
   
-  const [clients, setClients] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [sortOrder, setSortOrder] = useState('name');
+  const [sortOrder, setSortOrder] = useState('id');
   const [currentPage, setCurrentPage] = useState(1);
-  const clientsPerPage = 10;
+  const usersPerPage = 10;
 
   useEffect(() => {
-    fetchClients();
+    fetchUsers();
   }, []);
 
-  const fetchClients = async () => {
+  const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/clients');
+      const response = await fetch('http://localhost:8080/api/users');
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log('Clientes obtenidos:', data);
+      console.log('Usuarios obtenidos:', data);
       
-      const mappedClients = data.map(client => ({
-        id: client.id,
-        name: client.username || 'Sin nombre',
-        email: client.email || 'Sin email',
-        phone: client.phone || '+34433366999',
-        address: client.address || 'Calle Nevada 123',
-        lastname: client.lastname || '',
-        floor: client.floor || '',
-        role: client.role || 'CLIENT'
+      const mappedUsers = data.map(user => ({
+        id: user.id,
+        name: user.username || 'Sin nombre',
+        email: user.email || 'Sin email',
+        roles: user.roles || ['ROLE_USER']
       }));
       
-      setClients(mappedClients);
+      setUsers(mappedUsers);
     } catch (err) {
-      console.error('Error fetching clients:', err);
-      setError('Error al cargar clientes');
+      console.error('Error fetching users:', err);
+      setError('Error al cargar usuarios');
     } finally {
       setLoading(false);
     }
@@ -54,52 +50,52 @@ const AdminClientsPage = () => {
     setCurrentPage(1);
   };
 
-  const handleEdit = (clientId) => {
-    navigate(`/admin/clientes/editar/${clientId}`);
+  const handleEdit = (userId) => {
+    navigate(`/admin/usuarios/editar/${userId}`);
   };
 
-  const handleDelete = async (clientId) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este cliente?')) {
+  const handleDelete = async (userId) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
       try {
-        const response = await fetch(`http://localhost:8080/api/clients/${clientId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
           method: 'DELETE'
         });
 
         if (response.ok) {
-          setClients(clients.filter(client => client.id !== clientId));
-          alert('Cliente eliminado exitosamente');
+          setUsers(users.filter(user => user.id !== userId));
+          alert('Usuario eliminado exitosamente');
         } else {
-          throw new Error('Error al eliminar el cliente');
+          throw new Error('Error al eliminar el usuario');
         }
       } catch (err) {
-        console.error('Error deleting client:', err);
-        alert('Error al eliminar el cliente');
+        console.error('Error deleting user:', err);
+        alert('Error al eliminar el usuario');
       }
     }
   };
 
   const handleCreateNew = () => {
-    navigate('/admin/clientes/nuevo');
+    navigate('/admin/usuarios/nuevo');
   };
 
-  const sortedClients = [...clients].sort((a, b) => {
+  const sortedUsers = [...users].sort((a, b) => {
     switch (sortOrder) {
+      case 'id':
+        return a.id - b.id;
       case 'name':
         return a.name.localeCompare(b.name);
-      case 'email':
-        return a.email.localeCompare(b.email);
-      case 'phone':
-        return a.phone.localeCompare(b.phone);
-      case 'address':
-        return a.address.localeCompare(b.address);
+      case 'rol':
+        const aRole = a.roles.includes('ROLE_ADMIN') ? 'ADMIN' : 'USER';
+        const bRole = b.roles.includes('ROLE_ADMIN') ? 'ADMIN' : 'USER';
+        return aRole.localeCompare(bRole);
       default:
         return 0;
     }
   });
 
-  const totalPages = Math.ceil(sortedClients.length / clientsPerPage);
-  const startIndex = (currentPage - 1) * clientsPerPage;
-  const currentClients = sortedClients.slice(startIndex, startIndex + clientsPerPage);
+  const totalPages = Math.ceil(sortedUsers.length / usersPerPage);
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const currentUsers = sortedUsers.slice(startIndex, startIndex + usersPerPage);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -107,12 +103,19 @@ const AdminClientsPage = () => {
     }
   };
 
+  const getRoleBadge = (roles) => {
+    if (roles.includes('ROLE_ADMIN')) {
+      return { text: 'ADMIN', className: styles.adminBadge };
+    }
+    return { text: 'USER', className: styles.userBadge };
+  };
+
   if (loading) {
     return (
       <div className={styles.container}>
         <AdminSidebar />
         <div className={styles.content}>
-          <div className={styles.loading}>Cargando clientes...</div>
+          <div className={styles.loading}>Cargando usuarios...</div>
         </div>
       </div>
     );
@@ -123,11 +126,7 @@ const AdminClientsPage = () => {
       <AdminSidebar />
       <div className={styles.content}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Clientes</h1>
-          <button onClick={handleCreateNew} className={styles.createButton}>
-            <span className={styles.plusIcon}>+</span>
-            Crear Nuevo Cliente
-          </button>
+          <h1 className={styles.title}>Usuarios</h1>
         </div>
 
         {error && (
@@ -137,19 +136,28 @@ const AdminClientsPage = () => {
         )}
 
         <div className={styles.filtersSection}>
-          <div className={styles.sortSection}>
-            <label htmlFor="sort" className={styles.sortLabel}>Ordenar por</label>
-            <select
-              id="sort"
-              value={sortOrder}
-              onChange={handleSortChange}
-              className={styles.sortSelect}
-            >
-              <option value="name">Nombre</option>
-              <option value="email">Email</option>
-              <option value="phone">Teléfono</option>
-              <option value="address">Dirección</option>
-            </select>
+          <div className={styles.leftSection}>
+          </div>
+
+          <div className={styles.rightSection}>
+            <button onClick={handleCreateNew} className={styles.createButton}>
+              <span className={styles.plusIcon}>+</span>
+              Crear Nuevo Usuario
+            </button>
+            
+            <div className={styles.sortSection}>
+              <label htmlFor="sort" className={styles.sortLabel}>Ordenar por</label>
+              <select
+                id="sort"
+                value={sortOrder}
+                onChange={handleSortChange}
+                className={styles.sortSelect}
+              >
+                <option value="id">ID</option>
+                <option value="name">Nombre</option>
+                <option value="rol">Rol</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -157,45 +165,55 @@ const AdminClientsPage = () => {
           <table className={styles.table}>
             <thead>
               <tr className={styles.tableHeader}>
-                <th>Nombre</th>
+                <th>ID</th>
+                <th>Nombre de Usuario</th>
                 <th>Email</th>
-                <th>Teléfono</th>
-                <th>Dirección</th>
+                <th>Rol</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {currentClients.map(client => (
-                <tr key={client.id} className={styles.tableRow}>
-                  <td className={styles.nameCell}>{client.name}</td>
-                  <td className={styles.emailCell}>{client.email}</td>
-                  <td className={styles.phoneCell}>{client.phone}</td>
-                  <td className={styles.addressCell}>{client.address}</td>
-                  <td className={styles.actionsCell}>
-                    <button
-                      onClick={() => handleEdit(client.id)}
-                      className={styles.editButton}
-                      title="Editar"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="m18.5 2.5-1.5 1.5-6 6h-3v3l6-6 1.5-1.5"/>
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(client.id)}
-                      className={styles.deleteButton}
-                      title="Eliminar"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 6h18"/>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                      </svg>
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {currentUsers.map(user => {
+                const roleBadge = getRoleBadge(user.roles);
+                return (
+                  <tr key={user.id} className={styles.tableRow}>
+                    <td className={styles.idCell}>{user.id}</td>
+                    <td className={styles.nameCell}>{user.name}</td>
+                    <td className={styles.emailCell}>{user.email}</td>
+                    <td className={styles.roleCell}>
+                      <span className={roleBadge.className}>
+                        {roleBadge.text}
+                      </span>
+                    </td>
+                    <td className={styles.actionsCell}>
+                      <div className={styles.actionButtons}>
+                        <button
+                          onClick={() => handleEdit(user.id)}
+                          className={styles.editButton}
+                          title="Editar"
+                        >
+                          <img 
+                            src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1749329662/image_40_2_gmdep8.png" 
+                            alt="Editar" 
+                            className={styles.actionIcon}
+                          />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(user.id)}
+                          className={styles.deleteButton}
+                          title="Eliminar"
+                        >
+                          <img 
+                            src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1749329610/image_40_1_swihhs.png" 
+                            alt="Eliminar" 
+                            className={styles.actionIcon}
+                          />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -207,31 +225,48 @@ const AdminClientsPage = () => {
               disabled={currentPage === 1}
               className={styles.pageButton}
             >
-              ←
+              Anterior
             </button>
             
-            <span className={styles.pageInfo}>
-              {currentPage}
-            </span>
+            <div className={styles.pageNumbers}>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`${styles.pageNumber} ${currentPage === pageNum ? styles.activePage : ''}`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
             
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className={styles.pageButton}
             >
-              →
+              Siguiente
             </button>
-            
-            <span className={styles.totalPages}>
-              de {totalPages}
-            </span>
           </div>
         )}
 
-        {clients.length === 0 && !loading && (
+        {users.length === 0 && !loading && (
           <div className={styles.emptyState}>
-            <h3>No se encontraron clientes</h3>
-            <p>No hay clientes registrados en el sistema.</p>
+            <h3>No se encontraron usuarios</h3>
+            <p>No hay usuarios registrados en el sistema.</p>
           </div>
         )}
       </div>
