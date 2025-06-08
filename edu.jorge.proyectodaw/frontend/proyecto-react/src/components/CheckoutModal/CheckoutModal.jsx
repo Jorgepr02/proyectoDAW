@@ -95,11 +95,8 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
 
       console.log('Order data completo:', orderData);
 
-      // IMPORTANTE: Llamar a onSubmit y esperar a que termine
       await onSubmit(orderData);
       
-      // CORREGIDO: Solo resetear el formulario si todo fue exitoso
-      // NO cerramos el modal aquí - lo hace el parent component
       console.log('Pedido procesado exitosamente en CheckoutModal');
       
     } catch (error) {
@@ -110,7 +107,6 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
     }
   };
 
-  // AÑADIDO: Función para manejar el cierre del modal
   const handleClose = () => {
     if (!isSubmitting) {
       setFormData({
@@ -135,7 +131,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
             className={styles.closeButton} 
             onClick={handleClose}
             disabled={isSubmitting}
-            type="button" // AÑADIDO: Especificar tipo
+            type="button"
           >
             ×
           </button>
