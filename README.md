@@ -118,7 +118,7 @@ Ejecutar Application.java
 
 
 ## Estructura del proyecto
-
+´´´
 proyectoDAW/
 ├── edu.jorge.proyectodaw/
 │   ├── src/main/java/
@@ -141,6 +141,7 @@ proyectoDAW/
 │   ├── public/          
 │   └── package.json     
 └── README.md
+´´´
 
 ## Autor
 
