@@ -157,6 +157,34 @@
   }
 }
 
+@media (max-width: 991px) {
+  .content {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px 20px;
+  }
+
+  .title {
+    margin-top: 60px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "best-selling total-usuarios"
+      "total-pedidos pending-orders"
+      "total-ventas total-ventas"
+      "ventas-mes-pasado ventas-mes-actual"
+      "crecimiento-ventas crecimiento-ventas"
+      "sales-chart sales-chart"
+      "orders-chart orders-chart";
+  }
+
+  .chartWrapper {
+    height: 350px;
+  }
+}
+
 @media (max-width: 640px) {
   .content {
     padding: 16px;

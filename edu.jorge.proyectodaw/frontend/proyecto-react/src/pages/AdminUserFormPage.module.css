@@ -403,6 +403,18 @@
   }
 }
 
+@media (max-width: 991px) {
+  .content {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px 20px;
+  }
+
+  .title {
+    margin-top: 60px;
+  }
+}
+
 @media (max-width: 768px) {
   .formRow {
     grid-template-columns: 1fr;

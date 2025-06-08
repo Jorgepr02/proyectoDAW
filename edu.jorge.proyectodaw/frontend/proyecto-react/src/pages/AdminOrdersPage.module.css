@@ -513,6 +513,28 @@
   }
 }
 
+@media (max-width: 991px) {
+  .content {
+    margin-left: 0;
+    width: 100%;
+    padding: 24px 20px;
+  }
+  
+  .title {
+    margin-top: 60px;
+  }
+  
+  .filtersSection {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .rightSection {
+    justify-content: flex-end;
+  }
+}
+
 @media (max-width: 768px) {
   .rightSection {
     justify-content: center;
