@@ -11,6 +11,7 @@ export const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const searchRef = useRef(null);
 
   const checkAdminRole = () => {
@@ -31,9 +32,14 @@ export const Header = () => {
   const checkUserLoggedIn = () => {
     try {
       const userString = localStorage.getItem('user');
-      return !!userString;
+      if (!userString) return false;
+      
+      const user = JSON.parse(userString);
+      setCurrentUser(user);
+      return true;
     } catch (error) {
       console.error('Error checking user login status:', error);
+      setCurrentUser(null);
       return false;
     }
   };
@@ -43,6 +49,7 @@ export const Header = () => {
     localStorage.removeItem('token');
     setIsUserLoggedIn(false);
     setIsAdmin(false);
+    setCurrentUser(null);
     
     window.dispatchEvent(new Event('userChanged'));
     
@@ -259,7 +266,9 @@ export const Header = () => {
                   width={20}
                   height={20}
                 />
-                <span className={styles.tooltip}>Cerrar Sesión</span>
+                <span className={styles.tooltip}>
+                  Cerrar Sesión{currentUser && ` (${currentUser.username})`}
+                </span>
               </button>
             </div>
           )}
@@ -307,7 +316,7 @@ export const Header = () => {
             )}
             {isUserLoggedIn && (
               <button onClick={() => { handleLogout(); toggleMobileMenu(); }} className={styles.mobileNavLink}>
-                Cerrar Sesión
+                Cerrar Sesión{currentUser && ` (${currentUser.username})`}
               </button>
             )}
           </div>
