@@ -23,18 +23,34 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   grid-template-areas:
-    "ventas-totales ventas-mes clientes-nuevos"
-    "productos-tendencia productos-stock pedidos-mes"
-    "productos-tendencia productos-stock pedidos-pendientes";
+    "best-selling total-usuarios total-pedidos"
+    "pending-orders total-ventas total-ventas"
+    "ventas-mes-pasado ventas-mes-actual crecimiento-ventas"
+    "sales-chart sales-chart sales-chart"
+    "orders-chart orders-chart orders-chart";
 }
 
-.totalSales { grid-area: ventas-totales; }
-.monthlySales { grid-area: ventas-mes; }
-.newCustomers { grid-area: clientes-nuevos; }
-.monthlyOrders { grid-area: pedidos-mes; }
-.pendingOrders { grid-area: pedidos-pendientes; }
-.trendingProducts { grid-area: productos-tendencia; }
-.lowStock { grid-area: productos-stock; }
+.bestSelling { grid-area: best-selling; }
+.totalUsers { grid-area: total-usuarios; }
+.totalOrders { grid-area: total-pedidos; }
+.pendingOrders { grid-area: pending-orders; }
+.totalSales { grid-area: total-ventas; }
+.currentMonthSales { grid-area: ventas-mes-actual; }
+.lastMonthSales { grid-area: ventas-mes-pasado; }
+.salesGrowth { grid-area: crecimiento-ventas; }
+.salesChart { grid-area: sales-chart; }
+.ordersChart { grid-area: orders-chart; }
+
+.chartWrapper {
+  background-color: white;
+  border-radius: 8px;
+  border: 0.3px solid #8d8d8d;
+  box-shadow:
+    0px 1px 3px 0px rgba(0, 0, 0, 0.1),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  height: 400px;
+}
 
 .productList {
   display: flex;
@@ -48,10 +64,44 @@
   gap: 12px;
 }
 
+.rankNumber {
+  background-color: #2d1282;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.rankNumberSimple {
+  color: #111;
+  font-size: 16px;
+  font-weight: 600;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.productImageContainer {
+  flex-shrink: 0;
+}
+
 .productImage {
   width: 63px;
   height: 60px;
   object-fit: cover;
+  border-radius: 4px;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .productInfo h3 {
@@ -59,14 +109,21 @@
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
-  margin-bottom: 2px;
+  margin: 0;
 }
 
 .salesCount {
   color: #58ca52;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 24px;
+  line-height: 20px;
+}
+
+.productPrice {
+  color: #2d1282;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
 }
 
 .stockCount {
@@ -86,10 +143,17 @@
   .grid {
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas:
-      "ventas-totales ventas-mes"
-      "clientes-nuevos pedidos-mes"
-      "productos-tendencia productos-stock"
-      "pedidos-pendientes pedidos-pendientes";
+      "best-selling total-usuarios"
+      "total-pedidos pending-orders"
+      "total-ventas total-ventas"
+      "ventas-mes-pasado ventas-mes-actual"
+      "crecimiento-ventas crecimiento-ventas"
+      "sales-chart sales-chart"
+      "orders-chart orders-chart";
+  }
+
+  .chartWrapper {
+    height: 350px;
   }
 }
 
@@ -106,13 +170,21 @@
     grid-template-columns: 1fr;
     gap: 15px;
     grid-template-areas:
-      "ventas-totales"
-      "ventas-mes"
-      "clientes-nuevos"
-      "pedidos-mes"
-      "productos-tendencia"
-      "productos-stock"
-      "pedidos-pendientes";
+      "best-selling"
+      "total-usuarios"
+      "total-pedidos"
+      "pending-orders"
+      "total-ventas"
+      "ventas-mes-pasado"
+      "ventas-mes-actual"
+      "crecimiento-ventas"
+      "sales-chart"
+      "orders-chart";
+  }
+
+  .chartWrapper {
+    height: 300px;
+    padding: 15px;
   }
 
   .productItem {
@@ -129,8 +201,19 @@
   }
 
   .salesCount,
-  .stockCount {
+  .productPrice {
+    font-size: 12px;
+  }
+
+  .rankNumber {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .rankNumberSimple {
     font-size: 14px;
+    width: 16px;
   }
 }
 
