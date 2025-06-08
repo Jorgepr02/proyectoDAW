@@ -36,7 +36,8 @@ public class ClientServiceImp implements ClientService {
     public Client create(Client client) {
         client.setRegistrationDate(LocalDate.now());
         if (client.getName() == null || client.getName().isEmpty()) {
-           String namePart = client.getUser().getEmail().split("@")[0];
+            String namePart = client.getUser().getEmail().split("@")[0];
+            namePart = Character.toUpperCase(namePart.charAt(0)) + namePart.substring(1);
             client.setName(namePart);
         }
         return clientRepo.save(client);
