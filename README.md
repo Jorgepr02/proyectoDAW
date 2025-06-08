@@ -19,10 +19,10 @@ Una plataforma completa de comercio electrónico desarrollada con Spring Boot y 
 
 ### 1. Frontend
 
-git clone https://github.com/Jorgepr02/proyectoDAW
-cd frontend/proyecto-react
-npm install
-npm run dev
+-git clone https://github.com/Jorgepr02/proyectoDAW
+-cd frontend/proyecto-react
+-npm install
+-npm run dev
 
 ### 1. Backend
 
