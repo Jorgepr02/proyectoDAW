@@ -1,8 +1,10 @@
 package edu.jorge.proyectodaw.service.impl;
 
+import edu.jorge.proyectodaw.entity.Client;
 import edu.jorge.proyectodaw.entity.User;
 import edu.jorge.proyectodaw.repositories.RoleRepo;
 import edu.jorge.proyectodaw.repositories.UserRepo;
+import edu.jorge.proyectodaw.service.ClientService;
 import edu.jorge.proyectodaw.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ public class UserServiceImp implements UserService {
     
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private ClientService clientService;
 
     @Autowired
     PasswordEncoder encoder;
@@ -37,6 +41,18 @@ public class UserServiceImp implements UserService {
     @Override
     public User save(User user) {
         return userRepo.save(user);
+    }
+
+    @Override
+    public User create(User user) {
+
+        user.setPassword(encoder.encode(user.getPassword()));
+        User createdUser = userRepo.save(user);
+        clientService.create(
+                new Client(user.getEmail(), createdUser)
+        );
+
+        return createdUser;
     }
 
     @Override
@@ -63,6 +79,9 @@ public class UserServiceImp implements UserService {
     @Override
     public void delete(Long id) {
         User user = findById(id);
+        clientService.delete(
+                clientService.findByUserId(id).getId()
+        );
         userRepo.delete(user);
     }
 }
