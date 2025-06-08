@@ -29,8 +29,8 @@ public class DataInitializer {
     ) {
 
         return args -> {
-            // Inicializar clientes
-            initClients(clientService);
+            // Inicializar Usuarios y Clientes POR DEFECTO
+            initDefaultUserANDClients(userService, roleRepo, clientService);
 
             // Inicializar productos
 //            initProducts(productService, categoryService);
@@ -38,22 +38,82 @@ public class DataInitializer {
 
             // Inicializar pedidos
             initOrders(orderService, clientService, productService);
-
-            // Inicializar usuarios
-            initUsers(userService, roleRepo);
         };
     }
 
-    private void initClients(ClientService clientService) {
-        Client c1 = new Client(null, "Jorge", "jorge@example.com", "123456789", "Calle Principal", "123", LocalDate.now(), null, null, null);
-        Client c2 = new Client(null, "Ana", "ana@example.com", "987654321", "Avenida Secundaria", "456", LocalDate.now(), null, null, null);
-        Client c3 = new Client(null, "Luis", "luis@example.com", "456789123", "Plaza Central", "789", LocalDate.now(), null, null, null);
-        Client c4 = new Client(null, "Maria", "maria@example.com", "321654987", "Calle Nueva", "321", LocalDate.now(), null, null, null);
+    private void initDefaultUserANDClients(UserService userService, RoleRepo roleRepo, ClientService clientService) {
+        User admin = new User("administrador", "administrador@gmail.com","administrador");
+        admin.setRoles(
+                Set.of(roleRepo.findById(1L).orElseThrow(
+                        () -> new RuntimeException("Role not found")
+                )
+        ));
+        userService.create(admin);
 
-        clientService.save(c1);
-        clientService.save(c2);
-        clientService.save(c3);
-        clientService.save(c4);
+        User client1 = new User("jorge", "jorge@gmail.com","123456");
+        client1.setRoles(
+                Set.of(roleRepo.findById(2L).orElseThrow(
+                                () -> new RuntimeException("Role not found")
+                        )
+                ));
+        User client1Created = userService.create(client1);
+        Client client1Client = clientService.findByUserId(client1Created.getId());
+        client1Client.setPhone("123456789");
+        client1Client.setNameAddr("Calle Principal");
+        client1Client.setNumberAddr("123");
+        clientService.update(client1Client.getId(), client1Client);
+
+        User client2 = new User("ana", "ana@gmail.com", "123456");
+        client2.setRoles(
+                Set.of(roleRepo.findById(2L).orElseThrow(
+                                () -> new RuntimeException("Role not found")
+                        )
+                ));
+        User client2Created = userService.create(client2);
+        Client client2Client = clientService.findByUserId(client2Created.getId());
+        client2Client.setPhone("987654321");
+        client2Client.setNameAddr("Avenida Secundaria");
+        client2Client.setNumberAddr("456");
+        clientService.update(client2Client.getId(), client2Client);
+
+        User client3 = new User("luis", "luis@gmail.com", "123456");
+        client3.setRoles(
+                Set.of(roleRepo.findById(2L).orElseThrow(
+                                () -> new RuntimeException("Role not found")
+                        )
+                ));
+        User client3Created = userService.create(client3);
+        Client client3Client = clientService.findByUserId(client3Created.getId());
+        client3Client.setPhone("456789123");
+        client3Client.setNameAddr("Plaza Central");
+        client3Client.setNumberAddr("789");
+        clientService.update(client3Client.getId(), client3Client);
+
+        User client4 = new User("maria", "maria@gmail.com", "123456");
+        client4.setRoles(
+                Set.of(roleRepo.findById(2L).orElseThrow(
+                                () -> new RuntimeException("Role not found")
+                        )
+                ));
+        User client4Created = userService.create(client4);
+        Client client4Client = clientService.findByUserId(client4Created.getId());
+        client4Client.setPhone("321654987");
+        client4Client.setNameAddr("Calle Nueva");
+        client4Client.setNumberAddr("321");
+        clientService.update(client4Client.getId(), client4Client);
+
+        User client5 = new User("carlos", "carlos@gmail.com", "123456");
+        client5.setRoles(
+                Set.of(roleRepo.findById(2L).orElseThrow(
+                                () -> new RuntimeException("Role not found")
+                        )
+                ));
+        User client5Created = userService.create(client5);
+        Client client5Client = clientService.findByUserId(client5Created.getId());
+        client5Client.setPhone("789123456");
+        client5Client.setNameAddr("Boulevard Principal");
+        client5Client.setNumberAddr("654");
+        clientService.update(client5Client.getId(), client5Client);
     }
 
     private void initProducts(ProductService productService, CategoryService categoryService) {
@@ -250,11 +310,5 @@ public class DataInitializer {
 
         // Guardar el pedido con sus detalles utilizando el servicio
         orderService.createOrderWithDetails(order, orderDetailsList);
-    }
-
-    private void initUsers(UserService userService, RoleRepo roleRepo) {
-        User admin = new User("admin", "admin@gmail.com","adminadmin");
-        admin.setRoles(Set.of(roleRepo.findById(1L).orElseThrow(() -> new RuntimeException("Role not found"))));
-        userService.save(admin);
     }
 }
