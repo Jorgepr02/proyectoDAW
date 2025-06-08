@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar/AdminSidebar';
 import styles from './AdminOrdersPage.module.css';
 
 const AdminOrdersPage = () => {
-  const navigate = useNavigate();
-  
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeFilter, setActiveFilter] = useState('Todos');
   const [sortOrder, setSortOrder] = useState('date');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
   const ordersPerPage = 10;
 
   useEffect(() => {
@@ -33,8 +33,8 @@ const AdminOrdersPage = () => {
       const mappedOrders = data.map(order => ({
         id: order.id,
         client: {
-          name: order.client?.username || 'Cliente desconocido',
-          email: order.client?.email || 'Sin email'
+          name: order.clientName || 'Cliente desconocido',
+          email: order.clientEmail || 'Sin email'
         },
         date: formatDate(order.date),
         total: order.amount || 0,
@@ -55,16 +55,20 @@ const AdminOrdersPage = () => {
     }
   };
 
+  const calculateItemsCount = (details) => {
+    if (!details || details.length === 0) return 0;
+    return details.reduce((total, detail) => {
+      return total + (detail.amount || 0);
+    }, 0);
+  };
+
   const formatDate = (dateInput) => {
     try {
-      let date;
+      if (!dateInput) return 'Sin fecha';
       
-      if (Array.isArray(dateInput) && dateInput.length >= 3) {
-        const [year, month, day] = dateInput;
-        date = new Date(year, month - 1, day);
-      } else if (typeof dateInput === 'string') {
-        date = new Date(dateInput);
-      } else {
+      const date = new Date(dateInput);
+      
+      if (isNaN(date.getTime())) {
         return 'Sin fecha';
       }
       
@@ -74,22 +78,18 @@ const AdminOrdersPage = () => {
         year: 'numeric'
       });
     } catch (error) {
+      console.error('Error formatting date:', error);
       return 'Sin fecha';
     }
   };
 
-  const calculateItemsCount = (details) => {
-    if (!details || details.length === 0) return 0;
-    return details.reduce((total, detail) => total + (detail.amount || 0), 0);
-  };
-
   const mapPaymentMethod = (method) => {
     const methodMap = {
-      'STRIPE': 'Tarjeta',
+      'STRIPE': 'Stripe',
       'CASH': 'Efectivo',
       'TRANSFER': 'Transferencia'
     };
-    return methodMap[method] || 'Tarjeta';
+    return methodMap[method] || 'Stripe';
   };
 
   const mapOrderStatus = (backendStatus) => {
@@ -97,7 +97,7 @@ const AdminOrdersPage = () => {
       'NEW': 'Pendiente',
       'PENDING': 'Pendiente',
       'PAID': 'Enviado',
-      'SHIPPED': 'Enviado',
+      'SHIPPED': 'Enviado', 
       'DELIVERED': 'Entregado',
       'CANCELLED': 'Cancelado'
     };
@@ -114,32 +114,42 @@ const AdminOrdersPage = () => {
     setCurrentPage(1);
   };
 
-  const handleEdit = (orderId) => {
-    navigate(`/admin/pedidos/editar/${orderId}`);
+  const handleDeleteClick = (order) => {
+    setOrderToDelete(order);
+    setShowDeleteModal(true);
   };
 
-  const handleDelete = async (orderId) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este pedido?')) {
-      try {
-        const response = await fetch(`http://localhost:8080/api/orders/${orderId}`, {
-          method: 'DELETE'
-        });
+  const handleDeleteConfirm = async () => {
+    if (!orderToDelete) return;
 
-        if (response.ok) {
-          setOrders(orders.filter(order => order.id !== orderId));
-          alert('Pedido eliminado exitosamente');
-        } else {
-          throw new Error('Error al eliminar el pedido');
-        }
-      } catch (err) {
-        console.error('Error deleting order:', err);
-        alert('Error al eliminar el pedido');
+    try {
+      const response = await fetch(`http://localhost:8080/api/orders/${orderToDelete.id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setOrders(orders.filter(order => order.id !== orderToDelete.id));
+        setShowDeleteModal(false);
+        setOrderToDelete(null);
+        setShowSuccessModal(true);
+        
+        setTimeout(() => {
+          setShowSuccessModal(false);
+        }, 2000);
+      } else {
+        throw new Error('Error al eliminar el pedido');
       }
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      setError('Error al eliminar el pedido');
+      setShowDeleteModal(false);
+      setOrderToDelete(null);
     }
   };
 
-  const handleCreateNew = () => {
-    navigate('/admin/pedidos/nuevo');
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setOrderToDelete(null);
   };
 
   const filteredOrders = orders.filter(order => {
@@ -204,10 +214,6 @@ const AdminOrdersPage = () => {
       <div className={styles.content}>
         <div className={styles.header}>
           <h1 className={styles.title}>Pedidos</h1>
-          <button onClick={handleCreateNew} className={styles.createButton}>
-            <span className={styles.plusIcon}>+</span>
-            Crear Nuevo Pedido
-          </button>
         </div>
 
         {error && (
@@ -217,31 +223,35 @@ const AdminOrdersPage = () => {
         )}
 
         <div className={styles.filtersSection}>
-          <div className={styles.categoryFilters}>
-            {['Todos', 'Pendiente', 'Enviado', 'Entregado', 'Cancelado'].map(filter => (
-              <button
-                key={filter}
-                onClick={() => handleFilterChange(filter)}
-                className={`${styles.filterButton} ${activeFilter === filter ? styles.active : ''}`}
-              >
-                {filter}
-              </button>
-            ))}
+          <div className={styles.leftSection}>
+            <div className={styles.categoryFilters}>
+              {['Todos', 'Pendiente', 'Enviado', 'Entregado', 'Cancelado'].map(filter => (
+                <button
+                  key={filter}
+                  onClick={() => handleFilterChange(filter)}
+                  className={`${styles.filterButton} ${activeFilter === filter ? styles.active : ''}`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className={styles.sortSection}>
-            <label htmlFor="sort" className={styles.sortLabel}>Ordenar por</label>
-            <select
-              id="sort"
-              value={sortOrder}
-              onChange={handleSortChange}
-              className={styles.sortSelect}
-            >
-              <option value="date">Fecha</option>
-              <option value="total">Total</option>
-              <option value="client">Cliente</option>
-              <option value="status">Estado</option>
-            </select>
+          <div className={styles.rightSection}>
+            <div className={styles.sortSection}>
+              <label htmlFor="sort" className={styles.sortLabel}>Ordenar por</label>
+              <select
+                id="sort"
+                value={sortOrder}
+                onChange={handleSortChange}
+                className={styles.sortSelect}
+              >
+                <option value="date">Fecha</option>
+                <option value="total">Total</option>
+                <option value="client">Cliente</option>
+                <option value="status">Estado</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -279,27 +289,14 @@ const AdminOrdersPage = () => {
                     </span>
                   </td>
                   <td className={styles.actionsCell}>
-                    <button
-                      onClick={() => handleEdit(order.id)}
-                      className={styles.editButton}
-                      title="Editar"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="m18.5 2.5-1.5 1.5-6 6h-3v3l6-6 1.5-1.5"/>
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(order.id)}
-                      className={styles.deleteButton}
-                      title="Eliminar"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M3 6h18"/>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                      </svg>
-                    </button>
+                    <div className={styles.actionButtons}>
+                      <button
+                        onClick={() => handleDeleteClick(order)}
+                        className={styles.deleteButton}
+                        title="Eliminar"
+                      >
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -314,24 +311,41 @@ const AdminOrdersPage = () => {
               disabled={currentPage === 1}
               className={styles.pageButton}
             >
-              ←
+              Anterior
             </button>
             
-            <span className={styles.pageInfo}>
-              {currentPage}
-            </span>
+            <div className={styles.pageNumbers}>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`${styles.pageNumber} ${currentPage === pageNum ? styles.activePage : ''}`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
             
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               className={styles.pageButton}
             >
-              →
+              Siguiente
             </button>
-            
-            <span className={styles.totalPages}>
-              de {totalPages}
-            </span>
           </div>
         )}
 
@@ -342,6 +356,44 @@ const AdminOrdersPage = () => {
           </div>
         )}
       </div>
+
+      {showDeleteModal && (
+        <>
+          <div className={styles.modalOverlay} onClick={handleDeleteCancel} />
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h3>Confirmar eliminación</h3>
+            </div>
+            <div className={styles.modalContent}>
+              <p>¿Estás seguro de que quieres eliminar el pedido <strong>#{orderToDelete?.id}</strong> de <strong>"{orderToDelete?.client.name}"</strong>?</p>
+              <p className={styles.modalWarning}>Esta acción no se puede deshacer.</p>
+            </div>
+            <div className={styles.modalActions}>
+              <button onClick={handleDeleteCancel} className={styles.modalCancelButton}>
+                Cancelar
+              </button>
+              <button onClick={handleDeleteConfirm} className={styles.modalDeleteButton}>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {showSuccessModal && (
+        <>
+          <div className={styles.modalOverlay} />
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <div className={styles.successIcon}>✓</div>
+              <h3>¡Pedido eliminado!</h3>
+            </div>
+            <div className={styles.modalContent}>
+              <p>El pedido ha sido eliminado correctamente del sistema.</p>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
