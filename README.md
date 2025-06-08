@@ -66,22 +66,22 @@ Ejecutar Application.java
 
 ### Página de Inicio
 
-![alt text](<Captura de pantalla 2025-06-08 204852.png>)
+![alt text](inicio.png)
 
 ### Catálogo de Productos
 
-![alt text](image.png)
+![alt text](productos.png)
 
 ### Panel de Administración
 
-![alt text](<Captura de pantalla 2025-06-08 205255.png>)
+![alt text](dashboard.png)
 
 ### Carrito de Compras
 
-![alt text](<Captura de pantalla 2025-06-08 205117.png>)
+![alt text](carrito.png)
 
 ### Calculadora de Tallas
-![alt text](image-1.png)
+![alt text](calculadora.png)
 
 ##  Tecnologías utilizadas
 
