@@ -7,13 +7,27 @@
 Una plataforma completa de comercio electrónico desarrollada con Spring Boot y React, diseñada específicamente para la venta de tablas de snowboard, esquís y accesorios de deportes de invierno.
 
 ## Tabla de Contenido
+- [Instalación](#instalación)
 - [Características principales](#características-principales)
 - [Capturas de pantalla](#capturas-de-pantalla)
 - [Tecnologías utilizadas](#tecnologías-utilizadas)
 - [Requisitos previos](#requisitos-previos)
-- [Instalación](#instalación)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Autor](#autor)
+
+## Instalación
+
+### 1. Frontend
+
+git clone https://github.com/Jorgepr02/proyectoDAW
+cd frontend/proyecto-react
+npm install
+npm run dev
+
+### 1. Backend
+
+Ejecutar Application.java
+
 
 ##  Características principales
 
@@ -99,19 +113,6 @@ Una plataforma completa de comercio electrónico desarrollada con Spring Boot y 
 
 ### Cuentas externas:
 - Cuenta de **Stripe** (para pagos)
-
-## Instalación
-
-### 1. Frontend
-
-git clone https://github.com/tuusuario/snowshop.git
-cd frontend/proyecto-react
-npm install
-npm run dev
-
-### 1. Backend
-
-Ejecutar Application.java
 
 
 ## Estructura del proyecto
