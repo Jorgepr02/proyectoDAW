@@ -18,7 +18,6 @@ const LoginPage = () => {
       ...prev,
       [name]: value,
     }));
-    // Limpiar error cuando el usuario empiece a escribir
     if (error) setError("");
   };
 
@@ -50,31 +49,31 @@ const LoginPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password
-        })
+        body: JSON.stringify(formData)
       });
 
       const data = await response.json();
-
+      
       if (response.ok) {
+        console.log('Login successful:', data);
+        
         const userInfo = {
-          id: data.clientId || data.id, 
-          userId: data.id,      
-          clientId: data.clientId,
+          id: data.id,
           username: data.username,
           email: data.email,
-          roles: Array.isArray(data.roles) ? data.roles : [data.roles]
+          roles: data.roles,
+          token: data.token,
+          type: data.type,
+          clientId: data.clientId
         };
         
         localStorage.setItem('user', JSON.stringify(userInfo));
+        localStorage.setItem('token', data.token);
         
-        const authToken = `${data.type} ${data.token}`;
-        localStorage.setItem('authToken', authToken);
+        console.log('Usuario guardado:', userInfo);
+        console.log('Token guardado:', data.token);
         
-        console.log('Usuario logueado:', userInfo);
-        console.log('Token guardado:', authToken);
+        window.dispatchEvent(new Event('userChanged'));
         
         navigate('/');
       } else {

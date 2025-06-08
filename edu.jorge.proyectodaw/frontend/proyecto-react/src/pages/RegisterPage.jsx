@@ -21,7 +21,6 @@ const RegisterPage = () => {
       ...prevState,
       [name]: value,
     }));
-    // Limpiar errores cuando el usuario empiece a escribir
     if (error) setError("");
   };
 
@@ -75,7 +74,6 @@ const RegisterPage = () => {
       
       if (response.ok) {
         console.log('Usuario registrado:', data);
-        
         setSuccess(`¡Usuario ${data.username} registrado exitosamente!`);
         
         const userInfo = {
@@ -88,6 +86,8 @@ const RegisterPage = () => {
         };
         
         localStorage.setItem('user', JSON.stringify(userInfo));
+        
+        window.dispatchEvent(new Event('userChanged'));
         
         setTimeout(() => {
           navigate("/");
