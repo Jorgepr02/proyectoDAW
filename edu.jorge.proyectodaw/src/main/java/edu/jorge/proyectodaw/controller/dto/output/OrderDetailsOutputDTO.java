@@ -21,6 +21,7 @@ public class OrderDetailsOutputDTO {
     private String shippingNameAddress;
     private String shippingNumberAddress;
     private String notes;
+    private String clientName;
     private String clientEmail;
 
     List<OrderDetailsSimpleOutputDTO> details;

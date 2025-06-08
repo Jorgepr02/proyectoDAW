@@ -186,6 +186,9 @@ public class OrderController {
         if (order.getClient() != null) {
             dto.setClientEmail(order.getClient().getEmail());
         }
+        if (order.getClient() != null) {
+            dto.setClientName(order.getClient().getName());
+        }
 
         if (order.getOrderDetails() != null) {
             List<OrderDetailsSimpleOutputDTO> details = new ArrayList<>();
