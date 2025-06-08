@@ -21,7 +21,7 @@ const AdminSidebar = () => {
         white: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/pedidoicon_bkxte3.png",
         purple: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903750/image_50_yohm52.png",
       },
-      clientes: {
+      users: {
         white: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903375/clienticon_jz9sie.png",
         purple: "https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903750/image_69_tsa0xl.png",
       }
@@ -93,6 +93,21 @@ const AdminSidebar = () => {
             <span>Productos</span>
           </Link>
           <Link
+            to="/admin/usuarios"
+            className={`${styles.navItem} ${
+              location.pathname === "/admin/usuarios" ? styles.active : ""
+            }`}
+            onClick={closeSidebar}
+          >
+            <img
+              src={getIcon("users", location.pathname === "/admin/usuarios")}
+              alt="Usuarios"
+              className={styles.icon}
+            />
+            <span>Usuarios</span>
+          </Link>
+          
+          <Link
             to="/admin/pedidos"
             className={`${styles.navItem} ${
               location.pathname === "/admin/pedidos" ? styles.active : ""
@@ -105,20 +120,6 @@ const AdminSidebar = () => {
               className={styles.icon}
             />
             <span>Pedidos</span>
-          </Link>
-          <Link
-            to="/admin/clientes"
-            className={`${styles.navItem} ${
-              location.pathname === "/admin/clientes" ? styles.active : ""
-            }`}
-            onClick={closeSidebar}
-          >
-            <img
-              src={getIcon("clientes", location.pathname === "/admin/clientes")}
-              alt="Clientes"
-              className={styles.icon}
-            />
-            <span>Clientes</span>
           </Link>
         </nav>
         <Link to="/" className={styles.backLink} onClick={closeSidebar}>
