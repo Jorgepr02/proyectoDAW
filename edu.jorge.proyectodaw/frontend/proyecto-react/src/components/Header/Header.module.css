@@ -68,7 +68,7 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -86,22 +86,6 @@
   transition: background-color 0.3s ease;
   height: 36px;
   width: 36px;
-}
-
-.actions button:hover,
-.actions a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.actions img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
-.cartWrapper {
-  display: flex;
-  gap: 16px;
 }
 
 .cartCount {
@@ -304,6 +288,84 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.iconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  height: 36px;
+  width: 36px;
+  text-decoration: none;
+  position: relative;
+}
+
+.iconButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.iconButton img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.8);
+}
+
+.iconButton:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  bottom: -40px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 991px) {

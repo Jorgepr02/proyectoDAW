@@ -9,7 +9,23 @@ export const Header = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const searchRef = useRef(null);
+
+  const checkAdminRole = () => {
+    try {
+      const userString = localStorage.getItem('user');
+      if (!userString) return false;
+      
+      const user = JSON.parse(userString);
+      if (!user.roles || !Array.isArray(user.roles)) return false;
+      
+      return user.roles.includes('ROLE_ADMIN');
+    } catch (error) {
+      console.error('Error checking admin role:', error);
+      return false;
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -22,10 +38,26 @@ export const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    setIsAdmin(checkAdminRole());
+    
+    const handleStorageChange = () => {
+      setIsAdmin(checkAdminRole());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    window.addEventListener('userChanged', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userChanged', handleStorageChange);
+    };
+  }, []);
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      // Redirigir a la página de productos con el parámetro de búsqueda
       navigate(`/productos?search=${encodeURIComponent(searchTerm.trim())}`);
       setIsSearchOpen(false);
       setSearchTerm("");
@@ -132,34 +164,67 @@ export const Header = () => {
         <div className={styles.actions}>
           {searchButton} 
           
-          <Link to="/login">
-            <img
-              src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748940048/image_79_uccho4.png"
-              alt="User"
-              width={20}
-              height={22}
-            />
-          </Link>
+          <div className={styles.iconWrapper}>
+            <Link to="/login" className={styles.iconButton}>
+              <img
+                src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748940048/image_79_uccho4.png"
+                alt="User"
+                width={20}
+                height={22}
+              />
+              <span className={styles.tooltip}>Iniciar Sesión</span>
+            </Link>
+          </div>
 
-          <div className={styles.cartWrapper}>
-            <button onClick={() => navigate('/lista-deseos')}>
+          <div className={styles.iconWrapper}>
+            <button onClick={() => navigate('/lista-deseos')} className={styles.iconButton}>
               <img
                 src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748940650/2724657_dl3qlw.png"
                 alt="Wishlist"
                 width={20}
                 height={20}
               />
+              <span className={styles.tooltip}>Lista de Deseos</span>
             </button>
-            
-            <button onClick={() => navigate('/carrito')}>
+          </div>
+          
+          <div className={styles.iconWrapper}>
+            <button onClick={() => navigate('/carrito')} className={styles.iconButton}>
               <img
                 src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748940562/shopping-cart-pe974q2wd8bzu5cueg3qr_cw8dd8.webp"
                 alt="Cart"
                 width={20}
                 height={20}
               />
+              <span className={styles.tooltip}>Carrito</span>
             </button>
           </div>
+
+          <div className={styles.iconWrapper}>
+            <button onClick={() => navigate('/orders')} className={styles.iconButton}>
+              <img
+                src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1749309715/icon-order-1_q5gzlz.png"
+                alt="Orders"
+                width={20}
+                height={20}
+              />
+              <span className={styles.tooltip}>Mis Pedidos</span>
+            </button>
+          </div>
+
+          {isAdmin && (
+            <div className={styles.iconWrapper}>
+              <button onClick={() => navigate('/admin')} className={styles.iconButton}>
+                <img
+                  src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1748903376/dashboardicon_sgzxnf.png"
+                  alt="Admin Dashboard"
+                  width={20}
+                  height={20}
+                />
+                <span className={styles.tooltip}>Panel Admin</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
@@ -185,6 +250,23 @@ export const Header = () => {
             <Link to="/contacto" className={styles.mobileNavLink} onClick={() => { scrollToTop("/contacto"); toggleMobileMenu(); }}>
               Contacto
             </Link>
+            <Link to="/login" className={styles.mobileNavLink} onClick={() => { scrollToTop("/login"); toggleMobileMenu(); }}>
+              Iniciar Sesión
+            </Link>
+            <Link to="/lista-deseos" className={styles.mobileNavLink} onClick={() => { scrollToTop("/lista-deseos"); toggleMobileMenu(); }}>
+              Lista de Deseos
+            </Link>
+            <Link to="/carrito" className={styles.mobileNavLink} onClick={() => { scrollToTop("/carrito"); toggleMobileMenu(); }}>
+              Carrito
+            </Link>
+            <Link to="/orders" className={styles.mobileNavLink} onClick={() => { scrollToTop("/orders"); toggleMobileMenu(); }}>
+              Mis Pedidos
+            </Link>
+            {isAdmin && (
+              <Link to="/admin" className={styles.mobileNavLink} onClick={() => { scrollToTop("/admin"); toggleMobileMenu(); }}>
+                Panel Admin
+              </Link>
+            )}
           </div>
         </div>
       </div>
