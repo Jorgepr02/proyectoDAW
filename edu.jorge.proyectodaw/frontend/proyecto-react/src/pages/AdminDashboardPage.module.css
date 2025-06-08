@@ -1,16 +1,21 @@
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
 .content {
   margin-left: 276px;
-  padding: 24px 40px;
+  padding: 32px 40px;
   width: calc(100% - 276px);
   min-height: 100vh;
 }
 
 .title {
-  color: #111;
-  font-size: 24px;
+  color: #111827;
+  font-size: 28px;
   font-weight: 700;
-  line-height: 54px;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 
 .grid {
@@ -71,11 +76,11 @@
   line-height: 24px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
   .content {
     margin-left: 0;
     width: 100%;
-    padding-top: 80px;
+    padding: 24px 20px;
   }
 
   .grid {
@@ -90,12 +95,11 @@
 
 @media (max-width: 640px) {
   .content {
-    padding: 80px 20px 20px;
+    padding: 16px;
   }
 
   .title {
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 24px;
   }
 
   .grid {
