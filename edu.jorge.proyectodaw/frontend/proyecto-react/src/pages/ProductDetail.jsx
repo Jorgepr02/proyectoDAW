@@ -146,6 +146,10 @@ const ProductDetail = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    setQuantity(1);
+  }, [id]);
+
   const handleImageChange = (index) => {
     setCurrentImage(index);
   };
@@ -225,6 +229,7 @@ const ProductDetail = () => {
     // Abrir modal de checkout directamente
     setIsCheckoutModalOpen(true);
   };
+
   const handleDirectCheckout = async (orderData) => {
     try {
       console.log('=== INICIANDO CHECKOUT DIRECTO ===');
