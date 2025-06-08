@@ -1,6 +1,6 @@
 # SnowShop 
 
-![Nombre de la imagen](ReadmeImages/logo_qd5sfu%20(1).png)
+![SnowShop Logo](ReadmeImages/logo_qd5sfu%20(1).png)
 
 **E-commerce especializado en equipamiento de deportes de invierno**
 
