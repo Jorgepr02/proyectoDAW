@@ -20,6 +20,7 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .modalHeader {
@@ -36,6 +37,7 @@
   color: #111827;
   font-size: 24px;
   font-weight: 600;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .closeButton {
@@ -46,6 +48,7 @@
   color: #6b7280;
   padding: 4px;
   border-radius: 4px;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .closeButton:hover {
@@ -65,6 +68,7 @@
   color: #111827;
   font-size: 18px;
   font-weight: 600;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .orderSummary {
@@ -77,6 +81,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .summaryRow:last-child {
@@ -87,6 +92,7 @@
   font-weight: 600;
   color: #2d1282;
   font-size: 18px;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .confirmationText {
@@ -96,12 +102,26 @@
 .confirmationText p {
   margin: 0 0 12px 0;
   color: #374151;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .warningText {
   color: #f59e0b;
   font-weight: 500;
   font-size: 14px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.stripeLogoContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.stripeLogo {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
 }
 
 .modalActions {
@@ -124,6 +144,7 @@
   transition: all 0.2s;
   border: none;
   min-width: 120px;
+  font-family: "Poppins", system-ui, sans-serif;
 }
 
 .cancelButton {
@@ -165,5 +186,18 @@
   .cancelButton,
   .confirmButton {
     width: 100%;
+  }
+  
+  .modalHeader h2 {
+    font-size: 20px;
+  }
+  
+  .stripeLogo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .stripeLogoContainer {
+    margin-top: 16px;
   }
 }

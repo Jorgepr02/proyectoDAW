@@ -30,8 +30,10 @@ const PaymentConfirmationModal = ({ isOpen, onClose, orderData, total, onConfirm
     setIsProcessing(true);
     try {
       await onConfirmPayment();
+      onClose();
     } catch (error) {
       console.error('Error en el pago:', error);
+      alert(`Error en el pago: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
     } finally {
       setIsProcessing(false);
     }
@@ -81,6 +83,13 @@ const PaymentConfirmationModal = ({ isOpen, onClose, orderData, total, onConfirm
             <p className={styles.warningText}>
               Esta acción procesará el pago inmediatamente.
             </p>
+            <div className={styles.stripeLogoContainer}>
+              <img 
+                src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1749385545/image_processing20250206-349039-19g3b5c_ydvorh.gif" 
+                alt="Stripe" 
+                className={styles.stripeLogo}
+              />
+            </div>
           </div>
         </div>
 
@@ -99,7 +108,7 @@ const PaymentConfirmationModal = ({ isOpen, onClose, orderData, total, onConfirm
             className={styles.confirmButton}
             disabled={isProcessing}
           >
-            {isProcessing ? 'Procesando pago...' : 'Confirmar Pago con Stripe'}
+            {isProcessing ? 'Procesando pago...' : 'Confirmar Pago'}
           </button>
         </div>
       </div>

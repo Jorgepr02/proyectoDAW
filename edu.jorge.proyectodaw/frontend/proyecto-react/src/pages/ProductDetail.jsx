@@ -25,6 +25,9 @@ const ProductDetail = () => {
   const [pendingOrderData, setPendingOrderData] = useState(null);
   const [createdOrder, setCreatedOrder] = useState(null);
 
+  const [showPaymentSuccessModal, setShowPaymentSuccessModal] = useState(false);
+  const [paymentOrderId, setPaymentOrderId] = useState(null);
+
   const getUser = () => {
     const userString = localStorage.getItem('user');
     return userString ? JSON.parse(userString) : null;
@@ -281,7 +284,7 @@ const ProductDetail = () => {
       const amountCents = Math.round(createdOrder.amount * 100);
       const clientId = user.clientId || user.id;
 
-      console.log('Procesando pago directo:', { orderId, amountCents, clientId, userInfo: user });
+      console.log('Procesando pago directo:', { orderId, amountCents, clientId });
 
       const createPaymentResponse = await fetch(
         `http://localhost:8080/api/payments/create?orderId=${orderId}&amount=${amountCents}`,
@@ -317,19 +320,25 @@ const ProductDetail = () => {
       }
 
       const paymentResult = await processPaymentResponse.json();
-      console.log('Pago directo procesado exitosamente:', paymentResult);
+      console.log('Pago procesado exitosamente:', paymentResult);
       
       setIsPaymentConfirmationOpen(false);
       setPendingOrderData(null);
       setCreatedOrder(null);
       
-      alert(`¡Pago procesado con éxito!\nID del pedido: ${orderId}`);
-      navigate('/orders');
+      setPaymentOrderId(orderId);
+      setShowPaymentSuccessModal(true);
       
     } catch (error) {
       console.error('Error al procesar el pago directo:', error);
-      alert(`Error en el pago: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+      alert(`Error: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
     }
+  };
+
+  const handleClosePaymentSuccess = () => {
+    setShowPaymentSuccessModal(false);
+    setPaymentOrderId(null);
+    navigate('/orders');
   };
 
   const createDirectPurchaseItem = () => {
@@ -672,6 +681,30 @@ const ProductDetail = () => {
         total={product ? (product.price * quantity) : 0}
         onConfirmPayment={handleConfirmDirectPayment}
       />
+
+      {showPaymentSuccessModal && (
+        <>
+          <div className={styles.successOverlay} onClick={handleClosePaymentSuccess} />
+          <div className={styles.successModal}>
+            <div className={styles.successHeader}>
+              <div className={styles.successIcon}>✓</div>
+              <h3>¡Pago Procesado Exitosamente!</h3>
+            </div>
+            <div className={styles.successContent}>
+              <p>Tu pago ha sido procesado correctamente.</p>
+              <p><strong>ID del pedido:</strong> {paymentOrderId}</p>
+            </div>
+            <div className={styles.successActions}>
+              <button 
+                onClick={handleClosePaymentSuccess} 
+                className={styles.successButton}
+              >
+                Ver Mis Pedidos
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

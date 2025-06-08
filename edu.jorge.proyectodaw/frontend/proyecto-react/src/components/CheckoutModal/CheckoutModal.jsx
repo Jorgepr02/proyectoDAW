@@ -126,7 +126,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
     <div className={styles.modalOverlay} onClick={handleClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2>Finalizar Pedido</h2>
+          <h2>Ir al pago</h2>
           <button 
             className={styles.closeButton} 
             onClick={handleClose}
@@ -241,7 +241,7 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, onSubmit }) => {
               className={styles.submitButton}
               disabled={isSubmitting || !cartItems || cartItems.length === 0}
             >
-              {isSubmitting ? 'Procesando pedido...' : 'Finalizar Pedido'}
+              {isSubmitting ? 'Procesando pedido...' : 'Ir al pago'}
             </button>
           </div>
         </form>

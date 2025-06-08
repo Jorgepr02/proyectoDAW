@@ -8,10 +8,13 @@ import PaymentConfirmationModal from '../components/PaymentConfirmationModal/Pay
 const CartPage = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isPaymentConfirmationOpen, setIsPaymentConfirmationOpen] = useState(false);
   const [pendingOrderData, setPendingOrderData] = useState(null);
   const [createdOrder, setCreatedOrder] = useState(null);
+  const [showPaymentSuccessModal, setShowPaymentSuccessModal] = useState(false);
+  const [paymentOrderId, setPaymentOrderId] = useState(null);
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -41,6 +44,8 @@ const CartPage = () => {
       console.log('=== INICIANDO CHECKOUT ===');
       console.log('Datos del pedido a enviar:', orderData);
       
+      setLoading(true);
+      
       const orderResponse = await fetch('http://localhost:8080/api/orders', {
         method: 'POST',
         headers: {
@@ -64,7 +69,7 @@ const CartPage = () => {
       setPendingOrderData(orderData);
       
       setTimeout(() => {
-        setIsCheckoutModalOpen(false)
+        setIsCheckoutModalOpen(false);
         setTimeout(() => {
           setIsPaymentConfirmationOpen(true);
         }, 100);
@@ -73,6 +78,8 @@ const CartPage = () => {
     } catch (error) {
       console.error('Error al procesar el pedido:', error);
       alert(`Error: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,7 +100,6 @@ const CartPage = () => {
 
       const orderId = createdOrder.id;
       const amountCents = Math.round(createdOrder.amount * 100);
-
       const clientId = user.clientId || user.id;
 
       console.log('Procesando pago:', { orderId, amountCents, clientId, userInfo: user });
@@ -134,32 +140,29 @@ const CartPage = () => {
       const paymentResult = await processPaymentResponse.json();
       console.log('Pago procesado exitosamente:', paymentResult);
       
-      localStorage.removeItem('cart');
-      setCartItems([]);
       setIsPaymentConfirmationOpen(false);
       setPendingOrderData(null);
       setCreatedOrder(null);
       
-
-      alert(`¡Pago procesado con éxito!\nID del pedido: ${orderId}`);
-      navigate('/orders');
+      setPaymentOrderId(orderId);
+      setShowPaymentSuccessModal(true);
       
     } catch (error) {
       console.error('Error al procesar el pago:', error);
       alert(`Error en el pago: ${error.message}\n\nPor favor, inténtalo de nuevo.`);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const debugUserInfo = () => {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
+  const handleClosePaymentSuccess = () => {
+    setShowPaymentSuccessModal(false);
+    setPaymentOrderId(null);
     
-    console.log('=== DEBUG USER INFO ===');
-    console.log('LocalStorage user:', user);
-    console.log('user.id:', user?.id);
-    console.log('user.clientId:', user?.clientId);
-    console.log('clientId a usar:', user?.clientId || user?.id);
-    console.log('=======================');
+    localStorage.removeItem('cart');
+    setCartItems([]);
+    
+    navigate('/orders');
   };
 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -219,8 +222,9 @@ const CartPage = () => {
           <button 
             className={styles.checkoutButton}
             onClick={() => setIsCheckoutModalOpen(true)}
+            disabled={loading}
           >
-            Proceder al Pago
+            {loading ? 'Procesando...' : 'Proceder al Pago'}
           </button>
           <button 
             className={styles.continueShoppingButton}
@@ -255,6 +259,30 @@ const CartPage = () => {
         total={total}
         onConfirmPayment={handleConfirmPayment}
       />
+
+      {showPaymentSuccessModal && (
+        <>
+          <div className={styles.successOverlay} onClick={handleClosePaymentSuccess} />
+          <div className={styles.successModal}>
+            <div className={styles.successHeader}>
+              <div className={styles.successIcon}>✓</div>
+              <h3>¡Pago Procesado Exitosamente!</h3>
+            </div>
+            <div className={styles.successContent}>
+              <p>Tu pago ha sido procesado correctamente.</p>
+              <p><strong>ID del pedido:</strong> {paymentOrderId}</p>
+            </div>
+            <div className={styles.successActions}>
+              <button 
+                onClick={handleClosePaymentSuccess} 
+                className={styles.successButton}
+              >
+                Ver Mis Pedidos
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

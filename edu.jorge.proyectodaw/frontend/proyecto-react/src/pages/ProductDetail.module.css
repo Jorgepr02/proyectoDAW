@@ -514,3 +514,144 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
+
+.successOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  z-index: 1501;
+  min-width: 400px;
+  max-width: 500px;
+  animation: successModalAppear 0.4s ease-out;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+@keyframes successModalAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.successHeader {
+  padding: 32px 32px 24px 32px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.successIcon {
+  width: 64px;
+  height: 64px;
+  background-color: #dcfce7;
+  color: #16a34a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0 auto 16px auto;
+}
+
+.successHeader h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.successContent {
+  padding: 24px 32px;
+  text-align: center;
+}
+
+.successContent p {
+  margin: 0 0 12px 0;
+  color: #374151;
+  line-height: 1.6;
+  font-size: 16px;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.successContent p:last-child {
+  margin-bottom: 0;
+}
+
+.successActions {
+  padding: 16px 32px 32px 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.successButton {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  background: #2d1282;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: "Poppins", system-ui, sans-serif;
+}
+
+.successButton:hover {
+  background-color: #1e0d5f;
+}
+
+@media (max-width: 768px) {
+  .successModal {
+    min-width: 320px;
+    margin: 16px;
+    max-width: calc(100vw - 32px);
+  }
+  
+  .successHeader {
+    padding: 24px 20px 16px 20px;
+  }
+  
+  .successContent {
+    padding: 16px 20px;
+  }
+  
+  .successActions {
+    padding: 12px 20px 24px 20px;
+  }
+  
+  .successIcon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  
+  .successHeader h3 {
+    font-size: 20px;
+  }
+  
+  .successContent p {
+    font-size: 14px;
+  }
+}
