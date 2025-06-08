@@ -17,11 +17,10 @@ import ContactPage from "../pages/ContactPage";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
 import AdminProductsPage from "../pages/AdminProductsPage";
 import AdminProductFormPage from "../pages/AdminProductFormPage";
-import AdminUsersPage from "../pages/AdminUsersPage";
+import AdminUsersPage from "../pages/AdminUsersPage"; // Cambié de AdminClientsPage
 import AdminOrdersPage from "../pages/AdminOrdersPage";
 import AdminOrderFormPage from "../pages/AdminOrderFormPage";
-import AdminClientsPage from "../pages/AdminClientsPage";
-import AdminClientFormPage from "../pages/AdminClientFormPage";
+import AdminUserFormPage from "../pages/AdminUserFormPage"; // Cambié de AdminClientFormPage
 
 import ProtectedAdminRoute from "../components/ProtectedAdminRoute/ProtectedAdminRoute";
 
@@ -97,6 +96,22 @@ const AppContent = () => {
             } 
           />
           <Route 
+            path="/admin/usuarios/nuevo" 
+            element={
+              <ProtectedAdminRoute>
+                <AdminUserFormPage />
+              </ProtectedAdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/usuarios/editar/:id" 
+            element={
+              <ProtectedAdminRoute>
+                <AdminUserFormPage />
+              </ProtectedAdminRoute>
+            } 
+          />
+          <Route 
             path="/admin/pedidos" 
             element={
               <ProtectedAdminRoute>
@@ -117,30 +132,6 @@ const AppContent = () => {
             element={
               <ProtectedAdminRoute>
                 <AdminOrderFormPage />
-              </ProtectedAdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/clientes" 
-            element={
-              <ProtectedAdminRoute>
-                <AdminClientsPage />
-              </ProtectedAdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/clientes/nuevo" 
-            element={
-              <ProtectedAdminRoute>
-                <AdminClientFormPage />
-              </ProtectedAdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/clientes/editar/:id" 
-            element={
-              <ProtectedAdminRoute>
-                <AdminClientFormPage />
               </ProtectedAdminRoute>
             } 
           />
