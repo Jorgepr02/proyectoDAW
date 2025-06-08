@@ -10,6 +10,7 @@ export const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const searchRef = useRef(null);
 
   const checkAdminRole = () => {
@@ -27,6 +28,27 @@ export const Header = () => {
     }
   };
 
+  const checkUserLoggedIn = () => {
+    try {
+      const userString = localStorage.getItem('user');
+      return !!userString;
+    } catch (error) {
+      console.error('Error checking user login status:', error);
+      return false;
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    setIsUserLoggedIn(false);
+    setIsAdmin(false);
+    
+    window.dispatchEvent(new Event('userChanged'));
+    
+    navigate('/');
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -40,9 +62,11 @@ export const Header = () => {
 
   useEffect(() => {
     setIsAdmin(checkAdminRole());
+    setIsUserLoggedIn(checkUserLoggedIn());
     
     const handleStorageChange = () => {
       setIsAdmin(checkAdminRole());
+      setIsUserLoggedIn(checkUserLoggedIn());
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -225,6 +249,20 @@ export const Header = () => {
               </button>
             </div>
           )}
+
+          {isUserLoggedIn && (
+            <div className={styles.iconWrapper}>
+              <button onClick={handleLogout} className={styles.iconButton}>
+                <img
+                  src="https://res.cloudinary.com/dluvwj5lo/image/upload/v1749402873/logout_hnyrby.png"
+                  alt="Cerrar Sesión"
+                  width={20}
+                  height={20}
+                />
+                <span className={styles.tooltip}>Cerrar Sesión</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <button className={styles.mobileMenuButton} onClick={toggleMobileMenu}>
@@ -266,6 +304,11 @@ export const Header = () => {
               <Link to="/admin" className={styles.mobileNavLink} onClick={() => { scrollToTop("/admin"); toggleMobileMenu(); }}>
                 Panel Admin
               </Link>
+            )}
+            {isUserLoggedIn && (
+              <button onClick={() => { handleLogout(); toggleMobileMenu(); }} className={styles.mobileNavLink}>
+                Cerrar Sesión
+              </button>
             )}
           </div>
         </div>
