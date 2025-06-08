@@ -2,6 +2,7 @@ package edu.jorge.proyectodaw.controller;
 
 import edu.jorge.proyectodaw.controller.dto.input.ProductCreateInputDTO;
 import edu.jorge.proyectodaw.controller.dto.input.ProductFeatureInputDTO;
+import edu.jorge.proyectodaw.controller.dto.input.ProductUpdateInputDTO;
 import edu.jorge.proyectodaw.controller.dto.output.*;
 import edu.jorge.proyectodaw.entity.Category;
 import edu.jorge.proyectodaw.entity.Feature;
@@ -238,9 +239,12 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        Product updatedProduct = productService.update(id, product);
-        return ResponseEntity.ok(updatedProduct);
+    public ResponseEntity<ProductFullOutputDTO> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateInputDTO productUpdateInputDTO) {
+        return ResponseEntity.ok(
+                convertToFullDTO(
+                        productService.update(id, convertFromProductUpdateInputDTOToEntity(productUpdateInputDTO))
+                )
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -327,7 +331,7 @@ public class ProductController {
             dto.setFeatures(
                 product.getProductFeatures().stream()
                     .map(feature -> new FeatureProductSimpleOutputDTO(
-                        feature.getId(),
+                        feature.getFeature().getId(),
                         feature.getFeature().getName(),
                         feature.getValue().toString()
                     ))
@@ -376,6 +380,59 @@ public class ProductController {
             dto.setImages(Collections.emptyList());
         }
         return dto;
+    }
+
+    private Product convertFromProductCreateInputDTOToEntity(ProductCreateInputDTO productDTO) {
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+
+        if (productDTO.getIdCategory() != null) {
+            Category category = new Category();
+            category.setId(productDTO.getIdCategory());
+            product.setCategory(category);
+        }
+
+        if (productDTO.getProductFeatures() != null && !productDTO.getProductFeatures().isEmpty()) {
+            List<ProductFeature> productFeatures = productDTO.getProductFeatures().stream()
+                .map(featureDTO -> {
+                    Feature feature = new Feature();
+                    feature.setId(featureDTO.getIdFeature());
+                    return new ProductFeature(null, product, feature, featureDTO.getValue());
+                })
+                .collect(Collectors.toList());
+            product.setProductFeatures(productFeatures);
+        }
+
+        return product;
+    }
+
+    private Product convertFromProductUpdateInputDTOToEntity(ProductUpdateInputDTO productDTO) {
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setStock(productDTO.getStock());
+
+        if (productDTO.getIdCategory() != null) {
+            Category category = new Category();
+            category.setId(productDTO.getIdCategory());
+            product.setCategory(category);
+        }
+
+        if (productDTO.getProductFeatures() != null && !productDTO.getProductFeatures().isEmpty()) {
+            List<ProductFeature> productFeatures = productDTO.getProductFeatures().stream()
+                    .map(featureDTO -> {
+                        Feature feature = new Feature();
+                        feature.setId(featureDTO.getIdFeature());
+                        return new ProductFeature(null, product, feature, featureDTO.getValue());
+                    })
+                    .collect(Collectors.toList());
+            product.setProductFeatures(productFeatures);
+        }
+
+        return product;
     }
 }
 

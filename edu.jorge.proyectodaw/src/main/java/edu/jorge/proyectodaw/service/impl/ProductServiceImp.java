@@ -113,14 +113,35 @@ public class ProductServiceImp implements ProductService {
 //    }
 
     @Override
+    @Transactional
     public Product update(Long id, Product product) {
         Product existingProduct = findById(id);
+
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
-        existingProduct.setStock(product.getStock());
-        existingProduct.setCategory(product.getCategory());
-        return productRepo.save(existingProduct);
+        if (product.getStock() != null) {
+            existingProduct.setStock(product.getStock());
+        }
+        if (existingProduct.getCategory() != null && existingProduct.getCategory().getId() != null) {
+            existingProduct.setCategory(categoryService.findById(existingProduct.getCategory().getId()));
+        }
+
+        Product updatedProduct = productRepo.save(existingProduct);
+
+        // Actualizar las características del producto
+        List<ProductFeature> existingProductFeatures = existingProduct.getProductFeatures();
+        List<ProductFeature> newProductFeatures = product.getProductFeatures();
+
+        if (existingProductFeatures != null && newProductFeatures != null) {
+            for (int i = 0; i < existingProductFeatures.size(); i++) {
+                if (i < newProductFeatures.size()) {
+                    existingProductFeatures.get(i).setValue(newProductFeatures.get(i).getValue());
+                }
+            }
+        }
+
+        return updatedProduct;
     }
 
     @Override
@@ -139,7 +160,7 @@ public class ProductServiceImp implements ProductService {
         productToSave.setDescription(productCreateInputDTO.getDescription());
         productToSave.setPrice(productCreateInputDTO.getPrice());
         productToSave.setCategory(categoryService.findById(productCreateInputDTO.getIdCategory()));
-        productToSave.setStock(0); // Inicializamos el stock a 0
+        productToSave.setStock(0);
 
         Product productCreated = productRepo.saveAndFlush(productToSave); // Se podría omitir, por Transación SQL
 
