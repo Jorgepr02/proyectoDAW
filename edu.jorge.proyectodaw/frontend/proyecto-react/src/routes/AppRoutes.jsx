@@ -17,10 +17,9 @@ import ContactPage from "../pages/ContactPage";
 import AdminDashboardPage from "../pages/AdminDashboardPage";
 import AdminProductsPage from "../pages/AdminProductsPage";
 import AdminProductFormPage from "../pages/AdminProductFormPage";
-import AdminUsersPage from "../pages/AdminUsersPage"; // Cambié de AdminClientsPage
+import AdminUsersPage from "../pages/AdminUsersPage";
 import AdminOrdersPage from "../pages/AdminOrdersPage";
-import AdminOrderFormPage from "../pages/AdminOrderFormPage";
-import AdminUserFormPage from "../pages/AdminUserFormPage"; // Cambié de AdminClientFormPage
+import AdminUserFormPage from "../pages/AdminUserFormPage";
 
 import ProtectedAdminRoute from "../components/ProtectedAdminRoute/ProtectedAdminRoute";
 
@@ -116,22 +115,6 @@ const AppContent = () => {
             element={
               <ProtectedAdminRoute>
                 <AdminOrdersPage />
-              </ProtectedAdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/pedidos/nuevo" 
-            element={
-              <ProtectedAdminRoute>
-                <AdminOrderFormPage />
-              </ProtectedAdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/pedidos/editar/:id" 
-            element={
-              <ProtectedAdminRoute>
-                <AdminOrderFormPage />
               </ProtectedAdminRoute>
             } 
           />
