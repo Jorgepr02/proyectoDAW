@@ -24,14 +24,11 @@ const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simular envío (mockeado)
     setTimeout(() => {
       console.log('Mensaje enviado (mockeado):', formData);
       
-      // Mostrar popup de éxito
       setShowSuccessPopup(true);
       
-      // Vaciar formulario
       setFormData({
         name: '',
         email: '',
@@ -132,7 +129,6 @@ const ContactForm = () => {
         </button>
       </form>
 
-      {/* Popup de éxito */}
       {showSuccessPopup && (
         <>
           <div className={styles.overlay} onClick={() => setShowSuccessPopup(false)} />
