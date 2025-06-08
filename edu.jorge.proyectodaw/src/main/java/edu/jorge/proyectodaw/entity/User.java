@@ -50,4 +50,20 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public void addRole(Role role) {
+        if (roles.contains(role)) {}
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        if (!roles.contains(role)) {}
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.remove(role);
+    }
 }
